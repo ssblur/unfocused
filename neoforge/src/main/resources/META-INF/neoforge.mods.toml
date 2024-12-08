@@ -11,7 +11,7 @@ authors = "SSBlur"
 description = '''
 Blur's library mod, it just has a lot of useful common code.
 '''
-#logoFile = ""
+logoFile = "/assets/unfocused/icon.png"
 
 [[dependencies.unfocused]]
 modId = "neoforge"

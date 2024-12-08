@@ -3,10 +3,8 @@ package com.ssblur.unfocused.fabric
 import com.ssblur.unfocused.Unfocused
 import com.ssblur.unfocused.registry.RegistryTypes
 import net.fabricmc.api.ModInitializer
-import net.fabricmc.fabric.mixin.registry.sync.RegistriesAccessor
 import net.minecraft.core.Registry
 import net.minecraft.core.registries.BuiltInRegistries
-import net.minecraft.core.registries.Registries
 
 class UnfocusedModFabric: ModInitializer {
     override fun onInitialize() {

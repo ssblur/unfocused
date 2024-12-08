@@ -2,13 +2,13 @@ package com.ssblur.unfocused.constructors
 
 import net.minecraft.world.effect.MobEffect
 import net.minecraft.world.effect.MobEffectCategory
-import net.minecraft.world.entity.Entity
 import net.minecraft.world.entity.LivingEntity
 
 fun interface EffectApplicator{
     fun apply(livingEntity: LivingEntity)
 }
 
+@Suppress("unused")
 class Effect(mobEffectCategory: MobEffectCategory, color: Int): MobEffect(mobEffectCategory, color) {
     var function: EffectApplicator? = null
 

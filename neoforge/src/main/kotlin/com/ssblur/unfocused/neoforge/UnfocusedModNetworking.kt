@@ -1,13 +1,10 @@
 package com.ssblur.unfocused.neoforge
 
-import com.ssblur.unfocused.Unfocused
 import com.ssblur.unfocused.network.KClassPacket
 import com.ssblur.unfocused.network.NetworkManager
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload
 import net.minecraft.server.level.ServerPlayer
 import net.neoforged.bus.api.SubscribeEvent
-import net.neoforged.neoforge.client.event.InputEvent
-import net.neoforged.neoforge.client.event.ScreenEvent.MouseButtonPressed
 import net.neoforged.neoforge.network.PacketDistributor
 import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent
 

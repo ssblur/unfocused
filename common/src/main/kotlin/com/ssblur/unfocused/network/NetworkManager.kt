@@ -1,15 +1,12 @@
 package com.ssblur.unfocused.network
 
-import net.minecraft.network.RegistryFriendlyByteBuf
-import net.minecraft.network.codec.StreamCodec
-import net.minecraft.network.protocol.common.custom.CustomPacketPayload
 import net.minecraft.resources.ResourceLocation
 import net.minecraft.server.level.ServerPlayer
 import net.minecraft.world.entity.player.Player
 import org.jetbrains.annotations.ApiStatus.Internal
 import kotlin.reflect.KClass
 
-// todo get neoforge networking hooked up
+@Suppress("unused")
 object NetworkManager {
     fun interface S2CReceiver<T: Any>{
         fun receive(payload: T)

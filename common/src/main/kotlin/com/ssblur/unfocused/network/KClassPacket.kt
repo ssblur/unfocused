@@ -1,13 +1,13 @@
 package com.ssblur.unfocused.network
 
 import com.google.gson.Gson
-import com.google.gson.reflect.TypeToken
 import net.minecraft.network.RegistryFriendlyByteBuf
 import net.minecraft.network.codec.StreamCodec
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload
 import net.minecraft.resources.ResourceLocation
 import kotlin.reflect.KClass
 
+@Suppress("unused")
 class KClassPacket<T: Any>(val location: ResourceLocation, val type: KClass<T>, val value: Any): CustomPacketPayload {
     init {
         types[location] = type
