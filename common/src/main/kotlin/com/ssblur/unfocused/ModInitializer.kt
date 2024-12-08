@@ -1,8 +1,12 @@
 package com.ssblur.unfocused
 
 import com.ssblur.unfocused.registry.RegistryTypes
+import net.minecraft.core.Registry
 import net.minecraft.core.component.DataComponentType
+import net.minecraft.core.registries.Registries
+import net.minecraft.resources.ResourceKey
 import net.minecraft.resources.ResourceLocation
+import net.minecraft.tags.TagKey
 import net.minecraft.world.effect.MobEffect
 import net.minecraft.world.entity.EntityType
 import net.minecraft.world.item.BlockItem
@@ -61,4 +65,11 @@ open class ModInitializer(val id: String) {
     }
 
     fun location(path: String) = ResourceLocation.fromNamespaceAndPath(id, path)
+
+    fun <T> registerTag(registry: ResourceKey<Registry<T>>, path: ResourceLocation) = TagKey.create(registry, path)
+    fun <T> registerTag(registry: ResourceKey<Registry<T>>, path: String) = registerTag(registry, location(path))
+    fun registerItemTag(path: ResourceLocation) = registerTag(Registries.ITEM, path)
+    fun registerItemTag(path: String) = registerItemTag(location(path))
+    fun registerBlockTag(path: ResourceLocation) = registerTag(Registries.BLOCK, path)
+    fun registerBlockTag(path: String) = registerBlockTag(location(path))
 }

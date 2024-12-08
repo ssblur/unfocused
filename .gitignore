@@ -21,4 +21,7 @@ classes/
 .env
 .env.ps1
 
+publish.bat
+publish.bat
+
 *~
