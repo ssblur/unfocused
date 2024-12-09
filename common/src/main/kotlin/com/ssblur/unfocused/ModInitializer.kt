@@ -1,5 +1,6 @@
 package com.ssblur.unfocused
 
+import com.ssblur.unfocused.registry.RegistrySupplier
 import com.ssblur.unfocused.registry.RegistryTypes
 import net.minecraft.core.Registry
 import net.minecraft.core.component.DataComponentType
@@ -26,25 +27,25 @@ open class ModInitializer(val id: String) {
     val ENTITIES = RegistryTypes.ENTITIES.create(id)
     val FEATURES = RegistryTypes.FEATURES.create(id)
 
-    fun registerBlock(id: String, supplier: Supplier<Block>): Supplier<Block> {
+    fun registerBlock(id: String, supplier: Supplier<Block>): RegistrySupplier<Block> {
         return BLOCKS.register(id, supplier)
     }
 
-    fun registerBlockWithItem(id: String, supplier: Supplier<Block>): Pair<Supplier<Block>, Supplier<Item>> {
+    fun registerBlockWithItem(id: String, supplier: Supplier<Block>): Pair<RegistrySupplier<Block>, RegistrySupplier<Item>> {
         val block = BLOCKS.register(id, supplier)
         val item = ITEMS.register(id) { BlockItem(block.get(), Item.Properties()) }
         return Pair(block, item)
     }
 
-    fun registerItem(id: String, supplier: Supplier<Item>): Supplier<Item> {
+    fun registerItem(id: String, supplier: Supplier<Item>): RegistrySupplier<Item> {
         return ITEMS.register(id, supplier)
     }
 
-    fun registerEffect(id: String, supplier: Supplier<MobEffect>): Supplier<MobEffect> {
+    fun registerEffect(id: String, supplier: Supplier<MobEffect>): RegistrySupplier<MobEffect> {
         return EFFECTS.register(id, supplier)
     }
 
-    fun registerBlockEntity(id: String, supplier: Supplier<BlockEntityType<*>>): Supplier<BlockEntityType<*>> {
+    fun registerBlockEntity(id: String, supplier: Supplier<BlockEntityType<*>>): RegistrySupplier<BlockEntityType<*>> {
         return BLOCK_ENTITIES.register(id, supplier)
     }
 
@@ -56,11 +57,11 @@ open class ModInitializer(val id: String) {
         return componentType
     }
 
-    fun registerEntity(id: String, supplier: Supplier<EntityType<*>>): Supplier<EntityType<*>> {
+    fun registerEntity(id: String, supplier: Supplier<EntityType<*>>): RegistrySupplier<EntityType<*>> {
         return ENTITIES.register(id, supplier)
     }
 
-    fun registerFeature(id: String, supplier: Supplier<Feature<*>>): Supplier<Feature<*>> {
+    fun registerFeature(id: String, supplier: Supplier<Feature<*>>): RegistrySupplier<Feature<*>> {
         return FEATURES.register(id, supplier)
     }
 

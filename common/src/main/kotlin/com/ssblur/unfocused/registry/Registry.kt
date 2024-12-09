@@ -16,7 +16,7 @@ class Registry<A>(val id: String) {
     val entries: ArrayList<RegistryEntry<A>> = arrayListOf()
     val subscribers: ArrayList<Subscriber<A>> = arrayListOf()
 
-    fun register(id: String, supplier: Supplier<A>): Supplier<A> {
+    fun register(id: String, supplier: Supplier<A>): RegistrySupplier<A> {
         val registrySupplier = RegistrySupplier(supplier)
         entries += RegistryEntry(id, registrySupplier)
         subscribers.forEach { it.onRegistered(ResourceLocation.fromNamespaceAndPath(this.id, id), registrySupplier) }
