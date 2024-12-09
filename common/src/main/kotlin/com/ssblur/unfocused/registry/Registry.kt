@@ -8,15 +8,7 @@ class Registry<A>(val id: String) {
     fun interface Subscriber<T> {
         fun onRegistered(location: ResourceLocation, supplier: Supplier<T>)
     }
-    class RegistrySupplier<T>(val supplier: Supplier<T>): Supplier<T> {
-        var value: T? = null
-        override fun get(): T {
-            if(value == null)
-                value = supplier.get()
-            return value!!
-        }
 
-    }
     class RegistryEntry<T>(val id: String, val supplier: Supplier<T>) {
         var registered = false
     }
