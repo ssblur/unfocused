@@ -4,12 +4,11 @@ import net.minecraft.world.effect.MobEffect
 import net.minecraft.world.effect.MobEffectCategory
 import net.minecraft.world.entity.LivingEntity
 
-fun interface EffectApplicator{
-    fun apply(livingEntity: LivingEntity)
-}
-
 @Suppress("unused")
 class Effect(mobEffectCategory: MobEffectCategory, color: Int): MobEffect(mobEffectCategory, color) {
+    fun interface EffectApplicator{
+        fun apply(livingEntity: LivingEntity)
+    }
     var function: EffectApplicator? = null
 
     constructor(mobEffectCategory: MobEffectCategory = MobEffectCategory.NEUTRAL, color: Int = 0x0, function: EffectApplicator): this(mobEffectCategory, color) {

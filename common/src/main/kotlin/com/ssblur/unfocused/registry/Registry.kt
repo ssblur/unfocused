@@ -1,10 +1,12 @@
 package com.ssblur.unfocused.registry
 
+import net.minecraft.core.Registry
+import net.minecraft.resources.ResourceKey
 import net.minecraft.resources.ResourceLocation
 import java.util.function.Supplier
 
 
-class Registry<A>(val id: String) {
+class Registry<A>(val id: String, val key: ResourceKey<Registry<A>>) {
     fun interface Subscriber<T> {
         fun onRegistered(location: ResourceLocation, supplier: Supplier<T>)
     }
@@ -17,7 +19,7 @@ class Registry<A>(val id: String) {
     val subscribers: ArrayList<Subscriber<A>> = arrayListOf()
 
     fun register(id: String, supplier: Supplier<A>): RegistrySupplier<A> {
-        val registrySupplier = RegistrySupplier(supplier)
+        val registrySupplier = RegistrySupplier(supplier, ResourceLocation.fromNamespaceAndPath(this.id, id), key)
         entries += RegistryEntry(id, registrySupplier)
         subscribers.forEach { it.onRegistered(ResourceLocation.fromNamespaceAndPath(this.id, id), registrySupplier) }
         return registrySupplier

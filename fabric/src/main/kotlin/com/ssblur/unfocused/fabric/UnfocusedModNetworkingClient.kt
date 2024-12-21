@@ -17,8 +17,8 @@ object UnfocusedModNetworkingClient {
 
                 ClientPlayNetworking.registerGlobalReceiver(id) { payload, context ->
                     NetworkManager.s2cTypes.forEach {
-                        if(it.location.equals(type.location))
-                            (it.receiver as NetworkManager.S2CReceiver<Any>).receive(payload)
+                        if(it.location == type.location)
+                            (it.receiver as NetworkManager.S2CReceiver<Any>).receive(payload.value)
                     }
                 }
             },
