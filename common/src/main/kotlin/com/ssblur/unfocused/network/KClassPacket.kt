@@ -29,11 +29,10 @@ class KClassPacket<T: Any>(val location: ResourceLocation, type: KClass<T>, val 
         fun <T: Any> codec(location: ResourceLocation, type: KClass<T>): StreamCodec<RegistryFriendlyByteBuf, KClassPacket<*>> {
             return StreamCodec.of(
                 { buffer, payload ->
-                    buffer.writeBytes(Cbor.encodeToByteArray(payload.value))
+                    buffer.writeBytes(Cbor.encodeToByteArray(payload))
                 },
                 { buffer ->
-                    val value = Cbor.decodeFromByteArray(buffer.readByteArray()) as KClassPacket<*>
-                    KClassPacket(location, type, value)
+                    Cbor.decodeFromByteArray(buffer.readByteArray()) as KClassPacket<*>
                 }
             )
         }
