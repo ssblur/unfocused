@@ -1,6 +1,7 @@
 package com.ssblur.unfocused.network
 
 import kotlinx.serialization.ExperimentalSerializationApi
+import kotlinx.serialization.Serializable
 import kotlinx.serialization.cbor.Cbor
 import kotlinx.serialization.decodeFromByteArray
 import kotlinx.serialization.encodeToByteArray
@@ -11,6 +12,7 @@ import net.minecraft.resources.ResourceLocation
 import kotlin.reflect.KClass
 
 @Suppress("unused")
+@Serializable
 class KClassPacket<T: Any>(val location: ResourceLocation, type: KClass<T>, val value: Any): CustomPacketPayload {
     init {
         types[location] = type
