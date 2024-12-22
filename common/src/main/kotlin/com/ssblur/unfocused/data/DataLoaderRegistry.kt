@@ -13,9 +13,9 @@ object DataLoaderRegistry {
         event.register(subscriber)
     }
 
-    fun ModInitializer.registerDataLoader(path: String, type: KClass<Any>, dataLoader: DataLoader<Any>) {
+    fun <T: Any> ModInitializer.registerDataLoader(path: String, type: KClass<T>, dataLoader: DataLoader<T>) {
         val entry = DataLoaderEntry(path, type, dataLoader, this)
-        event.callback(entry)
+        event.callback(entry as DataLoaderEntry<in Any>)
     }
 
     fun <T: Any> ModInitializer.registerSimpleDataLoader(path: String, type: KClass<T>): MutableMap<ResourceLocation, T> {
