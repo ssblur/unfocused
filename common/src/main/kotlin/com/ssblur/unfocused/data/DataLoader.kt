@@ -3,6 +3,6 @@ package com.ssblur.unfocused.data
 import net.minecraft.resources.ResourceLocation
 
 @Suppress("unused")
-interface DataLoader<T> {
+fun interface DataLoader<in T> {
     fun load(resource: T, location: ResourceLocation)
 }

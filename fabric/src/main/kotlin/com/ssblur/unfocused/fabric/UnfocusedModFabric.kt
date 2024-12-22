@@ -1,6 +1,7 @@
 package com.ssblur.unfocused.fabric
 
 import com.ssblur.unfocused.Unfocused
+import com.ssblur.unfocused.fabric.events.UnfocusedModData
 import com.ssblur.unfocused.registry.RegistryTypes
 import net.fabricmc.api.ModInitializer
 import net.minecraft.core.Registry
@@ -34,5 +35,6 @@ class UnfocusedModFabric: ModInitializer {
         }
 
         UnfocusedModNetworking.init()
+        UnfocusedModData.init()
     }
 }

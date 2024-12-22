@@ -1,4 +1,4 @@
-package com.ssblur.unfocused.neoforge
+package com.ssblur.unfocused.neoforge.events
 
 import com.ssblur.unfocused.network.KClassPacket
 import com.ssblur.unfocused.network.NetworkManager

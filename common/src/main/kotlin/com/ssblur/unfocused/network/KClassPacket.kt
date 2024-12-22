@@ -1,18 +1,15 @@
 package com.ssblur.unfocused.network
 
-import kotlinx.serialization.ExperimentalSerializationApi
-import kotlinx.serialization.Serializable
-import kotlinx.serialization.cbor.Cbor
-import kotlinx.serialization.decodeFromByteArray
-import kotlinx.serialization.encodeToByteArray
+import com.google.gson.GsonBuilder
+import com.google.gson.ToNumberPolicy
 import net.minecraft.network.RegistryFriendlyByteBuf
 import net.minecraft.network.codec.StreamCodec
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload
 import net.minecraft.resources.ResourceLocation
 import kotlin.reflect.KClass
+import kotlin.reflect.full.declaredMemberProperties
 
 @Suppress("unused")
-@Serializable
 class KClassPacket<T: Any>(val location: ResourceLocation, type: KClass<T>, val value: Any): CustomPacketPayload {
     init {
         types[location] = type
@@ -25,14 +22,24 @@ class KClassPacket<T: Any>(val location: ResourceLocation, type: KClass<T>, val 
     companion object {
         val types: HashMap<ResourceLocation, KClass<*>> = hashMapOf()
 
-        @OptIn(ExperimentalSerializationApi::class)
         fun <T: Any> codec(location: ResourceLocation, type: KClass<T>): StreamCodec<RegistryFriendlyByteBuf, KClassPacket<*>> {
+            val gson = GsonBuilder() // While I'm using Gson I might as well trim it down a bit
+                .setFieldNamingStrategy {
+                    if(type.declaredMemberProperties.indexOfFirst { f -> f.name == it.name } >= 0)
+                        type.declaredMemberProperties.indexOfFirst { f -> f.name == it.name }.toString()
+                        else it.name
+                }
+                .disableHtmlEscaping()
+                .setNumberToNumberStrategy(ToNumberPolicy.LONG_OR_DOUBLE)
+                .create()
             return StreamCodec.of(
                 { buffer, payload ->
-                    buffer.writeBytes(Cbor.encodeToByteArray(payload))
+                    buffer.writeUtf(gson.toJson(payload.value, type.javaObjectType).drop(1).dropLast(1))
                 },
                 { buffer ->
-                    Cbor.decodeFromByteArray(buffer.readByteArray()) as KClassPacket<*>
+                    val input = buffer.readUtf()
+                    val value: T = gson.fromJson("{$input}", type.javaObjectType)
+                    KClassPacket(location, type, value)
                 }
             )
         }
