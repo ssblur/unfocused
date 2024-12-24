@@ -2,9 +2,12 @@ package com.ssblur.unfocused.neoforge.events
 
 import com.ssblur.unfocused.event.common.EntityDamagedEvent
 import com.ssblur.unfocused.event.common.PlayerChatEvent
+import com.ssblur.unfocused.event.common.PlayerJoinedEvent
+import net.minecraft.server.level.ServerPlayer
 import net.neoforged.neoforge.common.NeoForge
 import net.neoforged.neoforge.event.ServerChatEvent
 import net.neoforged.neoforge.event.entity.living.LivingDamageEvent
+import net.neoforged.neoforge.event.entity.player.PlayerEvent.PlayerLoggedInEvent
 
 
 object UnfocusedModEvents {
@@ -23,10 +26,14 @@ object UnfocusedModEvents {
         PlayerChatEvent.After.callback(PlayerChatEvent.PlayerChatMessage(event.player, event.message, PlayerChatEvent.After))
     }
 
+    fun playerJoinedEvent(event: PlayerLoggedInEvent) {
+        if(!event.entity.level().isClientSide) PlayerJoinedEvent.callback(event.entity as ServerPlayer)
+    }
 
     fun register() {
         NeoForge.EVENT_BUS.addListener(::livingDamageEventBefore)
         NeoForge.EVENT_BUS.addListener(::livingDamageEventAfter)
         NeoForge.EVENT_BUS.addListener(::chatEvent)
+        NeoForge.EVENT_BUS.addListener(::playerJoinedEvent)
     }
 }
