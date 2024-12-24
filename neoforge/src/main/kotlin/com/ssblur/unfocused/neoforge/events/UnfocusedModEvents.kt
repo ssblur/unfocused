@@ -3,6 +3,7 @@ package com.ssblur.unfocused.neoforge.events
 import com.ssblur.unfocused.event.common.EntityDamagedEvent
 import com.ssblur.unfocused.event.common.PlayerChatEvent
 import com.ssblur.unfocused.event.common.PlayerJoinedEvent
+import com.ssblur.unfocused.event.common.PlayerTickEvent
 import net.minecraft.server.level.ServerPlayer
 import net.neoforged.neoforge.common.NeoForge
 import net.neoforged.neoforge.event.ServerChatEvent
@@ -15,10 +16,8 @@ object UnfocusedModEvents {
         EntityDamagedEvent.Before.callback(EntityDamagedEvent.EntityDamage(event.entity, event.source, event.originalDamage, EntityDamagedEvent.Before))
         if(EntityDamagedEvent.Before.isCancelled()) event.newDamage = EntityDamagedEvent.Before.value!!
     }
-
-    fun livingDamageEventAfter(event: LivingDamageEvent.Post) {
+    fun livingDamageEventAfter(event: LivingDamageEvent.Post) =
         EntityDamagedEvent.After.callback(EntityDamagedEvent.EntityDamage(event.entity, event.source, event.originalDamage, EntityDamagedEvent.After))
-    }
 
     fun chatEvent(event: ServerChatEvent) {
         PlayerChatEvent.Before.callback(PlayerChatEvent.PlayerChatMessage(event.player, event.message, PlayerChatEvent.Before))
@@ -30,10 +29,21 @@ object UnfocusedModEvents {
         if(!event.entity.level().isClientSide) PlayerJoinedEvent.callback(event.entity as ServerPlayer)
     }
 
+    fun playerTickEventBefore(event: net.neoforged.neoforge.event.tick.PlayerTickEvent.Pre) {
+        if(event.entity is ServerPlayer)
+            PlayerTickEvent.Before.callback(event.entity as ServerPlayer)
+    }
+    fun playerTickEventAfter(event: net.neoforged.neoforge.event.tick.PlayerTickEvent.Post) {
+        if(event.entity is ServerPlayer)
+            PlayerTickEvent.After.callback(event.entity as ServerPlayer)
+    }
+
     fun register() {
         NeoForge.EVENT_BUS.addListener(::livingDamageEventBefore)
         NeoForge.EVENT_BUS.addListener(::livingDamageEventAfter)
         NeoForge.EVENT_BUS.addListener(::chatEvent)
         NeoForge.EVENT_BUS.addListener(::playerJoinedEvent)
+        NeoForge.EVENT_BUS.addListener(::playerTickEventBefore)
+        NeoForge.EVENT_BUS.addListener(::playerTickEventAfter)
     }
 }

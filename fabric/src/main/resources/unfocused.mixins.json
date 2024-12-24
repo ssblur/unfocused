@@ -8,7 +8,8 @@
   ],
   "mixins": [
     "LivingEntityMixin",
-    "PlayerListMixin"
+    "PlayerListMixin",
+    "PlayerMixin"
   ],
   "injectors": {
     "defaultRequire": 1
