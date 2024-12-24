@@ -1,14 +1,12 @@
 package com.ssblur.unfocused.neoforge.events
 
-import com.ssblur.unfocused.event.common.EntityDamagedEvent
-import com.ssblur.unfocused.event.common.PlayerChatEvent
-import com.ssblur.unfocused.event.common.PlayerJoinedEvent
-import com.ssblur.unfocused.event.common.PlayerTickEvent
+import com.ssblur.unfocused.event.common.*
 import net.minecraft.server.level.ServerPlayer
 import net.neoforged.neoforge.common.NeoForge
 import net.neoforged.neoforge.event.ServerChatEvent
 import net.neoforged.neoforge.event.entity.living.LivingDamageEvent
 import net.neoforged.neoforge.event.entity.player.PlayerEvent.PlayerLoggedInEvent
+import net.neoforged.neoforge.event.server.ServerStartedEvent
 
 
 object UnfocusedModEvents {
@@ -38,6 +36,10 @@ object UnfocusedModEvents {
             PlayerTickEvent.After.callback(event.entity as ServerPlayer)
     }
 
+    fun serverLifecycleEvent(event: ServerStartedEvent) {
+        ServerStartEvent.callback(event.server)
+    }
+
     fun register() {
         NeoForge.EVENT_BUS.addListener(::livingDamageEventBefore)
         NeoForge.EVENT_BUS.addListener(::livingDamageEventAfter)
@@ -45,5 +47,6 @@ object UnfocusedModEvents {
         NeoForge.EVENT_BUS.addListener(::playerJoinedEvent)
         NeoForge.EVENT_BUS.addListener(::playerTickEventBefore)
         NeoForge.EVENT_BUS.addListener(::playerTickEventAfter)
+        NeoForge.EVENT_BUS.addListener(::serverLifecycleEvent)
     }
 }
