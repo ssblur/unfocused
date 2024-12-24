@@ -1,9 +1,11 @@
 package com.ssblur.unfocused.fabric
 
 import com.ssblur.unfocused.Unfocused
+import com.ssblur.unfocused.event.common.PlayerChatEvent
 import com.ssblur.unfocused.fabric.events.UnfocusedModData
 import com.ssblur.unfocused.registry.RegistryTypes
 import net.fabricmc.api.ModInitializer
+import net.fabricmc.fabric.api.message.v1.ServerMessageEvents
 import net.minecraft.core.Registry
 import net.minecraft.core.registries.BuiltInRegistries
 
@@ -32,6 +34,14 @@ class UnfocusedModFabric: ModInitializer {
         }
         RegistryTypes.FEATURES.subscribe { location, supplier ->
             Registry.register(BuiltInRegistries.FEATURE, location, supplier.get())
+        }
+
+        ServerMessageEvents.ALLOW_CHAT_MESSAGE.register{ message, sender, params ->
+            PlayerChatEvent.Before.callback(PlayerChatEvent.PlayerChatMessage(sender, message.decoratedContent(), PlayerChatEvent.Before))
+            !PlayerChatEvent.Before.isCancelled()
+        }
+        ServerMessageEvents.CHAT_MESSAGE.register{ message, sender, params ->
+            PlayerChatEvent.After.callback(PlayerChatEvent.PlayerChatMessage(sender, message.decoratedContent(), PlayerChatEvent.After))
         }
 
         UnfocusedModNetworking.init()
