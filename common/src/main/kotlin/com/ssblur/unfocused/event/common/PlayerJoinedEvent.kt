@@ -1,10 +1,10 @@
-package com.ssblur.unfocused.event.server
+package com.ssblur.unfocused.event.common
 
-import com.ssblur.unfocused.event.Event
+import com.ssblur.unfocused.event.SimpleEvent
 import net.minecraft.server.level.ServerPlayer
 
 @Suppress("unused")
-class PlayerJoinedEvent: Event<ServerPlayer>(false) {
+class PlayerJoinedEvent: SimpleEvent<ServerPlayer>(false) {
     companion object {
         val Before = PlayerJoinedEvent()
         val After = PlayerJoinedEvent()

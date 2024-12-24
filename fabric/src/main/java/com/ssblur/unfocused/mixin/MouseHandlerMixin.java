@@ -16,7 +16,7 @@ public class MouseHandlerMixin {
     at = @At("HEAD"),
     cancellable = true
   )
-  public void onMouseScrolled(
+  public void unfocused$onScroll(
     long handle,
     double x,
     double y,

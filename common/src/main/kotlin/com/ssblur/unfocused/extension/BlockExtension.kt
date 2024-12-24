@@ -1,12 +1,13 @@
 package com.ssblur.unfocused.extension
 
 import com.ssblur.unfocused.event.Event
+import com.ssblur.unfocused.event.SimpleEvent
 import net.minecraft.client.renderer.RenderType
 import net.minecraft.world.level.block.Block
 
 @Suppress("unused")
 object BlockExtension {
-    val event = Event<Pair<Block, RenderType>>(true)
+    val event = SimpleEvent<Pair<Block, RenderType>>(true)
     fun register(subscriber: Event.Listener<Pair<Block, RenderType>>) {
         event.register(subscriber)
     }
