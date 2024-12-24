@@ -8,6 +8,7 @@ import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload
 import net.minecraft.server.level.ServerPlayer
 
+@Suppress("UNCHECKED_CAST")
 object UnfocusedModNetworkingClient {
     fun init() {
         NetworkManager.subscribeToS2CRegistration(
