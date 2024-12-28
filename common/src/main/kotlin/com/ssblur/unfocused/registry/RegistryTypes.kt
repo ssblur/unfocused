@@ -7,6 +7,8 @@ import net.minecraft.resources.ResourceKey
 import net.minecraft.world.effect.MobEffect
 import net.minecraft.world.entity.EntityType
 import net.minecraft.world.item.Item
+import net.minecraft.world.item.crafting.Recipe
+import net.minecraft.world.item.crafting.RecipeType
 import net.minecraft.world.level.block.Block
 import net.minecraft.world.level.block.entity.BlockEntityType
 import net.minecraft.world.level.levelgen.feature.Feature
@@ -36,4 +38,6 @@ object RegistryTypes {
     val DATA_COMPONENTS: RegistryType<DataComponentType<*>> = RegistryType(Registries.DATA_COMPONENT_TYPE)
     val ENTITIES: RegistryType<EntityType<*>> = RegistryType(Registries.ENTITY_TYPE)
     val FEATURES: RegistryType<Feature<*>> = RegistryType(Registries.FEATURE)
+    val RECIPE_TYPES: RegistryType<RecipeType<*>> = RegistryType(Registries.RECIPE_TYPE)
+    val RECIPES: RegistryType<Recipe<*>> = RegistryType(Registries.RECIPE)
 }

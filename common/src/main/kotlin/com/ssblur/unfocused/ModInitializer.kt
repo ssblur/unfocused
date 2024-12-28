@@ -12,12 +12,15 @@ import net.minecraft.world.effect.MobEffect
 import net.minecraft.world.entity.EntityType
 import net.minecraft.world.item.BlockItem
 import net.minecraft.world.item.Item
+import net.minecraft.world.item.crafting.Recipe
+import net.minecraft.world.item.crafting.RecipeType
 import net.minecraft.world.level.block.Block
 import net.minecraft.world.level.block.entity.BlockEntityType
 import net.minecraft.world.level.levelgen.feature.Feature
 import java.util.function.Consumer
 import java.util.function.Supplier
 
+@Suppress("unused")
 open class ModInitializer(val id: String) {
     var BLOCKS = RegistryTypes.BLOCK.create(id)
     var ITEMS = RegistryTypes.ITEM.create(id)
@@ -26,6 +29,8 @@ open class ModInitializer(val id: String) {
     val DATA_COMPONENTS = RegistryTypes.DATA_COMPONENTS.create(id)
     val ENTITIES = RegistryTypes.ENTITIES.create(id)
     val FEATURES = RegistryTypes.FEATURES.create(id)
+    val RECIPES = RegistryTypes.RECIPES.create(id)
+    val RECIPE_TYPES = RegistryTypes.RECIPE_TYPES.create(id)
 
     fun registerBlock(id: String, supplier: Supplier<Block>): RegistrySupplier<Block> {
         return BLOCKS.register(id, supplier)
@@ -63,6 +68,14 @@ open class ModInitializer(val id: String) {
 
     fun registerFeature(id: String, supplier: Supplier<Feature<*>>): RegistrySupplier<Feature<*>> {
         return FEATURES.register(id, supplier)
+    }
+
+    fun registerRecipe(id: String, supplier: Supplier<Recipe<*>>): RegistrySupplier<Recipe<*>> {
+        return RECIPES.register(id, supplier)
+    }
+
+    fun registerRecipeType(id: String, supplier: Supplier<RecipeType<*>>): RegistrySupplier<RecipeType<*>> {
+        return RECIPE_TYPES.register(id, supplier)
     }
 
     fun location(path: String) = ResourceLocation.fromNamespaceAndPath(id, path)
