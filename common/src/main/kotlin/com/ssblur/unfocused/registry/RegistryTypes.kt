@@ -15,8 +15,8 @@ import net.minecraft.world.level.levelgen.feature.Feature
 
 object RegistryTypes {
     open class RegistryType<T>(val key: ResourceKey<net.minecraft.core.Registry<T>>) {
-        val registries: ArrayList<Registry<T>> = arrayListOf()
-        val subscribers: ArrayList<Subscriber<T>> = arrayListOf()
+        private val registries: ArrayList<Registry<T>> = arrayListOf()
+        private val subscribers: ArrayList<Subscriber<T>> = arrayListOf()
 
         fun create(id: String): Registry<T> {
             val registry: Registry<T> = Registry(id, key)
