@@ -9,6 +9,7 @@ import net.minecraft.resources.ResourceKey
 import net.minecraft.resources.ResourceLocation
 import net.minecraft.tags.TagKey
 import net.minecraft.world.effect.MobEffect
+import net.minecraft.world.entity.Entity
 import net.minecraft.world.entity.EntityType
 import net.minecraft.world.item.BlockItem
 import net.minecraft.world.item.Item
@@ -63,8 +64,8 @@ open class ModInitializer(val id: String) {
         return componentType
     }
 
-    fun registerEntity(id: String, supplier: Supplier<EntityType<*>>): RegistrySupplier<EntityType<*>> {
-        return ENTITIES.register(id, supplier)
+    fun <T: Entity> registerEntity(id: String, supplier: Supplier<EntityType<T>>): RegistrySupplier<EntityType<T>> {
+        return ENTITIES.register(id, supplier as Supplier<EntityType<*>>) as RegistrySupplier<EntityType<T>>
     }
 
     fun registerFeature(id: String, supplier: Supplier<Feature<*>>): RegistrySupplier<Feature<*>> {
