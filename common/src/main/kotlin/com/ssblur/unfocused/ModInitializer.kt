@@ -64,7 +64,7 @@ open class ModInitializer(val id: String) {
         return componentType
     }
 
-    fun <T: Entity> registerEntity(id: String, supplier: Supplier<EntityType<T>>): RegistrySupplier<EntityType<T>> {
+    fun <T: Entity> registerEntity(id: String, supplier: Supplier<EntityType<T?>>): RegistrySupplier<EntityType<T>> {
         return ENTITIES.register(id, supplier as Supplier<EntityType<*>>) as RegistrySupplier<EntityType<T>>
     }
 
