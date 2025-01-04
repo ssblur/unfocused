@@ -15,6 +15,7 @@ import net.minecraft.world.item.Item
 import net.minecraft.world.item.crafting.Recipe
 import net.minecraft.world.item.crafting.RecipeType
 import net.minecraft.world.level.block.Block
+import net.minecraft.world.level.block.entity.BlockEntity
 import net.minecraft.world.level.block.entity.BlockEntityType
 import net.minecraft.world.level.levelgen.feature.Feature
 import java.util.function.Consumer
@@ -50,8 +51,8 @@ open class ModInitializer(val id: String) {
         return EFFECTS.register(id, supplier)
     }
 
-    fun registerBlockEntity(id: String, supplier: Supplier<BlockEntityType<*>>): RegistrySupplier<BlockEntityType<*>> {
-        return BLOCK_ENTITIES.register(id, supplier)
+    fun <T: BlockEntity> registerBlockEntity(id: String, supplier: Supplier<BlockEntityType<T>>): RegistrySupplier<BlockEntityType<T>> {
+        return BLOCK_ENTITIES.register(id, supplier as Supplier<BlockEntityType<*>>) as RegistrySupplier<BlockEntityType<T>>
     }
 
     fun <T> registerDataComponent(id: String, consumer: Consumer<DataComponentType.Builder<T>>): DataComponentType<T>{
