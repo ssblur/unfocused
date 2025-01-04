@@ -1,6 +1,7 @@
 package com.ssblur.unfocused.fabric
 
 import com.ssblur.unfocused.Unfocused
+import com.ssblur.unfocused.entity.EntityAttributes
 import com.ssblur.unfocused.event.common.PlayerChatEvent
 import com.ssblur.unfocused.event.common.ServerStartEvent
 import com.ssblur.unfocused.fabric.events.UnfocusedModData
@@ -8,6 +9,7 @@ import com.ssblur.unfocused.registry.RegistryTypes
 import net.fabricmc.api.ModInitializer
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents
 import net.fabricmc.fabric.api.message.v1.ServerMessageEvents
+import net.fabricmc.fabric.api.`object`.builder.v1.entity.FabricDefaultAttributeRegistry
 import net.minecraft.core.Registry
 import net.minecraft.core.registries.BuiltInRegistries
 
@@ -48,6 +50,10 @@ class UnfocusedModFabric: ModInitializer {
 
         ServerLifecycleEvents.SERVER_STARTED.register{
             ServerStartEvent.callback(it)
+        }
+
+        EntityAttributes.register{ (type, builder) ->
+            FabricDefaultAttributeRegistry.register(type, builder)
         }
 
         UnfocusedModNetworking.init()

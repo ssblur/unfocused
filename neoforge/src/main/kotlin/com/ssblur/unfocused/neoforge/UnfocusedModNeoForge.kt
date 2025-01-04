@@ -16,7 +16,7 @@ class UnfocusedModNeoForge(bus: IEventBus) {
         Unfocused.isNeoForge = true
 
         NeoForge.EVENT_BUS.addListener(UnfocusedModData::event)
-        UnfocusedModEvents.register()
+        UnfocusedModEvents.register(bus)
 
         ProxyRegistry(Registries.BLOCK, RegistryTypes.BLOCK).register(bus)
         ProxyRegistry(Registries.ITEM, RegistryTypes.ITEM).register(bus)

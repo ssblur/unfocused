@@ -6,6 +6,7 @@ import com.ssblur.unfocused.rendering.BlockEntityRendering
 import net.minecraft.client.Minecraft
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider
 import net.minecraft.world.level.block.entity.BlockEntity
+import net.neoforged.bus.api.IEventBus
 import net.neoforged.neoforge.client.event.ClientTickEvent
 import net.neoforged.neoforge.client.event.EntityRenderersEvent
 import net.neoforged.neoforge.client.event.InputEvent
@@ -20,17 +21,18 @@ object UnfocusedModClientEvents {
         MouseScrollEvent.callback(MouseScrollEvent.KeyPress(Minecraft.getInstance(), Vector2d(event.scrollDeltaX, event.scrollDeltaY), MouseScrollEvent))
         if(MouseScrollEvent.isCancelled()) event.isCanceled = true
     }
-    fun registerEntityRendererEvent(event: EntityRenderersEvent.RegisterRenderers) {
 
+    fun registerEntityRendererEvent(event: EntityRenderersEvent.RegisterRenderers) {
         BlockEntityRendering.register{ pair ->
             event.registerBlockEntityRenderer<BlockEntity>(pair.type, pair.renderer as BlockEntityRendererProvider<BlockEntity>)
         }
     }
 
-    fun register() {
+    fun register(bus: IEventBus) {
         NeoForge.EVENT_BUS.addListener(::clientTickEventAfter)
         NeoForge.EVENT_BUS.addListener(::clientTickEventBefore)
         NeoForge.EVENT_BUS.addListener(::clientScrollEvent)
-        NeoForge.EVENT_BUS.addListener(::registerEntityRendererEvent)
+
+        bus.addListener(::registerEntityRendererEvent)
     }
 }
