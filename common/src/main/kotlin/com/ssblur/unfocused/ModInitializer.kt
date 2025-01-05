@@ -3,7 +3,6 @@ package com.ssblur.unfocused
 import com.ssblur.unfocused.registry.RegistrySupplier
 import com.ssblur.unfocused.registry.RegistryTypes
 import net.minecraft.advancements.CriterionTrigger
-import net.minecraft.advancements.CriterionTriggerInstance
 import net.minecraft.core.Registry
 import net.minecraft.core.component.DataComponentType
 import net.minecraft.core.registries.Registries
@@ -99,8 +98,8 @@ open class ModInitializer(val id: String) {
         return LOOT_CONDITION_TYPES.register(id, supplier)
     }
 
-    fun <T : CriterionTriggerInstance> registerTrigger(id: String, supplier: Supplier<CriterionTrigger<T>>): RegistrySupplier<CriterionTrigger<*>> {
-        return TRIGGER_TYPES.register(id, supplier as Supplier<CriterionTrigger<*>>)
+    fun <T : CriterionTrigger<*>> registerTrigger(id: String, supplier: Supplier<T>): RegistrySupplier<T> {
+        return TRIGGER_TYPES.register(id, supplier as Supplier<CriterionTrigger<*>>) as RegistrySupplier<T>
     }
 
     fun <T: Recipe<*>> registerRecipeSerializer(id: String, supplier: Supplier<RecipeSerializer<T>>): RegistrySupplier<RecipeSerializer<T>> {
