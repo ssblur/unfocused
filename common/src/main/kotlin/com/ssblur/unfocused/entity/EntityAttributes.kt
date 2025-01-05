@@ -7,8 +7,9 @@ import net.minecraft.world.entity.EntityType
 import net.minecraft.world.entity.LivingEntity
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier
 
-object EntityAttributes: SimpleEvent<Pair<RegistrySupplier<EntityType<out LivingEntity>>, AttributeSupplier.Builder>>(retroactive = true) {
-    fun ModInitializer.registerEntityAttributes(type: RegistrySupplier<EntityType<out LivingEntity>>, builder: AttributeSupplier.Builder) {
+@Suppress("unused")
+object EntityAttributes: SimpleEvent<Pair<RegistrySupplier<EntityType<in LivingEntity>>, AttributeSupplier.Builder>>(retroactive = true) {
+    fun ModInitializer.registerEntityAttributes(type: RegistrySupplier<EntityType<in LivingEntity>>, builder: AttributeSupplier.Builder) {
         EntityAttributes.callback(Pair(type, builder))
     }
 }
