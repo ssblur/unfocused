@@ -17,7 +17,6 @@ object CreativeTabs {
     private val acceptor: SimpleEvent<CreativeTabEntry> = SimpleEvent(retroactive = true)
     data class CreativeTabEntry(val id: ResourceLocation, val item: ItemLike?, val stack: ItemStack?)
     fun ModInitializer.registerCreativeTab(id: String, supplier: Supplier<CreativeModeTab>): RegistrySupplier<CreativeModeTab> {
-        println("literally registering creative tab rn")
         return CREATIVE_TABS.register(id, supplier)
     }
 
