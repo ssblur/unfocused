@@ -16,6 +16,7 @@ import net.minecraft.world.entity.EntityType
 import net.minecraft.world.item.BlockItem
 import net.minecraft.world.item.Item
 import net.minecraft.world.item.crafting.Recipe
+import net.minecraft.world.item.crafting.RecipeSerializer
 import net.minecraft.world.item.crafting.RecipeType
 import net.minecraft.world.level.block.Block
 import net.minecraft.world.level.block.entity.BlockEntity
@@ -41,6 +42,7 @@ open class ModInitializer(val id: String) {
     val LOOT_FUNCTION_TYPES = RegistryTypes.LOOT_FUNCTION_TYPES.create(id)
     val LOOT_CONDITION_TYPES = RegistryTypes.LOOT_CONDITION_TYPES.create(id)
     val TRIGGER_TYPES = RegistryTypes.TRIGGER_TYPES.create(id)
+    val RECIPE_SERIALIZERS = RegistryTypes.RECIPE_SERIALIZERS.create(id)
 
     fun registerBlock(id: String, supplier: Supplier<Block>): RegistrySupplier<Block> {
         return BLOCKS.register(id, supplier)
@@ -98,6 +100,10 @@ open class ModInitializer(val id: String) {
 
     fun <T : CriterionTriggerInstance> registerTrigger(id: String, supplier: Supplier<CriterionTrigger<T>>): RegistrySupplier<CriterionTrigger<*>> {
         return TRIGGER_TYPES.register(id, supplier as Supplier<CriterionTrigger<*>>)
+    }
+
+    fun <T: Recipe<*>> registerRecipeSerializer(id: String, supplier: Supplier<RecipeSerializer<T>>): RegistrySupplier<RecipeSerializer<T>> {
+        return RECIPE_SERIALIZERS.register(id, supplier as Supplier<RecipeSerializer<*>>) as RegistrySupplier<RecipeSerializer<T>>
     }
 
     fun location(path: String) = ResourceLocation.fromNamespaceAndPath(id, path)

@@ -28,6 +28,7 @@ class UnfocusedModNeoForge(bus: IEventBus) {
         ProxyRegistry(Registries.LOOT_CONDITION_TYPE, RegistryTypes.LOOT_CONDITION_TYPES).register(bus)
         ProxyRegistry(Registries.LOOT_FUNCTION_TYPE, RegistryTypes.LOOT_FUNCTION_TYPES).register(bus)
         ProxyRegistry(Registries.TRIGGER_TYPE, RegistryTypes.TRIGGER_TYPES).register(bus)
+        ProxyRegistry(Registries.RECIPE_SERIALIZER, RegistryTypes.RECIPE_SERIALIZERS).register(bus)
 
         Unfocused.init()
     }

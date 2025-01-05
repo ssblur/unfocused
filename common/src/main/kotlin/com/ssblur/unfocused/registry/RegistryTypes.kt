@@ -31,6 +31,7 @@ object RegistryTypes {
     val FEATURES = RegistryType(Registries.FEATURE)
     val RECIPE_TYPES = RegistryType(Registries.RECIPE_TYPE)
     val RECIPES = RegistryType(Registries.RECIPE)
+    val RECIPE_SERIALIZERS = RegistryType(Registries.RECIPE_SERIALIZER)
     val LOOT_FUNCTION_TYPES = RegistryType(Registries.LOOT_FUNCTION_TYPE)
     val LOOT_CONDITION_TYPES = RegistryType(Registries.LOOT_CONDITION_TYPE)
     val TRIGGER_TYPES = RegistryType(Registries.TRIGGER_TYPE)
