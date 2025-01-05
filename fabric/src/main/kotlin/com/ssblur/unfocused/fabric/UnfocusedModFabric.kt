@@ -12,8 +12,6 @@ import net.fabricmc.fabric.api.message.v1.ServerMessageEvents
 import net.fabricmc.fabric.api.`object`.builder.v1.entity.FabricDefaultAttributeRegistry
 import net.minecraft.core.Registry
 import net.minecraft.core.registries.BuiltInRegistries
-import net.minecraft.world.entity.EntityType
-import net.minecraft.world.entity.LivingEntity
 
 class UnfocusedModFabric: ModInitializer {
     override fun onInitialize() {
@@ -55,7 +53,7 @@ class UnfocusedModFabric: ModInitializer {
         }
 
         EntityAttributes.register{ (type, builder) ->
-            FabricDefaultAttributeRegistry.register(type.get() as EntityType<out LivingEntity>, builder)
+            FabricDefaultAttributeRegistry.register(type.get(), builder.get())
         }
 
         UnfocusedModNetworking.init()
