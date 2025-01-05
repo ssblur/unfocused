@@ -3,6 +3,8 @@ package com.ssblur.unfocused.neoforge.events
 import com.ssblur.unfocused.entity.EntityAttributes
 import com.ssblur.unfocused.event.common.*
 import net.minecraft.server.level.ServerPlayer
+import net.minecraft.world.entity.EntityType
+import net.minecraft.world.entity.LivingEntity
 import net.neoforged.bus.api.IEventBus
 import net.neoforged.neoforge.common.NeoForge
 import net.neoforged.neoforge.event.ServerChatEvent
@@ -45,7 +47,7 @@ object UnfocusedModEvents {
 
     fun attributeEvent(event: EntityAttributeCreationEvent) {
         EntityAttributes.register{ (type, builder) ->
-            event.put(type.get(), builder.build())
+            event.put(type.get() as EntityType<out LivingEntity>, builder.build())
         }
     }
 
