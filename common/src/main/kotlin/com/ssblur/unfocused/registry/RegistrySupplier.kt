@@ -9,11 +9,12 @@ import net.minecraft.resources.ResourceKey
 import net.minecraft.resources.ResourceLocation
 import net.minecraft.tags.TagKey
 import java.util.*
+import java.util.function.Consumer
 import java.util.function.Predicate
 import java.util.function.Supplier
 import kotlin.jvm.optionals.getOrNull
 
-@Suppress("unused")
+@Suppress("unused", "UNCHECKED_CAST")
 class RegistrySupplier<T>(
     val supplier: Supplier<T>,
     val location: ResourceLocation? = null,
@@ -22,6 +23,7 @@ class RegistrySupplier<T>(
     var value: T? = null
     var key: ResourceKey<T>? = null
     var tags: MutableSet<TagKey<T>> = mutableSetOf()
+    private var pending: MutableList<Consumer<T>> = mutableListOf()
 
     init {
         if(location != null && registryKey != null)
@@ -29,9 +31,19 @@ class RegistrySupplier<T>(
     }
 
     override fun get(): T {
-        if(value == null)
+        if(value == null) {
             value = supplier.get()
+            pending.forEach{ it.accept(value!!) }
+            pending = mutableListOf()
+        }
         return value!!
+    }
+
+    fun wait(consumer: Consumer<T>) {
+        if(value == null)
+            pending += consumer
+        else
+            consumer.accept(value!!)
     }
 
     fun ref() = location?.let { BuiltInRegistries.REGISTRY.get(registryKey!!.location())?.getHolder(it)?.getOrNull() } as Holder.Reference<T>

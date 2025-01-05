@@ -35,4 +35,5 @@ object RegistryTypes {
     val LOOT_FUNCTION_TYPES = RegistryType(Registries.LOOT_FUNCTION_TYPE)
     val LOOT_CONDITION_TYPES = RegistryType(Registries.LOOT_CONDITION_TYPE)
     val TRIGGER_TYPES = RegistryType(Registries.TRIGGER_TYPE)
+    val CREATIVE_TABS = RegistryType(Registries.CREATIVE_MODE_TAB)
 }

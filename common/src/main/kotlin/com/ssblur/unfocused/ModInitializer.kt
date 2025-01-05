@@ -43,6 +43,7 @@ open class ModInitializer(val id: String) {
     val LOOT_CONDITION_TYPES = RegistryTypes.LOOT_CONDITION_TYPES.create(id)
     val TRIGGER_TYPES = RegistryTypes.TRIGGER_TYPES.create(id)
     val RECIPE_SERIALIZERS = RegistryTypes.RECIPE_SERIALIZERS.create(id)
+    val CREATIVE_TABS = RegistryTypes.CREATIVE_TABS.create(id)
 
     fun registerBlock(id: String, supplier: Supplier<Block>): RegistrySupplier<Block> {
         return BLOCKS.register(id, supplier)
