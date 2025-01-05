@@ -15,7 +15,7 @@ class UnfocusedModFabricClient: ClientModInitializer {
     override fun onInitializeClient() {
         BlockExtension.register{ pair -> BlockRenderLayerMap.INSTANCE.putBlock(pair.first, pair.second) }
         BlockEntityRendering.register{ pair ->
-            BlockEntityRenderers.register<BlockEntity>(pair.type, pair.renderer as BlockEntityRendererProvider<BlockEntity>)
+            BlockEntityRenderers.register<BlockEntity>(pair.type.get(), pair.renderer as BlockEntityRendererProvider<BlockEntity>)
         }
 
         UnfocusedModNetworkingClient.init()

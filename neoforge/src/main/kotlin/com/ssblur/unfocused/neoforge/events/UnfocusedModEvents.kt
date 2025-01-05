@@ -45,7 +45,7 @@ object UnfocusedModEvents {
 
     fun attributeEvent(event: EntityAttributeCreationEvent) {
         EntityAttributes.register{ (type, builder) ->
-            event.put(type, builder.build())
+            event.put(type.get(), builder.build())
         }
     }
 

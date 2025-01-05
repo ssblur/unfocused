@@ -24,7 +24,7 @@ object UnfocusedModClientEvents {
 
     fun registerEntityRendererEvent(event: EntityRenderersEvent.RegisterRenderers) {
         BlockEntityRendering.register{ pair ->
-            event.registerBlockEntityRenderer<BlockEntity>(pair.type, pair.renderer as BlockEntityRendererProvider<BlockEntity>)
+            event.registerBlockEntityRenderer<BlockEntity>(pair.type.get(), pair.renderer as BlockEntityRendererProvider<BlockEntity>)
         }
     }
 

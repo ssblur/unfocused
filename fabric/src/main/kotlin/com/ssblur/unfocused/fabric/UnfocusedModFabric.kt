@@ -53,7 +53,7 @@ class UnfocusedModFabric: ModInitializer {
         }
 
         EntityAttributes.register{ (type, builder) ->
-            FabricDefaultAttributeRegistry.register(type, builder)
+            FabricDefaultAttributeRegistry.register(type.get(), builder)
         }
 
         UnfocusedModNetworking.init()
