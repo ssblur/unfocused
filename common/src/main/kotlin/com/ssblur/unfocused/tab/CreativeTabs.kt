@@ -37,31 +37,37 @@ object CreativeTabs {
         }
     }
 
-    fun Item.tab(supplier: RegistrySupplier<CreativeModeTab>) {
+    fun Item.tab(supplier: RegistrySupplier<CreativeModeTab>): Item {
         acceptor.callback(CreativeTabEntry(supplier.location!!, this, null))
+        return this
     }
 
-    fun Item.tab(location: ResourceLocation) {
+    fun Item.tab(location: ResourceLocation): Item {
         acceptor.callback(CreativeTabEntry(location, this, null))
+        return this
     }
 
-    fun RegistrySupplier<Item>.tab(supplier: RegistrySupplier<CreativeModeTab>) {
+    fun RegistrySupplier<Item>.tab(supplier: RegistrySupplier<CreativeModeTab>): RegistrySupplier<Item> {
         this.wait{
             acceptor.callback(CreativeTabEntry(supplier.location!!, this.value, null))
         }
+        return this
     }
 
-    fun RegistrySupplier<Item>.tab(location: ResourceLocation) {
+    fun RegistrySupplier<Item>.tab(location: ResourceLocation): RegistrySupplier<Item> {
         this.wait{
             acceptor.callback(CreativeTabEntry(location, this.value, null))
         }
+        return this
     }
 
-    fun RegistrySupplier<CreativeModeTab>.add(item: ItemLike) {
+    fun RegistrySupplier<CreativeModeTab>.add(item: ItemLike): RegistrySupplier<CreativeModeTab> {
         acceptor.callback(CreativeTabEntry(location!!, item, null))
+        return this
     }
 
-    fun RegistrySupplier<CreativeModeTab>.add(item: ItemStack) {
+    fun RegistrySupplier<CreativeModeTab>.add(item: ItemStack): RegistrySupplier<CreativeModeTab> {
         acceptor.callback(CreativeTabEntry(location!!, null, item))
+        return this
     }
 }
