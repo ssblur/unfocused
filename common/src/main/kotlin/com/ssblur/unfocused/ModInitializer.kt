@@ -19,10 +19,13 @@ import net.minecraft.world.level.block.Block
 import net.minecraft.world.level.block.entity.BlockEntity
 import net.minecraft.world.level.block.entity.BlockEntityType
 import net.minecraft.world.level.levelgen.feature.Feature
+import net.minecraft.world.level.storage.loot.functions.LootItemFunction
+import net.minecraft.world.level.storage.loot.functions.LootItemFunctionType
+import net.minecraft.world.level.storage.loot.predicates.LootItemConditionType
 import java.util.function.Consumer
 import java.util.function.Supplier
 
-@Suppress("unused")
+@Suppress("unused", "UNCHECKED_CAST")
 open class ModInitializer(val id: String) {
     var BLOCKS = RegistryTypes.BLOCK.create(id)
     var ITEMS = RegistryTypes.ITEM.create(id)
@@ -33,6 +36,8 @@ open class ModInitializer(val id: String) {
     val FEATURES = RegistryTypes.FEATURES.create(id)
     val RECIPES = RegistryTypes.RECIPES.create(id)
     val RECIPE_TYPES = RegistryTypes.RECIPE_TYPES.create(id)
+    val LOOT_FUNCTION_TYPES = RegistryTypes.LOOT_FUNCTION_TYPES.create(id)
+    val LOOT_CONDITION_TYPES = RegistryTypes.LOOT_CONDITION_TYPES.create(id)
 
     fun registerBlock(id: String, supplier: Supplier<Block>): RegistrySupplier<Block> {
         return BLOCKS.register(id, supplier)
@@ -78,6 +83,14 @@ open class ModInitializer(val id: String) {
 
     fun registerRecipeType(id: String, supplier: Supplier<RecipeType<*>>): RegistrySupplier<RecipeType<*>> {
         return RECIPE_TYPES.register(id, supplier)
+    }
+
+    fun <T: LootItemFunction> registerLootFunction(id: String, supplier: Supplier<LootItemFunctionType<T>>): RegistrySupplier<LootItemFunctionType<T>> {
+        return LOOT_FUNCTION_TYPES.register(id, supplier as Supplier<LootItemFunctionType<*>>) as RegistrySupplier<LootItemFunctionType<T>>
+    }
+
+    fun registerLootCondition(id: String, supplier: Supplier<LootItemConditionType>): RegistrySupplier<LootItemConditionType> {
+        return LOOT_CONDITION_TYPES.register(id, supplier)
     }
 
     fun location(path: String) = ResourceLocation.fromNamespaceAndPath(id, path)
