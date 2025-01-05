@@ -2,6 +2,8 @@ package com.ssblur.unfocused
 
 import com.ssblur.unfocused.registry.RegistrySupplier
 import com.ssblur.unfocused.registry.RegistryTypes
+import net.minecraft.advancements.CriterionTrigger
+import net.minecraft.advancements.CriterionTriggerInstance
 import net.minecraft.core.Registry
 import net.minecraft.core.component.DataComponentType
 import net.minecraft.core.registries.Registries
@@ -92,6 +94,10 @@ open class ModInitializer(val id: String) {
 
     fun registerLootCondition(id: String, supplier: Supplier<LootItemConditionType>): RegistrySupplier<LootItemConditionType> {
         return LOOT_CONDITION_TYPES.register(id, supplier)
+    }
+
+    fun <T : CriterionTriggerInstance> registerTrigger(id: String, supplier: Supplier<CriterionTrigger<T>>): RegistrySupplier<CriterionTrigger<*>> {
+        return TRIGGER_TYPES.register(id, supplier as Supplier<CriterionTrigger<*>>)
     }
 
     fun location(path: String) = ResourceLocation.fromNamespaceAndPath(id, path)
