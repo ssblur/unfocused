@@ -48,14 +48,14 @@ object CreativeTabs {
     }
 
     fun RegistrySupplier<Item>.tab(supplier: RegistrySupplier<CreativeModeTab>): RegistrySupplier<Item> {
-        this.wait{
+        this.then{
             acceptor.callback(CreativeTabEntry(supplier.location!!, this.value, null))
         }
         return this
     }
 
     fun RegistrySupplier<Item>.tab(location: ResourceLocation): RegistrySupplier<Item> {
-        this.wait{
+        this.then{
             acceptor.callback(CreativeTabEntry(location, this.value, null))
         }
         return this

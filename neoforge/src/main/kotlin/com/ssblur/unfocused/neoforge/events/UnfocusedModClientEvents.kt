@@ -4,6 +4,7 @@ import com.ssblur.unfocused.event.client.ClientLevelTickEvent
 import com.ssblur.unfocused.event.client.MouseScrollEvent
 import com.ssblur.unfocused.rendering.BlockEntityRendering
 import com.ssblur.unfocused.rendering.EntityRendering
+import com.ssblur.unfocused.rendering.ParticleFactories
 import net.minecraft.client.Minecraft
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider
 import net.minecraft.client.renderer.entity.EntityRendererProvider
@@ -13,6 +14,7 @@ import net.neoforged.bus.api.IEventBus
 import net.neoforged.neoforge.client.event.ClientTickEvent
 import net.neoforged.neoforge.client.event.EntityRenderersEvent
 import net.neoforged.neoforge.client.event.InputEvent
+import net.neoforged.neoforge.client.event.RegisterParticleProvidersEvent
 import net.neoforged.neoforge.common.NeoForge
 import org.joml.Vector2d
 
@@ -31,6 +33,12 @@ object UnfocusedModClientEvents {
         }
         EntityRendering.register{ pair ->
             event.registerEntityRenderer(pair.type.get(), pair.renderer as EntityRendererProvider<Entity>)
+        }
+    }
+
+    fun registerParticleProviders(event: RegisterParticleProvidersEvent) {
+        ParticleFactories.register{ pair ->
+            event.registerSpecial(pair.particle, pair.provider)
         }
     }
 

@@ -39,7 +39,7 @@ class RegistrySupplier<T>(
         return value!!
     }
 
-    fun wait(consumer: Consumer<T>) {
+    fun then(consumer: Consumer<T>) {
         if(value == null)
             pending += consumer
         else
