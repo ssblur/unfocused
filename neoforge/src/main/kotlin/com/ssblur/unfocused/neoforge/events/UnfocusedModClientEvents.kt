@@ -3,8 +3,11 @@ package com.ssblur.unfocused.neoforge.events
 import com.ssblur.unfocused.event.client.ClientLevelTickEvent
 import com.ssblur.unfocused.event.client.MouseScrollEvent
 import com.ssblur.unfocused.rendering.BlockEntityRendering
+import com.ssblur.unfocused.rendering.EntityRendering
 import net.minecraft.client.Minecraft
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider
+import net.minecraft.client.renderer.entity.EntityRendererProvider
+import net.minecraft.world.entity.Entity
 import net.minecraft.world.level.block.entity.BlockEntity
 import net.neoforged.bus.api.IEventBus
 import net.neoforged.neoforge.client.event.ClientTickEvent
@@ -13,7 +16,7 @@ import net.neoforged.neoforge.client.event.InputEvent
 import net.neoforged.neoforge.common.NeoForge
 import org.joml.Vector2d
 
-@Suppress("UNCHECKED_CAST", "unused")
+@Suppress("unchecked_cast", "unused", "unused_parameter")
 object UnfocusedModClientEvents {
     fun clientTickEventBefore(event: ClientTickEvent.Pre) = Minecraft.getInstance().level?.let(ClientLevelTickEvent.Before::callback)
     fun clientTickEventAfter(event: ClientTickEvent.Post) = Minecraft.getInstance().level?.let(ClientLevelTickEvent.After::callback)
@@ -24,7 +27,10 @@ object UnfocusedModClientEvents {
 
     fun registerEntityRendererEvent(event: EntityRenderersEvent.RegisterRenderers) {
         BlockEntityRendering.register{ pair ->
-            event.registerBlockEntityRenderer<BlockEntity>(pair.type.get(), pair.renderer as BlockEntityRendererProvider<BlockEntity>)
+            event.registerBlockEntityRenderer(pair.type.get(), pair.renderer as BlockEntityRendererProvider<BlockEntity>)
+        }
+        EntityRendering.register{ pair ->
+            event.registerEntityRenderer(pair.type.get(), pair.renderer as EntityRendererProvider<Entity>)
         }
     }
 
