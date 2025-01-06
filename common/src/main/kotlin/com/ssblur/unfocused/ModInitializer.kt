@@ -5,6 +5,8 @@ import com.ssblur.unfocused.registry.RegistryTypes
 import net.minecraft.advancements.CriterionTrigger
 import net.minecraft.core.Registry
 import net.minecraft.core.component.DataComponentType
+import net.minecraft.core.particles.ParticleOptions
+import net.minecraft.core.particles.ParticleType
 import net.minecraft.core.registries.Registries
 import net.minecraft.resources.ResourceKey
 import net.minecraft.resources.ResourceLocation
@@ -43,6 +45,7 @@ open class ModInitializer(val id: String) {
     val TRIGGER_TYPES = RegistryTypes.TRIGGER_TYPES.create(id)
     val RECIPE_SERIALIZERS = RegistryTypes.RECIPE_SERIALIZERS.create(id)
     val CREATIVE_TABS = RegistryTypes.CREATIVE_TABS.create(id)
+    val PARTICLE_TYPES = RegistryTypes.PARTICLE_TYPES.create(id)
 
     fun registerBlock(id: String, supplier: Supplier<Block>): RegistrySupplier<Block> {
         return BLOCKS.register(id, supplier)
@@ -104,6 +107,10 @@ open class ModInitializer(val id: String) {
 
     fun <T: Recipe<*>> registerRecipeSerializer(id: String, supplier: Supplier<RecipeSerializer<T>>): RegistrySupplier<RecipeSerializer<T>> {
         return RECIPE_SERIALIZERS.register(id, supplier as Supplier<RecipeSerializer<*>>) as RegistrySupplier<RecipeSerializer<T>>
+    }
+
+    fun <T: ParticleOptions> registerParticleType(id: String, supplier: Supplier<ParticleType<T>>): RegistrySupplier<ParticleType<T>> {
+        return PARTICLE_TYPES.register(id, supplier as Supplier<ParticleType<*>>) as RegistrySupplier<ParticleType<T>>
     }
 
     fun location(path: String) = ResourceLocation.fromNamespaceAndPath(id, path)

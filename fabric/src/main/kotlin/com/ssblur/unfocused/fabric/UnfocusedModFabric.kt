@@ -54,6 +54,9 @@ class UnfocusedModFabric: ModInitializer {
         RegistryTypes.CREATIVE_TABS.subscribe { location, supplier ->
             Registry.register(BuiltInRegistries.CREATIVE_MODE_TAB, location, supplier.get())
         }
+        RegistryTypes.PARTICLE_TYPES.subscribe { location, supplier ->
+            Registry.register(BuiltInRegistries.PARTICLE_TYPE, location, supplier.get())
+        }
 
         ServerMessageEvents.ALLOW_CHAT_MESSAGE.register{ message, sender, params ->
             PlayerChatEvent.Before.callback(PlayerChatEvent.PlayerChatMessage(sender, message.decoratedContent(), PlayerChatEvent.Before))
