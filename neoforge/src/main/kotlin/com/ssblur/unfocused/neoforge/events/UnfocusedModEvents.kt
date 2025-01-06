@@ -59,5 +59,6 @@ object UnfocusedModEvents {
         NeoForge.EVENT_BUS.addListener(::serverLifecycleEvent)
 
         bus.addListener(::attributeEvent)
+        bus.register(UnfocusedModNetworking)
     }
 }

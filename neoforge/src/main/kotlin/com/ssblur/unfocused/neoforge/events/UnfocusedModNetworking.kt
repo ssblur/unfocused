@@ -9,7 +9,8 @@ import net.neoforged.neoforge.network.PacketDistributor
 import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent
 
 
-class UnfocusedModNetworking {
+@Suppress("UNCHECKED_CAST")
+object UnfocusedModNetworking {
     @SubscribeEvent
     fun register(event: RegisterPayloadHandlersEvent) {
         val registrar = event.registrar("1")
