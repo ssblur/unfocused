@@ -14,6 +14,7 @@ import net.fabricmc.fabric.api.message.v1.ServerMessageEvents
 import net.fabricmc.fabric.api.`object`.builder.v1.entity.FabricDefaultAttributeRegistry
 import net.minecraft.core.Registry
 import net.minecraft.core.registries.BuiltInRegistries
+import net.minecraft.world.level.storage.loot.LootPool
 
 class UnfocusedModFabric: ModInitializer {
     override fun onInitialize() {
@@ -73,7 +74,9 @@ class UnfocusedModFabric: ModInitializer {
         }
 
         LootTableEvents.MODIFY.register{ key, builder, source, provider ->
-            LootTablePopulateEvent.callback(LootTablePopulateEvent.LootTableContext(key, source.isBuiltin, builder.build()))
+            val pools = mutableListOf<LootPool.Builder>()
+            LootTablePopulateEvent.callback(LootTablePopulateEvent.LootTableContext(key, source.isBuiltin, pools))
+            pools.forEach { builder.withPool(it) }
         }
 
         EntityAttributes.register{ (type, builder) ->

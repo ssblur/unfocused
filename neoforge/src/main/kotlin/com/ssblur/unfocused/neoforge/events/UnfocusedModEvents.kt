@@ -5,6 +5,7 @@ import com.ssblur.unfocused.event.common.*
 import net.minecraft.core.registries.Registries
 import net.minecraft.resources.ResourceKey
 import net.minecraft.server.level.ServerPlayer
+import net.minecraft.world.level.storage.loot.LootPool
 import net.neoforged.bus.api.IEventBus
 import net.neoforged.neoforge.common.NeoForge
 import net.neoforged.neoforge.event.LootTableLoadEvent
@@ -53,9 +54,11 @@ object UnfocusedModEvents {
     }
 
     fun modifyLootTable(event: LootTableLoadEvent) {
+        val pools = mutableListOf<LootPool.Builder>()
         LootTablePopulateEvent.callback(
-            LootTablePopulateEvent.LootTableContext(ResourceKey.create(Registries.LOOT_TABLE, event.name), true, event.table)
+            LootTablePopulateEvent.LootTableContext(ResourceKey.create(Registries.LOOT_TABLE, event.name), true, pools)
         )
+        pools.forEach { event.table.addPool(it.build()) }
     }
 
     fun register(bus: IEventBus) {
