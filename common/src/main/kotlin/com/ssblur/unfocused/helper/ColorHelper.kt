@@ -39,4 +39,6 @@ object ColorHelper {
 
     fun RegistrySupplier<Item>.registerColor(color: ItemColor) = registerColor(color, this as RegistrySupplier<ItemLike>)
     fun RegistrySupplier<Block>.registerColor(color: BlockColor) = registerColor(color, this)
+    fun Item.registerColor(color: ItemColor) = registerColor(color, { this })
+    fun Block.registerColor(color: BlockColor) = registerColor(color, { this })
 }
