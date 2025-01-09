@@ -8,6 +8,7 @@
   ],
   "mixins": [
     "LivingEntityMixin",
+    "LootTableAccessor",
     "PlayerListMixin",
     "PlayerMixin"
   ],
