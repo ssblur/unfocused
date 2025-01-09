@@ -1,6 +1,7 @@
 package com.ssblur.unfocused.fabric
 
 import com.ssblur.unfocused.event.client.ClientLevelTickEvent
+import com.ssblur.unfocused.event.client.ClientLoreEvent
 import com.ssblur.unfocused.extension.BlockExtension
 import com.ssblur.unfocused.rendering.BlockEntityRendering
 import com.ssblur.unfocused.rendering.EntityRendering
@@ -8,6 +9,7 @@ import com.ssblur.unfocused.rendering.ParticleFactories
 import net.fabricmc.api.ClientModInitializer
 import net.fabricmc.fabric.api.blockrenderlayer.v1.BlockRenderLayerMap
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents
+import net.fabricmc.fabric.api.client.item.v1.ItemTooltipCallback
 import net.fabricmc.fabric.api.client.particle.v1.ParticleFactoryRegistry
 import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider
@@ -34,5 +36,8 @@ class UnfocusedModFabricClient: ClientModInitializer {
 
         ClientTickEvents.START_CLIENT_TICK.register{ instance -> instance.level?.let { ClientLevelTickEvent.Before.callback(it) }}
         ClientTickEvents.END_CLIENT_TICK.register{ instance -> instance.level?.let { ClientLevelTickEvent.After.callback(it) }}
+        ItemTooltipCallback.EVENT.register{ stack, context, flag, lore ->
+            ClientLoreEvent.callback(ClientLoreEvent.LoreContext(stack, lore, context, flag))
+        }
     }
 }

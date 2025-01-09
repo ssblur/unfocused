@@ -1,6 +1,7 @@
 package com.ssblur.unfocused.neoforge.events
 
 import com.ssblur.unfocused.event.client.ClientLevelTickEvent
+import com.ssblur.unfocused.event.client.ClientLoreEvent
 import com.ssblur.unfocused.event.client.MouseScrollEvent
 import com.ssblur.unfocused.rendering.BlockEntityRendering
 import com.ssblur.unfocused.rendering.EntityRendering
@@ -16,6 +17,7 @@ import net.neoforged.neoforge.client.event.EntityRenderersEvent
 import net.neoforged.neoforge.client.event.InputEvent
 import net.neoforged.neoforge.client.event.RegisterParticleProvidersEvent
 import net.neoforged.neoforge.common.NeoForge
+import net.neoforged.neoforge.event.entity.player.ItemTooltipEvent
 import org.joml.Vector2d
 
 @Suppress("unchecked_cast", "unused", "unused_parameter")
@@ -42,10 +44,15 @@ object UnfocusedModClientEvents {
         }
     }
 
+    fun clientLoreEvent(event: ItemTooltipEvent) {
+        ClientLoreEvent.callback(ClientLoreEvent.LoreContext(event.itemStack, event.toolTip, event.context, event.flags))
+    }
+
     fun register(bus: IEventBus) {
         NeoForge.EVENT_BUS.addListener(::clientTickEventAfter)
         NeoForge.EVENT_BUS.addListener(::clientTickEventBefore)
         NeoForge.EVENT_BUS.addListener(::clientScrollEvent)
+        NeoForge.EVENT_BUS.addListener(::clientLoreEvent)
 
         bus.addListener(::registerEntityRendererEvent)
     }
