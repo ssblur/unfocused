@@ -3,6 +3,7 @@ package com.ssblur.unfocused.neoforge.events
 import com.ssblur.unfocused.event.client.ClientLevelTickEvent
 import com.ssblur.unfocused.event.client.ClientLoreEvent
 import com.ssblur.unfocused.event.client.MouseScrollEvent
+import com.ssblur.unfocused.neoforge.UtilityExpectPlatformImpl
 import com.ssblur.unfocused.rendering.BlockEntityRendering
 import com.ssblur.unfocused.rendering.EntityRendering
 import com.ssblur.unfocused.rendering.ParticleFactories
@@ -12,10 +13,7 @@ import net.minecraft.client.renderer.entity.EntityRendererProvider
 import net.minecraft.world.entity.Entity
 import net.minecraft.world.level.block.entity.BlockEntity
 import net.neoforged.bus.api.IEventBus
-import net.neoforged.neoforge.client.event.ClientTickEvent
-import net.neoforged.neoforge.client.event.EntityRenderersEvent
-import net.neoforged.neoforge.client.event.InputEvent
-import net.neoforged.neoforge.client.event.RegisterParticleProvidersEvent
+import net.neoforged.neoforge.client.event.*
 import net.neoforged.neoforge.common.NeoForge
 import net.neoforged.neoforge.event.entity.player.ItemTooltipEvent
 import org.joml.Vector2d
@@ -48,12 +46,26 @@ object UnfocusedModClientEvents {
         ClientLoreEvent.callback(ClientLoreEvent.LoreContext(event.itemStack, event.toolTip, event.context, event.flags))
     }
 
+    fun blockColorEvent(event: RegisterColorHandlersEvent.Block) {
+        UtilityExpectPlatformImpl.BLOCK_COLORS.forEach { (color, supplier) ->
+            event.register(color, supplier.get())
+        }
+    }
+
+    fun itemColorEvent(event: RegisterColorHandlersEvent.Item) {
+        UtilityExpectPlatformImpl.ITEM_COLORS.forEach { (color, supplier) ->
+            event.register(color, supplier.get())
+        }
+    }
+
     fun register(bus: IEventBus) {
         NeoForge.EVENT_BUS.addListener(::clientTickEventAfter)
         NeoForge.EVENT_BUS.addListener(::clientTickEventBefore)
         NeoForge.EVENT_BUS.addListener(::clientScrollEvent)
         NeoForge.EVENT_BUS.addListener(::clientLoreEvent)
 
+        bus.addListener(::itemColorEvent)
+        bus.addListener(::blockColorEvent)
         bus.addListener(::registerEntityRendererEvent)
     }
 }
