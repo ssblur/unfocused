@@ -16,7 +16,7 @@ import net.minecraft.client.renderer.entity.EntityRendererProvider
 import net.minecraft.world.entity.Entity
 import net.minecraft.world.level.block.entity.BlockEntity
 
-@Suppress("UNCHECKED_CAST")
+@Suppress("unchecked_cast")
 class UnfocusedModFabricClient: ClientModInitializer {
     override fun onInitializeClient() {
         BlockExtension.register{ pair -> BlockRenderLayerMap.INSTANCE.putBlock(pair.first, pair.second) }
