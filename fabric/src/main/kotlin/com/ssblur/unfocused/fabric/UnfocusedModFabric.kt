@@ -2,12 +2,14 @@ package com.ssblur.unfocused.fabric
 
 import com.ssblur.unfocused.Unfocused
 import com.ssblur.unfocused.entity.EntityAttributes
+import com.ssblur.unfocused.event.common.LootTablePopulateEvent
 import com.ssblur.unfocused.event.common.PlayerChatEvent
 import com.ssblur.unfocused.event.common.ServerStartEvent
 import com.ssblur.unfocused.fabric.events.UnfocusedModData
 import com.ssblur.unfocused.registry.RegistryTypes
 import net.fabricmc.api.ModInitializer
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents
+import net.fabricmc.fabric.api.loot.v3.LootTableEvents
 import net.fabricmc.fabric.api.message.v1.ServerMessageEvents
 import net.fabricmc.fabric.api.`object`.builder.v1.entity.FabricDefaultAttributeRegistry
 import net.minecraft.core.Registry
@@ -68,6 +70,10 @@ class UnfocusedModFabric: ModInitializer {
 
         ServerLifecycleEvents.SERVER_STARTED.register{
             ServerStartEvent.callback(it)
+        }
+
+        LootTableEvents.MODIFY.register{ key, builder, source, provider ->
+            LootTablePopulateEvent.callback(LootTablePopulateEvent.LootTableContext(key, source.isBuiltin, builder.build()))
         }
 
         EntityAttributes.register{ (type, builder) ->

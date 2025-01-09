@@ -2,9 +2,12 @@ package com.ssblur.unfocused.neoforge.events
 
 import com.ssblur.unfocused.entity.EntityAttributes
 import com.ssblur.unfocused.event.common.*
+import net.minecraft.core.registries.Registries
+import net.minecraft.resources.ResourceKey
 import net.minecraft.server.level.ServerPlayer
 import net.neoforged.bus.api.IEventBus
 import net.neoforged.neoforge.common.NeoForge
+import net.neoforged.neoforge.event.LootTableLoadEvent
 import net.neoforged.neoforge.event.ServerChatEvent
 import net.neoforged.neoforge.event.entity.EntityAttributeCreationEvent
 import net.neoforged.neoforge.event.entity.living.LivingDamageEvent
@@ -49,6 +52,12 @@ object UnfocusedModEvents {
         }
     }
 
+    fun modifyLootTable(event: LootTableLoadEvent) {
+        LootTablePopulateEvent.callback(
+            LootTablePopulateEvent.LootTableContext(ResourceKey.create(Registries.LOOT_TABLE, event.name), true, event.table)
+        )
+    }
+
     fun register(bus: IEventBus) {
         NeoForge.EVENT_BUS.addListener(::livingDamageEventBefore)
         NeoForge.EVENT_BUS.addListener(::livingDamageEventAfter)
@@ -57,6 +66,7 @@ object UnfocusedModEvents {
         NeoForge.EVENT_BUS.addListener(::playerTickEventBefore)
         NeoForge.EVENT_BUS.addListener(::playerTickEventAfter)
         NeoForge.EVENT_BUS.addListener(::serverLifecycleEvent)
+        NeoForge.EVENT_BUS.addListener(::modifyLootTable)
 
         bus.addListener(::attributeEvent)
         bus.register(UnfocusedModNetworking)
