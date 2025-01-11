@@ -9,6 +9,7 @@ import net.minecraft.core.registries.Registries
 import net.neoforged.bus.api.IEventBus
 import net.neoforged.fml.common.Mod
 import net.neoforged.neoforge.common.NeoForge
+import net.neoforged.neoforge.common.world.BiomeModifiers
 
 @Mod("unfocused")
 class UnfocusedModNeoForge(bus: IEventBus) {
@@ -31,6 +32,8 @@ class UnfocusedModNeoForge(bus: IEventBus) {
         ProxyRegistry(Registries.RECIPE_SERIALIZER, RegistryTypes.RECIPE_SERIALIZERS).register(bus)
         ProxyRegistry(Registries.CREATIVE_MODE_TAB, RegistryTypes.CREATIVE_TABS).register(bus)
         ProxyRegistry(Registries.PARTICLE_TYPE, RegistryTypes.PARTICLE_TYPES).register(bus)
+
+        BiomeModifiers.AddFeaturesBiomeModifier.DIRECT_CODEC
 
         Unfocused.init()
     }

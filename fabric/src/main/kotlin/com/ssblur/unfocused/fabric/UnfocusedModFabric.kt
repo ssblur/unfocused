@@ -5,15 +5,22 @@ import com.ssblur.unfocused.entity.EntityAttributes
 import com.ssblur.unfocused.event.common.LootTablePopulateEvent
 import com.ssblur.unfocused.event.common.PlayerChatEvent
 import com.ssblur.unfocused.event.common.ServerStartEvent
+import com.ssblur.unfocused.fabric.biome.BiomeModifiers
 import com.ssblur.unfocused.fabric.events.UnfocusedModData
 import com.ssblur.unfocused.registry.RegistryTypes
 import net.fabricmc.api.ModInitializer
+import net.fabricmc.fabric.api.biome.v1.BiomeModifications
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents
 import net.fabricmc.fabric.api.loot.v3.LootTableEvents
 import net.fabricmc.fabric.api.message.v1.ServerMessageEvents
 import net.fabricmc.fabric.api.`object`.builder.v1.entity.FabricDefaultAttributeRegistry
 import net.minecraft.core.Registry
 import net.minecraft.core.registries.BuiltInRegistries
+import net.minecraft.core.registries.Registries
+import net.minecraft.resources.ResourceKey
+import net.minecraft.resources.ResourceLocation
+import net.minecraft.tags.TagKey
+import net.minecraft.world.level.levelgen.GenerationStep
 import net.minecraft.world.level.storage.loot.LootPool
 
 class UnfocusedModFabric: ModInitializer {
@@ -69,9 +76,7 @@ class UnfocusedModFabric: ModInitializer {
             PlayerChatEvent.After.callback(PlayerChatEvent.PlayerChatMessage(sender, message.decoratedContent(), PlayerChatEvent.After))
         }
 
-        ServerLifecycleEvents.SERVER_STARTED.register{
-            ServerStartEvent.callback(it)
-        }
+        ServerLifecycleEvents.SERVER_STARTED.register(ServerStartEvent::callback)
 
         LootTableEvents.MODIFY.register{ key, builder, source, provider ->
             val pools = mutableListOf<LootPool.Builder>()
@@ -81,6 +86,57 @@ class UnfocusedModFabric: ModInitializer {
 
         EntityAttributes.register{ (type, builder) ->
             FabricDefaultAttributeRegistry.register(type.get(), builder.get())
+        }
+
+        BiomeModifiers.event.register{ (_, modification) ->
+            when (modification.type) {
+                "unfocused:add_feature" -> {
+                    BiomeModifications.addFeature(
+                        {
+                            if(modification.biomes.startsWith("#"))
+                                it.hasTag(TagKey.create(Registries.BIOME, ResourceLocation.parse(modification.biomes.substring(1))))
+                            it.biomeKey.location().equals(modification.biomes)
+                        },
+                        GenerationStep.Decoration.valueOf(modification.step!!),
+                        ResourceKey.create(Registries.PLACED_FEATURE, ResourceLocation.parse(modification.feature!!))
+                    )
+                }
+                "unfocused:remove_feature" -> {
+                    // todo
+                }
+                "unfocused:add_spawn" -> {
+                    for(entity in modification.spawners!!)
+                        BiomeModifications.addSpawn(
+                            {
+                                if(modification.biomes.startsWith("#"))
+                                    it.hasTag(TagKey.create(Registries.BIOME, ResourceLocation.parse(modification.biomes.substring(1))))
+                                it.biomeKey.location().equals(modification.biomes)
+                            },
+                            BuiltInRegistries.ENTITY_TYPE.get(ResourceLocation.parse(entity.type)).category,
+                            BuiltInRegistries.ENTITY_TYPE.get(ResourceLocation.parse(entity.type)),
+                            entity.weight,
+                            entity.minCount,
+                            entity.maxCount
+                        )
+                }
+                "unfocused:remove_spawn" -> {
+                    // todo
+                }
+                "unfocused:add_carver" -> {
+                    BiomeModifications.addCarver(
+                        {
+                            if(modification.biomes.startsWith("#"))
+                                it.hasTag(TagKey.create(Registries.BIOME, ResourceLocation.parse(modification.biomes.substring(1))))
+                            it.biomeKey.location().equals(modification.biomes)
+                        },
+                        GenerationStep.Carving.valueOf(modification.step!!),
+                        ResourceKey.create(Registries.CONFIGURED_CARVER, ResourceLocation.parse(modification.carvers!!))
+                    )
+                }
+                "unfocused:remove_carver" -> {
+                    // todo
+                }
+            }
         }
 
         UnfocusedModNetworking.init()

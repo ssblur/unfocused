@@ -1,19 +1,24 @@
 package com.ssblur.unfocused.neoforge.events
 
+import com.ssblur.unfocused.Unfocused
 import com.ssblur.unfocused.entity.EntityAttributes
 import com.ssblur.unfocused.event.common.*
 import net.minecraft.core.registries.Registries
 import net.minecraft.resources.ResourceKey
 import net.minecraft.server.level.ServerPlayer
 import net.minecraft.world.level.storage.loot.LootPool
+import net.neoforged.bus.api.EventPriority
 import net.neoforged.bus.api.IEventBus
 import net.neoforged.neoforge.common.NeoForge
+import net.neoforged.neoforge.common.NeoForgeMod
 import net.neoforged.neoforge.event.LootTableLoadEvent
 import net.neoforged.neoforge.event.ServerChatEvent
 import net.neoforged.neoforge.event.entity.EntityAttributeCreationEvent
 import net.neoforged.neoforge.event.entity.living.LivingDamageEvent
 import net.neoforged.neoforge.event.entity.player.PlayerEvent.PlayerLoggedInEvent
 import net.neoforged.neoforge.event.server.ServerStartedEvent
+import net.neoforged.neoforge.registries.NeoForgeRegistries
+import net.neoforged.neoforge.registries.RegisterEvent
 
 
 object UnfocusedModEvents {
@@ -61,6 +66,17 @@ object UnfocusedModEvents {
         pools.forEach { event.table.addPool(it.build()) }
     }
 
+    fun registerEvent(event: RegisterEvent) {
+        event.register(NeoForgeRegistries.Keys.BIOME_MODIFIER_SERIALIZERS) { register ->
+            register.register(Unfocused.location("add_feature"), NeoForgeMod.ADD_FEATURES_BIOME_MODIFIER_TYPE.get())
+            register.register(Unfocused.location("remove_feature"), NeoForgeMod.REMOVE_FEATURES_BIOME_MODIFIER_TYPE.get())
+            register.register(Unfocused.location("add_spawn"), NeoForgeMod.ADD_SPAWNS_BIOME_MODIFIER_TYPE.get())
+            register.register(Unfocused.location("remove_spawn"), NeoForgeMod.REMOVE_SPAWNS_BIOME_MODIFIER_TYPE.get())
+            register.register(Unfocused.location("add_carver"), NeoForgeMod.ADD_CARVERS_BIOME_MODIFIER_TYPE.get())
+            register.register(Unfocused.location("remove_carver"), NeoForgeMod.REMOVE_CARVERS_BIOME_MODIFIER_TYPE.get())
+        }
+    }
+
     fun register(bus: IEventBus) {
         NeoForge.EVENT_BUS.addListener(::livingDamageEventBefore)
         NeoForge.EVENT_BUS.addListener(::livingDamageEventAfter)
@@ -71,6 +87,7 @@ object UnfocusedModEvents {
         NeoForge.EVENT_BUS.addListener(::serverLifecycleEvent)
         NeoForge.EVENT_BUS.addListener(::modifyLootTable)
 
+        bus.addListener(EventPriority.LOWEST, ::registerEvent)
         bus.addListener(::attributeEvent)
         bus.register(UnfocusedModNetworking)
     }

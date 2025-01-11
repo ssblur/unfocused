@@ -1,7 +1,7 @@
 package com.ssblur.unfocused.event
 
 
-open class Event<T, R>(val retroactive: Boolean = false, val cancelable: Boolean = false) {
+open class Event<T, R>(val retroactive: Boolean = false, val cancelable: Boolean = false, val clearAfterRun: Boolean = true) {
     fun interface Listener<T> {
         fun listen(event: T)
     }
@@ -11,7 +11,9 @@ open class Event<T, R>(val retroactive: Boolean = false, val cancelable: Boolean
     var value: R? = null
 
     fun callback(event: T) {
-        if(retroactive) events += event
+        if(retroactive)
+            if(!clearAfterRun || subscribers.isEmpty())
+                events += event
         cancelled = false
         value = null
         subscribers.forEach{ it.listen(event) }
@@ -19,6 +21,7 @@ open class Event<T, R>(val retroactive: Boolean = false, val cancelable: Boolean
 
     fun register(subscriber: Listener<T>) {
         events.forEach{ subscriber.listen(it) }
+        if(clearAfterRun) events.clear()
         subscribers += subscriber
     }
 
