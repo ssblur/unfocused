@@ -17,7 +17,7 @@ object BiomeModifiers {
     data class Spawner(val type: String, val weight: Int, val minCount: Int, val maxCount: Int)
     val event = SimpleEvent<Pair<ResourceLocation, BiomeModification>>(retroactive = true)
     init {
-        Unfocused.registerDataLoader("biome_modifier", BiomeModification::class) { modification, location ->
+        Unfocused.registerDataLoader("neoforge/biome_modifier", BiomeModification::class) { modification, location ->
             event.callback(Pair(location, modification))
         }
     }

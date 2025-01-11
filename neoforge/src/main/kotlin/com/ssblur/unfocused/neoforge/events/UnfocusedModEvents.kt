@@ -67,7 +67,7 @@ object UnfocusedModEvents {
     }
 
     fun registerEvent(event: RegisterEvent) {
-        event.register(NeoForgeRegistries.Keys.BIOME_MODIFIER_SERIALIZERS) { register ->
+        event.register(NeoForgeRegistries.Keys.BIOME_MODIFIER_SERIALIZERS) { register -> // todo fix
             register.register(Unfocused.location("add_feature"), NeoForgeMod.ADD_FEATURES_BIOME_MODIFIER_TYPE.get())
             register.register(Unfocused.location("remove_feature"), NeoForgeMod.REMOVE_FEATURES_BIOME_MODIFIER_TYPE.get())
             register.register(Unfocused.location("add_spawn"), NeoForgeMod.ADD_SPAWNS_BIOME_MODIFIER_TYPE.get())
