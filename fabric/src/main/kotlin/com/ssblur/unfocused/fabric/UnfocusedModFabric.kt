@@ -97,7 +97,7 @@ class UnfocusedModFabric: ModInitializer {
                                 it.hasTag(TagKey.create(Registries.BIOME, ResourceLocation.parse(modification.biomes.substring(1))))
                             it.biomeKey.location().equals(modification.biomes)
                         },
-                        GenerationStep.Decoration.valueOf(modification.step!!),
+                        GenerationStep.Decoration.entries.first { it.getName() == modification.step!! },
                         ResourceKey.create(Registries.PLACED_FEATURE, ResourceLocation.parse(modification.feature!!))
                     )
                 }
@@ -129,7 +129,7 @@ class UnfocusedModFabric: ModInitializer {
                                 it.hasTag(TagKey.create(Registries.BIOME, ResourceLocation.parse(modification.biomes.substring(1))))
                             it.biomeKey.location().equals(modification.biomes)
                         },
-                        GenerationStep.Carving.valueOf(modification.step!!),
+                        GenerationStep.Carving.entries.first { it.getName() == modification.step!! },
                         ResourceKey.create(Registries.CONFIGURED_CARVER, ResourceLocation.parse(modification.carvers!!))
                     )
                 }
