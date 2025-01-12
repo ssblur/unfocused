@@ -10,7 +10,7 @@ object BiomeModifiers {
         val type: String,
         val biomes: String,
         val step: String?,
-        val feature: String?,
+        val features: String?,
         val spawners: List<Spawner>?,
         val carvers: String?
     )

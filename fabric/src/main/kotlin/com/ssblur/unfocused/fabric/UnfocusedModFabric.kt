@@ -98,7 +98,7 @@ class UnfocusedModFabric: ModInitializer {
                             it.biomeKey.location().equals(modification.biomes)
                         },
                         GenerationStep.Decoration.entries.first { it.getName() == modification.step!! },
-                        ResourceKey.create(Registries.PLACED_FEATURE, ResourceLocation.parse(modification.feature!!))
+                        ResourceKey.create(Registries.PLACED_FEATURE, ResourceLocation.parse(modification.features!!))
                     )
                 }
                 "unfocused:remove_feature" -> {
