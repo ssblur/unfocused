@@ -65,3 +65,7 @@ remapJar {
 kotlin {
   jvmToolchain(21)
 }
+
+loom {
+  accessWidenerPath = project(":common").loom.accessWidenerPath
+}

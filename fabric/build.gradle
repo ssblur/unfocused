@@ -8,6 +8,10 @@ architectury {
     fabric()
 }
 
+loom {
+  accessWidenerPath = project(":common").loom.accessWidenerPath
+}
+
 configurations {
     common {
         canBeResolved = true
@@ -45,16 +49,22 @@ processResources {
 }
 
 shadowJar {
-    configurations = [project.configurations.shadowBundle]
-    archiveClassifier = 'dev-shadow'
+  exclude "architectury.common.json"
+
+  configurations = [project.configurations.shadowBundle]
+  archiveClassifier = 'dev-shadow'
 }
 
 remapJar {
-    inputFile.set shadowJar.archiveFile
+  injectAccessWidener = true
+  inputFile.set shadowJar.archiveFile
+  dependsOn shadowJar
 }
+
 repositories {
   mavenCentral()
 }
+
 kotlin {
   jvmToolchain(21)
 }
