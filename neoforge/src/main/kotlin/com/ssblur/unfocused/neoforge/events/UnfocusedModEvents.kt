@@ -28,7 +28,6 @@ import net.neoforged.neoforge.event.village.WandererTradesEvent
 import net.neoforged.neoforge.registries.NeoForgeRegistries
 import net.neoforged.neoforge.registries.RegisterEvent
 
-@Suppress("unchecked_cast")
 object UnfocusedModEvents {
     fun livingDamageEventBefore(event: LivingDamageEvent.Pre) {
         EntityDamagedEvent.Before.callback(EntityDamagedEvent.EntityDamage(event.entity, event.source, event.originalDamage, EntityDamagedEvent.Before))
@@ -90,7 +89,7 @@ object UnfocusedModEvents {
             if(trade.profession == event.type) {
                 event.trades.computeIfAbsent(
                     trade.rarity,
-                    { _: Int -> NonNullList.create<VillagerTrades.ItemListing>() } as Int2ObjectFunction<NonNullList<VillagerTrades.ItemListing>>
+                    Int2ObjectFunction<NonNullList<VillagerTrades.ItemListing>> { NonNullList.create() }
                 ).add(trade.trade)
             }
         }
