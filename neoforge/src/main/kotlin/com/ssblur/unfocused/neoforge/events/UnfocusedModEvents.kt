@@ -1,26 +1,34 @@
 package com.ssblur.unfocused.neoforge.events
 
 import com.ssblur.unfocused.Unfocused
+import com.ssblur.unfocused.command.CommandRegistration
 import com.ssblur.unfocused.entity.EntityAttributes
+import com.ssblur.unfocused.entity.Trades
 import com.ssblur.unfocused.event.common.*
+import it.unimi.dsi.fastutil.ints.Int2ObjectFunction
+import net.minecraft.core.NonNullList
 import net.minecraft.core.registries.Registries
 import net.minecraft.resources.ResourceKey
 import net.minecraft.server.level.ServerPlayer
+import net.minecraft.world.entity.npc.VillagerTrades
 import net.minecraft.world.level.storage.loot.LootPool
 import net.neoforged.bus.api.EventPriority
 import net.neoforged.bus.api.IEventBus
 import net.neoforged.neoforge.common.NeoForge
 import net.neoforged.neoforge.common.NeoForgeMod
 import net.neoforged.neoforge.event.LootTableLoadEvent
+import net.neoforged.neoforge.event.RegisterCommandsEvent
 import net.neoforged.neoforge.event.ServerChatEvent
 import net.neoforged.neoforge.event.entity.EntityAttributeCreationEvent
 import net.neoforged.neoforge.event.entity.living.LivingDamageEvent
 import net.neoforged.neoforge.event.entity.player.PlayerEvent.PlayerLoggedInEvent
 import net.neoforged.neoforge.event.server.ServerStartedEvent
+import net.neoforged.neoforge.event.village.VillagerTradesEvent
+import net.neoforged.neoforge.event.village.WandererTradesEvent
 import net.neoforged.neoforge.registries.NeoForgeRegistries
 import net.neoforged.neoforge.registries.RegisterEvent
 
-
+@Suppress("unchecked_cast")
 object UnfocusedModEvents {
     fun livingDamageEventBefore(event: LivingDamageEvent.Pre) {
         EntityDamagedEvent.Before.callback(EntityDamagedEvent.EntityDamage(event.entity, event.source, event.originalDamage, EntityDamagedEvent.Before))
@@ -77,6 +85,32 @@ object UnfocusedModEvents {
         }
     }
 
+    fun tradeRegisterEvent(event: VillagerTradesEvent) {
+        Trades.register{ trade ->
+            if(trade.profession == event.type) {
+                event.trades.computeIfAbsent(
+                    trade.rarity,
+                    { _: Int -> NonNullList.create<VillagerTrades.ItemListing>() } as Int2ObjectFunction<NonNullList<VillagerTrades.ItemListing>>
+                ).add(trade.trade)
+            }
+        }
+    }
+
+    fun wanderingTradesRegisterEvent(event: WandererTradesEvent) {
+        Trades.register{ trade ->
+            if(trade.rarity > 0)
+                event.rareTrades.add(trade.trade)
+            else
+                event.genericTrades.add(trade.trade)
+        }
+    }
+
+    fun commandRegistrationEvent(event: RegisterCommandsEvent) {
+        CommandRegistration.register{
+            it.callback(event.dispatcher, event.buildContext, event.commandSelection)
+        }
+    }
+
     fun register(bus: IEventBus) {
         NeoForge.EVENT_BUS.addListener(::livingDamageEventBefore)
         NeoForge.EVENT_BUS.addListener(::livingDamageEventAfter)
@@ -86,6 +120,9 @@ object UnfocusedModEvents {
         NeoForge.EVENT_BUS.addListener(::playerTickEventAfter)
         NeoForge.EVENT_BUS.addListener(::serverLifecycleEvent)
         NeoForge.EVENT_BUS.addListener(::modifyLootTable)
+        NeoForge.EVENT_BUS.addListener(::tradeRegisterEvent)
+        NeoForge.EVENT_BUS.addListener(::wanderingTradesRegisterEvent)
+        NeoForge.EVENT_BUS.addListener(::commandRegistrationEvent)
 
         bus.addListener(EventPriority.LOWEST, ::registerEvent)
         bus.addListener(::attributeEvent)

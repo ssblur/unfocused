@@ -1,7 +1,9 @@
 package com.ssblur.unfocused.fabric
 
 import com.ssblur.unfocused.Unfocused
+import com.ssblur.unfocused.command.CommandRegistration
 import com.ssblur.unfocused.entity.EntityAttributes
+import com.ssblur.unfocused.entity.Trades
 import com.ssblur.unfocused.event.common.LootTablePopulateEvent
 import com.ssblur.unfocused.event.common.PlayerChatEvent
 import com.ssblur.unfocused.event.common.ServerStartEvent
@@ -10,10 +12,12 @@ import com.ssblur.unfocused.fabric.events.UnfocusedModData
 import com.ssblur.unfocused.registry.RegistryTypes
 import net.fabricmc.api.ModInitializer
 import net.fabricmc.fabric.api.biome.v1.BiomeModifications
+import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents
 import net.fabricmc.fabric.api.loot.v3.LootTableEvents
 import net.fabricmc.fabric.api.message.v1.ServerMessageEvents
 import net.fabricmc.fabric.api.`object`.builder.v1.entity.FabricDefaultAttributeRegistry
+import net.fabricmc.fabric.api.`object`.builder.v1.trade.TradeOfferHelper
 import net.minecraft.core.Registry
 import net.minecraft.core.registries.BuiltInRegistries
 import net.minecraft.core.registries.Registries
@@ -97,7 +101,7 @@ class UnfocusedModFabric: ModInitializer {
                                 it.hasTag(TagKey.create(Registries.BIOME, ResourceLocation.parse(modification.biomes.substring(1))))
                             it.biomeKey.location().equals(modification.biomes)
                         },
-                        GenerationStep.Decoration.entries.first { it.getName() == modification.step!! },
+                        GenerationStep.Decoration.entries.first { it.getName().equals(modification.step ?: "raw_generation") },
                         ResourceKey.create(Registries.PLACED_FEATURE, ResourceLocation.parse(modification.features!!))
                     )
                 }
@@ -136,6 +140,19 @@ class UnfocusedModFabric: ModInitializer {
                 "unfocused:remove_carver" -> {
                     // todo
                 }
+            }
+        }
+
+        Trades.register{ trade ->
+            if(trade.profession != null)
+                TradeOfferHelper.registerVillagerOffers(trade.profession, trade.rarity) { list -> list.add(trade.trade) }
+            else
+                TradeOfferHelper.registerWanderingTraderOffers(trade.rarity) { list -> list.add(trade.trade) }
+        }
+
+        CommandRegistration.register{
+            CommandRegistrationCallback.EVENT.register{ dispatcher, access, environment ->
+                it.callback(dispatcher, access, environment)
             }
         }
 
