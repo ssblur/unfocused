@@ -19,11 +19,8 @@ transitive-accessible field net/minecraft/client/renderer/RenderStateShard GLINT
 transitive-accessible field net/minecraft/client/renderer/RenderStateShard CRUMBLING_TRANSPARENCY Lnet/minecraft/client/renderer/RenderStateShard$TransparencyStateShard;
 transitive-accessible field net/minecraft/client/renderer/RenderStateShard TRANSLUCENT_TRANSPARENCY Lnet/minecraft/client/renderer/RenderStateShard$TransparencyStateShard;
 transitive-accessible field net/minecraft/client/renderer/RenderStateShard NO_SHADER Lnet/minecraft/client/renderer/RenderStateShard$ShaderStateShard;
-transitive-accessible field net/minecraft/client/renderer/RenderStateShard BLOCK_SHADER Lnet/minecraft/client/renderer/RenderStateShard$ShaderStateShard;
-transitive-accessible field net/minecraft/client/renderer/RenderStateShard NEW_ENTITY_SHADER Lnet/minecraft/client/renderer/RenderStateShard$ShaderStateShard;
 transitive-accessible field net/minecraft/client/renderer/RenderStateShard POSITION_COLOR_LIGHTMAP_SHADER Lnet/minecraft/client/renderer/RenderStateShard$ShaderStateShard;
 transitive-accessible field net/minecraft/client/renderer/RenderStateShard POSITION_SHADER Lnet/minecraft/client/renderer/RenderStateShard$ShaderStateShard;
-transitive-accessible field net/minecraft/client/renderer/RenderStateShard POSITION_COLOR_TEX_SHADER Lnet/minecraft/client/renderer/RenderStateShard$ShaderStateShard;
 transitive-accessible field net/minecraft/client/renderer/RenderStateShard POSITION_TEX_SHADER Lnet/minecraft/client/renderer/RenderStateShard$ShaderStateShard;
 transitive-accessible field net/minecraft/client/renderer/RenderStateShard POSITION_COLOR_TEX_LIGHTMAP_SHADER Lnet/minecraft/client/renderer/RenderStateShard$ShaderStateShard;
 transitive-accessible field net/minecraft/client/renderer/RenderStateShard POSITION_COLOR_SHADER Lnet/minecraft/client/renderer/RenderStateShard$ShaderStateShard;
@@ -32,7 +29,6 @@ transitive-accessible field net/minecraft/client/renderer/RenderStateShard RENDE
 transitive-accessible field net/minecraft/client/renderer/RenderStateShard RENDERTYPE_CUTOUT_SHADER Lnet/minecraft/client/renderer/RenderStateShard$ShaderStateShard;
 transitive-accessible field net/minecraft/client/renderer/RenderStateShard RENDERTYPE_TRANSLUCENT_SHADER Lnet/minecraft/client/renderer/RenderStateShard$ShaderStateShard;
 transitive-accessible field net/minecraft/client/renderer/RenderStateShard RENDERTYPE_TRANSLUCENT_MOVING_BLOCK_SHADER Lnet/minecraft/client/renderer/RenderStateShard$ShaderStateShard;
-transitive-accessible field net/minecraft/client/renderer/RenderStateShard RENDERTYPE_TRANSLUCENT_NO_CRUMBLING_SHADER Lnet/minecraft/client/renderer/RenderStateShard$ShaderStateShard;
 transitive-accessible field net/minecraft/client/renderer/RenderStateShard RENDERTYPE_ARMOR_CUTOUT_NO_CULL_SHADER Lnet/minecraft/client/renderer/RenderStateShard$ShaderStateShard;
 transitive-accessible field net/minecraft/client/renderer/RenderStateShard RENDERTYPE_ENTITY_SOLID_SHADER Lnet/minecraft/client/renderer/RenderStateShard$ShaderStateShard;
 transitive-accessible field net/minecraft/client/renderer/RenderStateShard RENDERTYPE_ENTITY_CUTOUT_SHADER Lnet/minecraft/client/renderer/RenderStateShard$ShaderStateShard;
@@ -53,11 +49,9 @@ transitive-accessible field net/minecraft/client/renderer/RenderStateShard RENDE
 transitive-accessible field net/minecraft/client/renderer/RenderStateShard RENDERTYPE_LEASH_SHADER Lnet/minecraft/client/renderer/RenderStateShard$ShaderStateShard;
 transitive-accessible field net/minecraft/client/renderer/RenderStateShard RENDERTYPE_WATER_MASK_SHADER Lnet/minecraft/client/renderer/RenderStateShard$ShaderStateShard;
 transitive-accessible field net/minecraft/client/renderer/RenderStateShard RENDERTYPE_OUTLINE_SHADER Lnet/minecraft/client/renderer/RenderStateShard$ShaderStateShard;
-transitive-accessible field net/minecraft/client/renderer/RenderStateShard RENDERTYPE_ARMOR_GLINT_SHADER Lnet/minecraft/client/renderer/RenderStateShard$ShaderStateShard;
 transitive-accessible field net/minecraft/client/renderer/RenderStateShard RENDERTYPE_ARMOR_ENTITY_GLINT_SHADER Lnet/minecraft/client/renderer/RenderStateShard$ShaderStateShard;
 transitive-accessible field net/minecraft/client/renderer/RenderStateShard RENDERTYPE_GLINT_TRANSLUCENT_SHADER Lnet/minecraft/client/renderer/RenderStateShard$ShaderStateShard;
 transitive-accessible field net/minecraft/client/renderer/RenderStateShard RENDERTYPE_GLINT_SHADER Lnet/minecraft/client/renderer/RenderStateShard$ShaderStateShard;
-transitive-accessible field net/minecraft/client/renderer/RenderStateShard RENDERTYPE_GLINT_DIRECT_SHADER Lnet/minecraft/client/renderer/RenderStateShard$ShaderStateShard;
 transitive-accessible field net/minecraft/client/renderer/RenderStateShard RENDERTYPE_ENTITY_GLINT_SHADER Lnet/minecraft/client/renderer/RenderStateShard$ShaderStateShard;
 transitive-accessible field net/minecraft/client/renderer/RenderStateShard RENDERTYPE_ENTITY_GLINT_DIRECT_SHADER Lnet/minecraft/client/renderer/RenderStateShard$ShaderStateShard;
 transitive-accessible field net/minecraft/client/renderer/RenderStateShard RENDERTYPE_CRUMBLING_SHADER Lnet/minecraft/client/renderer/RenderStateShard$ShaderStateShard;
