@@ -14,7 +14,7 @@ import java.util.function.Supplier
 
 @Suppress("unused")
 object CreativeTabs {
-    private val acceptor: SimpleEvent<CreativeTabEntry> = SimpleEvent(retroactive = true)
+    private val acceptor: SimpleEvent<CreativeTabEntry> = SimpleEvent(retroactive = true, clearAfterRun = false)
     data class CreativeTabEntry(val id: ResourceLocation, val item: ItemLike?, val stack: ItemStack?)
     fun ModInitializer.registerCreativeTab(id: String, supplier: Supplier<CreativeModeTab>): RegistrySupplier<CreativeModeTab> {
         return CREATIVE_TABS.register(id, supplier)
