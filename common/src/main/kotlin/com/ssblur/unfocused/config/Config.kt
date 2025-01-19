@@ -42,7 +42,11 @@ class Config( val id: String) {
         val file = dir.resolve("$id.cfg")
         val writer = file.writer(Charset.defaultCharset())
         writer.write("## Config file for $id\n")
+        writer.write("## These are default values for gamerules.\n")
+        writer.write("## If your world has already been created, you can change them\n")
+        writer.write("## using '/gamerule $id:[var]'\n\n\n")
         for(line in values.entries) {
+            writer.write("## Default value for '$id:${line.key}' gamerule\n")
             writer.write(line.key)
             writer.write(":")
             writer.write(line.value.replace("\n", "\n  "))

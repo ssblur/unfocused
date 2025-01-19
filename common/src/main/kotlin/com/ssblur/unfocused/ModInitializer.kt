@@ -34,13 +34,8 @@ import java.util.function.Supplier
 
 @Suppress("unused", "unchecked_cast")
 open class ModInitializer(val id: String) {
-    val CONFIG = Config(id)
-    private var modConfig: GameRuleConfig? = null
-    fun config(): GameRuleConfig {
-        if(modConfig == null)
-            modConfig = GameRuleConfig(this)
-        return modConfig!!
-    }
+    val CONFIG: Config by lazy { Config(id) }
+    val config: GameRuleConfig by lazy { GameRuleConfig(this) }
 
     var BLOCKS = RegistryTypes.BLOCK.create(id)
     var ITEMS = RegistryTypes.ITEM.create(id)
