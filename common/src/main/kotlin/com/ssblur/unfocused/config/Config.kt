@@ -75,8 +75,10 @@ class Config( val id: String) {
             } else {
                 if(key.isNotEmpty()) values[key] = value
                 val split = it.split(":".toRegex(), 2)
-                key = split[0]
-                value = split[1]
+                if(split.size >= 2) {
+                    key = split[0]
+                    value = split[1]
+                }
             }
         }
         if(key.isNotEmpty()) values[key] = value
