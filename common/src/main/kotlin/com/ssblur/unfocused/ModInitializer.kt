@@ -1,5 +1,6 @@
 package com.ssblur.unfocused
 
+import com.ssblur.unfocused.advancement.GenericTrigger
 import com.ssblur.unfocused.registry.RegistrySupplier
 import com.ssblur.unfocused.registry.RegistryTypes
 import net.minecraft.advancements.CriterionTrigger
@@ -103,6 +104,9 @@ open class ModInitializer(val id: String) {
 
     fun <T : CriterionTrigger<*>> registerTrigger(id: String, supplier: Supplier<T>): RegistrySupplier<T> {
         return TRIGGER_TYPES.register(id, supplier as Supplier<CriterionTrigger<*>>) as RegistrySupplier<T>
+    }
+    fun <T : CriterionTrigger<*>> registerGenericTrigger(id: String): RegistrySupplier<T> {
+        return TRIGGER_TYPES.register(id) { GenericTrigger(location(id)) } as RegistrySupplier<T>
     }
 
     fun <T: Recipe<*>> registerRecipeSerializer(id: String, supplier: Supplier<RecipeSerializer<T>>): RegistrySupplier<RecipeSerializer<T>> {
