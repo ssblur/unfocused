@@ -5,12 +5,14 @@ import net.fabricmc.api.EnvType
 import net.fabricmc.api.Environment
 import net.fabricmc.fabric.api.client.rendering.v1.ColorProviderRegistry
 import net.fabricmc.fabric.api.itemgroup.v1.FabricItemGroup
+import net.fabricmc.loader.api.FabricLoader
 import net.fabricmc.loader.impl.FabricLoaderImpl
 import net.minecraft.client.color.block.BlockColor
 import net.minecraft.client.color.item.ItemColor
 import net.minecraft.world.item.CreativeModeTab
 import net.minecraft.world.level.ItemLike
 import net.minecraft.world.level.block.Block
+import java.nio.file.Path
 import java.util.function.Supplier
 
 @Suppress("unused")
@@ -34,4 +36,7 @@ object UtilityExpectPlatformImpl {
     fun registerColor(color: BlockColor, vararg blocks: Supplier<Block>) {
         ColorProviderRegistry.BLOCK.register(color, *blocks.map{ it.get() }.toTypedArray())
     }
+
+    @JvmStatic
+    fun configDir(): Path = FabricLoader.getInstance().configDir
 }

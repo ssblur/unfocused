@@ -7,6 +7,7 @@ import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload
 
+@Suppress("unchecked_cast")
 object UnfocusedModNetworking {
     fun init() {
         NetworkManager.subscribeToC2SRegistration (

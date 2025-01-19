@@ -8,6 +8,8 @@ import net.minecraft.world.level.ItemLike
 import net.minecraft.world.level.block.Block
 import net.neoforged.api.distmarker.Dist
 import net.neoforged.fml.loading.FMLEnvironment
+import net.neoforged.fml.loading.FMLPaths
+import java.nio.file.Path
 import java.util.function.Supplier
 
 @Suppress("unused")
@@ -36,4 +38,7 @@ object UtilityExpectPlatformImpl {
             BLOCK_COLORS += Pair(color, it)
         }
     }
+
+    @JvmStatic
+    fun configDir(): Path = FMLPaths.CONFIGDIR.get()
 }

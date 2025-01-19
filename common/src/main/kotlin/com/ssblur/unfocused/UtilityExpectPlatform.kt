@@ -9,6 +9,7 @@ import net.minecraft.client.color.item.ItemColor
 import net.minecraft.world.item.CreativeModeTab
 import net.minecraft.world.level.ItemLike
 import net.minecraft.world.level.block.Block
+import java.nio.file.Path
 import java.util.function.Supplier
 
 @Suppress("unused", "unused_parameter")
@@ -36,6 +37,13 @@ object UtilityExpectPlatform {
     @ExpectPlatform
     @JvmStatic
     fun registerColor(color: BlockColor, vararg blocks: Supplier<Block>) {
+        throw AssertionError()
+    }
+
+
+    @ExpectPlatform
+    @JvmStatic
+    fun configDir(): Path {
         throw AssertionError()
     }
 }
