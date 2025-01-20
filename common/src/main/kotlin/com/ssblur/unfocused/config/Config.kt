@@ -44,9 +44,9 @@ class Config(val id: String, val delimeter: String = "=") {
         writer.write("## Config file for $id\n")
         writer.write("## These are default values for gamerules.\n")
         writer.write("## If your world has already been created, you can change them\n")
-        writer.write("## using '/gamerule $id$delimeter[var]'\n\n\n")
+        writer.write("## using '/gamerule $id:[var]'\n\n\n")
         for(line in values.entries) {
-            writer.write("## Default value for '$id$delimeter${line.key}' gamerule\n")
+            writer.write("## Default value for '$id:${line.key}' gamerule\n")
             writer.write(line.key)
             writer.write(delimeter)
             writer.write(line.value.replace("\n", "\n  "))
