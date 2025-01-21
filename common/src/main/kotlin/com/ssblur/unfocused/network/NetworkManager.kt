@@ -1,5 +1,7 @@
 package com.ssblur.unfocused.network
 
+import com.ssblur.unfocused.event.SimpleEvent
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload
 import net.minecraft.resources.ResourceLocation
 import net.minecraft.server.level.ServerPlayer
 import net.minecraft.world.entity.player.Player
@@ -25,6 +27,10 @@ object NetworkManager {
     val s2cTypes: ArrayList<S2CType> = arrayListOf()
     val s2cSubscribers: ArrayList<S2CSubscriber> = arrayListOf()
     val s2cMessengers: ArrayList<S2CMessenger> = arrayListOf()
+
+    data class PlayerPacket(val players: List<Player>, val packet: CustomPacketPayload)
+    val s2cQueue = SimpleEvent<PlayerPacket>()
+    val c2sQueue = SimpleEvent<CustomPacketPayload>()
 
     /**
      * Register a new Client-to-Server message type.
@@ -89,5 +95,17 @@ object NetworkManager {
         c2sTypes.forEach { subscriber.post(it) }
         c2sSubscribers += subscriber
         c2sMessengers += messenger
+    }
+
+    fun CustomPacketPayload.sendToServer() {
+        c2sQueue.callback(this)
+    }
+
+    fun CustomPacketPayload.sendToClient(players: Iterable<Player>) {
+        s2cQueue.callback(PlayerPacket(players.toList(), this))
+    }
+
+    fun CustomPacketPayload.sendToClient(vararg players: Player) {
+        this.sendToClient(players.toList())
     }
 }

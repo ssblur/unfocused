@@ -39,5 +39,15 @@ object UnfocusedModNetworking {
             },
             { location, type, payload, players -> players.forEach { PacketDistributor.sendToPlayer(it as ServerPlayer, KClassPacket(location, type, payload)) } }
         )
+
+        NetworkManager.s2cQueue.register{ (players, packet) ->
+            players.forEach{
+                PacketDistributor.sendToPlayer(it as ServerPlayer, packet)
+            }
+        }
+
+        NetworkManager.c2sQueue.register{
+            PacketDistributor.sendToServer(it)
+        }
     }
 }
