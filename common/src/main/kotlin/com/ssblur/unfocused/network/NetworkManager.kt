@@ -1,6 +1,8 @@
 package com.ssblur.unfocused.network
 
 import com.ssblur.unfocused.event.SimpleEvent
+import net.minecraft.network.PacketListener
+import net.minecraft.network.protocol.Packet
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload
 import net.minecraft.resources.ResourceLocation
 import net.minecraft.server.level.ServerPlayer
@@ -101,11 +103,23 @@ object NetworkManager {
         c2sQueue.callback(this)
     }
 
+    fun <T: PacketListener> Packet<T>.sendToServer() {
+        (this as CustomPacketPayload).sendToServer()
+    }
+
     fun CustomPacketPayload.sendToClient(players: Iterable<Player>) {
         s2cQueue.callback(PlayerPacket(players.toList(), this))
     }
 
+    fun <T: PacketListener> Packet<T>.sendToClient(players: Iterable<Player>) {
+        (this as CustomPacketPayload).sendToClient(players)
+    }
+
     fun CustomPacketPayload.sendToClient(vararg players: Player) {
         this.sendToClient(players.toList())
+    }
+
+    fun <T: PacketListener> Packet<T>.sendToClient(vararg players: Player) {
+        (this as CustomPacketPayload).sendToClient(players.toList())
     }
 }
