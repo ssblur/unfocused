@@ -14,7 +14,7 @@ import java.util.function.Predicate
 import java.util.function.Supplier
 import kotlin.jvm.optionals.getOrNull
 
-@Suppress("unused", "UNCHECKED_CAST")
+@Suppress("unused", "unchecked_cast")
 class RegistrySupplier<T>(
     val supplier: Supplier<T>,
     val location: ResourceLocation? = null,
@@ -58,8 +58,6 @@ class RegistrySupplier<T>(
     override fun `is`(predicate: Predicate<ResourceKey<T>>) = key?.let { predicate.test(it) } ?: false
     override fun `is`(resourceKey: ResourceKey<T>) = resourceKey == key
     override fun `is`(resourceLocation: ResourceLocation) = resourceLocation == location
-    @Deprecated("Deprecated in Java",
-        ReplaceWith("equals")
-    )
+    @Deprecated("Deprecated in Java", ReplaceWith("equals"))
     override fun `is`(holder: Holder<T>) = location?.let { holder.`is`(it) } ?:  (isBound && holder.isBound && value() == holder.value())
 }

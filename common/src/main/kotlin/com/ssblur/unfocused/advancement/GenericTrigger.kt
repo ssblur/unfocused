@@ -3,6 +3,7 @@ package com.ssblur.unfocused.advancement
 import com.mojang.serialization.Codec
 import com.mojang.serialization.codecs.RecordCodecBuilder
 import com.ssblur.unfocused.Unfocused
+import com.ssblur.unfocused.registry.RegistrySupplier
 import net.minecraft.advancements.critereon.ContextAwarePredicate
 import net.minecraft.advancements.critereon.SimpleCriterionTrigger
 import net.minecraft.resources.ResourceLocation
@@ -20,6 +21,9 @@ class GenericTrigger(var location: ResourceLocation) :
             Unfocused.LOGGER.error(e)
         }
     }
+
+    fun RegistrySupplier<GenericTrigger>.trigger(player: ServerPlayer?) = this.get().trigger(player)
+    operator fun RegistrySupplier<GenericTrigger>.invoke(player: ServerPlayer?) = this.get().trigger(player)
 
     override fun codec(): Codec<Instance> {
         return Instance.CODEC
