@@ -8,6 +8,7 @@ import com.ssblur.unfocused.rendering.BlockEntityRendering
 import com.ssblur.unfocused.rendering.EntityRendering
 import com.ssblur.unfocused.rendering.ParticleFactories
 import net.minecraft.client.Minecraft
+import net.minecraft.client.particle.ParticleProvider
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider
 import net.minecraft.client.renderer.entity.EntityRendererProvider
 import net.minecraft.world.entity.Entity
@@ -38,7 +39,15 @@ object UnfocusedModClientEvents {
 
     fun registerParticleProviders(event: RegisterParticleProvidersEvent) {
         ParticleFactories.register{ pair ->
-            event.registerSpecial(pair.particle, pair.provider)
+            pair.ifLeft {
+                event.registerSpecial(it.particle, it.provider)
+            }.ifRight{
+                event.registerSpriteSet(it.particle) { sprite ->
+                    ParticleProvider { options, clientLevel, d, e, f, g, h, i ->
+                        it.provider(sprite).createParticle(options, clientLevel, d, e, f, g, h, i)
+                    }
+                }
+            }
         }
     }
 

@@ -49,7 +49,7 @@ class Config(val id: String, val delimeter: String = "=") {
         val writer = file.writer(Charset.defaultCharset())
         writer.write("## Config file for $id\n")
         writer.write("## These are default values for gamerules.\n")
-        writer.write("## If your world has already been created, you can change them\n")
+        writer.write("## If your world has already been created, you can change most of them\n")
         writer.write("## using '/gamerule $id:[var]'\n\n\n")
         for(line in values.entries) {
             for(comment in comments[line.key] ?: listOf())

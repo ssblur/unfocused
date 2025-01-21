@@ -12,6 +12,7 @@ import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents
 import net.fabricmc.fabric.api.client.item.v1.ItemTooltipCallback
 import net.fabricmc.fabric.api.client.particle.v1.ParticleFactoryRegistry
 import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry
+import net.minecraft.client.particle.ParticleProvider
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderers
 import net.minecraft.client.renderer.entity.EntityRendererProvider
@@ -29,7 +30,15 @@ class UnfocusedModFabricClient: ClientModInitializer {
             EntityRendererRegistry.register(pair.type.get(), pair.renderer as EntityRendererProvider<Entity>)
         }
         ParticleFactories.register{ pair ->
-            ParticleFactoryRegistry.getInstance().register(pair.particle, pair.provider)
+            pair.ifLeft {
+                ParticleFactoryRegistry.getInstance().register(it.particle, it.provider)
+            }.ifRight{
+                ParticleFactoryRegistry.getInstance().register(it.particle) { sprite ->
+                    ParticleProvider { options, clientLevel, d, e, f, g, h, i ->
+                        it.provider(sprite).createParticle(options, clientLevel, d, e, f, g, h, i)
+                    }
+                }
+            }
         }
 
         UnfocusedModNetworkingClient.init()
