@@ -15,6 +15,7 @@ class Config(val id: String, val delimeter: String = "=") {
     }
 
     private val values: MutableMap<String, String> = mutableMapOf()
+    private val comments: MutableMap<String, List<String>> = mutableMapOf()
     private var dirty = false
     private var loaded = false
 
@@ -28,10 +29,15 @@ class Config(val id: String, val delimeter: String = "=") {
         return values[key]
     }
 
-    fun get(key: String, default: String): String {
+    fun get(key: String, default: String, vararg comment: String): String {
         if(!loaded) load()
-        if(values[key] == null)
+        if(values[key] == null) {
             set(key, default)
+            if(comment.isEmpty())
+                comments[key] = listOf("Default value for '$id:$key' gamerule")
+            else
+                comments[key] = comment.toList()
+        }
         return values[key]!!
     }
 
@@ -46,7 +52,8 @@ class Config(val id: String, val delimeter: String = "=") {
         writer.write("## If your world has already been created, you can change them\n")
         writer.write("## using '/gamerule $id:[var]'\n\n\n")
         for(line in values.entries) {
-            writer.write("## Default value for '$id:${line.key}' gamerule\n")
+            for(comment in comments[line.key] ?: listOf())
+                writer.write("## $comment\n")
             writer.write(line.key)
             writer.write(delimeter)
             writer.write(line.value.replace("\n", "\n  "))
@@ -68,20 +75,30 @@ class Config(val id: String, val delimeter: String = "=") {
         val reader = file.reader(Charset.defaultCharset())
         var value = ""
         var key = ""
+        var comment = mutableListOf<String>()
         reader.forEachLine {
-            if(it.startsWith("##")) return@forEachLine
+            if(it.startsWith("##")) {
+                comment += it.substring(2).trimStart()
+            }
             if("^\\s+(.*)".toRegex().matches(it)) {
                 "^\\s+(.*)".toRegex().find(it)?.let { match -> value += match.groups[1]?.value + "\n" }
             } else {
-                if(key.isNotEmpty()) values[key] = value
+                if(key.isNotEmpty()) {
+                    values[key] = value
+                    comments[key] = comment
+                    comment = mutableListOf()
+                }
                 val split = it.split(delimeter.toRegex(), 2)
                 if(split.size >= 2) {
                     key = split[0].trim()
                     value = split[1].trim()
-                }
+                } else comment += ""
             }
         }
-        if(key.isNotEmpty()) values[key] = value
+        if(key.isNotEmpty()){
+            values[key] = value
+            comments[key] = comment
+        }
         loaded = true
     }
 }
