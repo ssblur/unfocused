@@ -76,8 +76,8 @@ class Config(val id: String, val delimeter: String = "=") {
                 if(key.isNotEmpty()) values[key] = value
                 val split = it.split(delimeter.toRegex(), 2)
                 if(split.size >= 2) {
-                    key = split[0]
-                    value = split[1]
+                    key = split[0].trim()
+                    value = split[1].trim()
                 }
             }
         }
