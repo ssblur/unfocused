@@ -7,7 +7,7 @@ import kotlin.io.path.exists
 import kotlin.io.path.reader
 import kotlin.io.path.writer
 
-class Config(val id: String, val delimeter: String = "=") {
+class Config(val id: String, val delimeter: String = "=", val topComment: String? = null) {
     init {
         ServerStartEvent.register{
             it.addTickable{ if(dirty) save() }
@@ -47,10 +47,12 @@ class Config(val id: String, val delimeter: String = "=") {
         val dir = UtilityExpectPlatform.configDir()
         val file = dir.resolve("$id.cfg")
         val writer = file.writer(Charset.defaultCharset())
-        writer.write("## Config file for $id\n")
-        writer.write("## These are default values for gamerules.\n")
-        writer.write("## If your world has already been created, you can change most of them\n")
-        writer.write("## using '/gamerule $id:[var]'\n\n\n")
+        if(topComment != null) {
+            writer.write("## Config file for $id\n")
+            writer.write("## These are default values for gamerules.\n")
+            writer.write("## If your world has already been created, you can change most of them\n")
+            writer.write("## using '/gamerule $id:[var]'\n\n\n")
+        }
         for(line in values.entries) {
             for(comment in comments[line.key] ?: listOf())
                 writer.write("## $comment\n")
