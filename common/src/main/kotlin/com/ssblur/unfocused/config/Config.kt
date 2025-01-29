@@ -47,11 +47,13 @@ class Config(val id: String, val delimeter: String = "=", val topComment: String
         val dir = UtilityExpectPlatform.configDir()
         val file = dir.resolve("$id.cfg")
         val writer = file.writer(Charset.defaultCharset())
-        if(topComment != null) {
+        if(topComment == null) {
             writer.write("## Config file for $id\n")
             writer.write("## These are default values for gamerules.\n")
             writer.write("## If your world has already been created, you can change most of them\n")
             writer.write("## using '/gamerule $id:[var]'\n\n\n")
+        } else {
+            writer.write(topComment)
         }
         for(line in values.entries) {
             for(comment in comments[line.key] ?: listOf())
@@ -78,6 +80,7 @@ class Config(val id: String, val delimeter: String = "=", val topComment: String
         var value = ""
         var key = ""
         var comment = mutableListOf<String>()
+        var first = true
         reader.forEachLine {
             if(it.startsWith("##")) {
                 comment += it.substring(2).trimStart()
@@ -87,8 +90,9 @@ class Config(val id: String, val delimeter: String = "=", val topComment: String
             } else {
                 if(key.isNotEmpty()) {
                     values[key] = value
-                    comments[key] = comment
+                    if(!first) comments[key] = comment
                     comment = mutableListOf()
+                    first = false
                 }
                 val split = it.split(delimeter.toRegex(), 2)
                 if(split.size >= 2) {
