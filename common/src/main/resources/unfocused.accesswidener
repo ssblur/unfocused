@@ -10,6 +10,8 @@ transitive-accessible class net/minecraft/client/renderer/RenderType$CompositeSt
 transitive-accessible class net/minecraft/client/renderer/RenderType$CompositeRenderType
 transitive-accessible class net/minecraft/client/renderer/RenderType$OutlineProperty
 transitive-accessible class net/minecraft/world/inventory/MenuType
+transitive-accessible method net/minecraft/world/inventory/MenuType <init> (Lnet/minecraft/world/inventory/MenuType$MenuSupplier;Lnet/minecraft/world/flag/FeatureFlagSet;)V
+
 
 # Render fields, sourced from https://github.com/architectury/architectury-api
 transitive-accessible field net/minecraft/client/renderer/RenderStateShard VIEW_SCALE_Z_EPSILON F
