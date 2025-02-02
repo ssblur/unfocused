@@ -9,6 +9,7 @@ transitive-accessible method net/minecraft/client/renderer/RenderType create (Lj
 transitive-accessible class net/minecraft/client/renderer/RenderType$CompositeState
 transitive-accessible class net/minecraft/client/renderer/RenderType$CompositeRenderType
 transitive-accessible class net/minecraft/client/renderer/RenderType$OutlineProperty
+transitive-accessible class net/minecraft/world/inventory/MenuType
 
 # Render fields, sourced from https://github.com/architectury/architectury-api
 transitive-accessible field net/minecraft/client/renderer/RenderStateShard VIEW_SCALE_Z_EPSILON F
