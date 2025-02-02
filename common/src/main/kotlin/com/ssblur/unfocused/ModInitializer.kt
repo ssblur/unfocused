@@ -150,8 +150,8 @@ open class ModInitializer(val id: String) {
     return PARTICLE_TYPES.register(id, supplier as Supplier<ParticleType<*>>) as RegistrySupplier<ParticleType<T>>
   }
 
-  fun <T: AbstractContainerMenu> registerMenu(id: String, supplier: Supplier<MenuType<T>>): Supplier<MenuType<T>> {
-    return MENUS.register(id, supplier as Supplier<MenuType<*>>) as Supplier<MenuType<T>>
+  fun <T: AbstractContainerMenu> registerMenu(id: String, supplier: Supplier<MenuType<T>>): RegistrySupplier<MenuType<T>> {
+    return MENUS.register(id, supplier as Supplier<MenuType<*>>) as RegistrySupplier<MenuType<T>>
   }
 
   fun location(path: String) = ResourceLocation.fromNamespaceAndPath(id, path)
