@@ -1,4 +1,5 @@
 @file:JvmName("UtilityExpectPlatformImpl")
+
 package com.ssblur.unfocused.fabric
 
 import net.fabricmc.api.EnvType
@@ -17,26 +18,27 @@ import java.util.function.Supplier
 
 @Suppress("unused")
 object UtilityExpectPlatformImpl {
-    @JvmStatic
-    fun creativeTabBuilder(): CreativeModeTab.Builder = FabricItemGroup.builder()
+  @JvmStatic
+  fun creativeTabBuilder(): CreativeModeTab.Builder = FabricItemGroup.builder()
 
-    @JvmStatic
-    fun isClient(): Boolean = FabricLoaderImpl.INSTANCE.environmentType == EnvType.CLIENT
-    @JvmStatic
-    fun isServer(): Boolean = FabricLoaderImpl.INSTANCE.environmentType == EnvType.SERVER
+  @JvmStatic
+  fun isClient(): Boolean = FabricLoaderImpl.INSTANCE.environmentType == EnvType.CLIENT
 
-    @Environment(EnvType.CLIENT)
-    @JvmStatic
-    fun registerColor(color: ItemColor, vararg items: Supplier<ItemLike>) {
-        ColorProviderRegistry.ITEM.register(color, *items.map{ it.get() }.toTypedArray())
-    }
+  @JvmStatic
+  fun isServer(): Boolean = FabricLoaderImpl.INSTANCE.environmentType == EnvType.SERVER
 
-    @Environment(EnvType.CLIENT)
-    @JvmStatic
-    fun registerColor(color: BlockColor, vararg blocks: Supplier<Block>) {
-        ColorProviderRegistry.BLOCK.register(color, *blocks.map{ it.get() }.toTypedArray())
-    }
+  @Environment(EnvType.CLIENT)
+  @JvmStatic
+  fun registerColor(color: ItemColor, vararg items: Supplier<ItemLike>) {
+    ColorProviderRegistry.ITEM.register(color, *items.map { it.get() }.toTypedArray())
+  }
 
-    @JvmStatic
-    fun configDir(): Path = FabricLoader.getInstance().configDir
+  @Environment(EnvType.CLIENT)
+  @JvmStatic
+  fun registerColor(color: BlockColor, vararg blocks: Supplier<Block>) {
+    ColorProviderRegistry.BLOCK.register(color, *blocks.map { it.get() }.toTypedArray())
+  }
+
+  @JvmStatic
+  fun configDir(): Path = FabricLoader.getInstance().configDir
 }

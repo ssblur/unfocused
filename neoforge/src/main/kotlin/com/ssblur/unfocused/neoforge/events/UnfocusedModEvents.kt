@@ -29,102 +29,130 @@ import net.neoforged.neoforge.registries.NeoForgeRegistries
 import net.neoforged.neoforge.registries.RegisterEvent
 
 object UnfocusedModEvents {
-    fun livingDamageEventBefore(event: LivingDamageEvent.Pre) {
-        EntityDamagedEvent.Before.callback(EntityDamagedEvent.EntityDamage(event.entity, event.source, event.originalDamage, EntityDamagedEvent.Before))
-        if(EntityDamagedEvent.Before.isCancelled()) event.newDamage = EntityDamagedEvent.Before.value!!
-    }
-    fun livingDamageEventAfter(event: LivingDamageEvent.Post) =
-        EntityDamagedEvent.After.callback(EntityDamagedEvent.EntityDamage(event.entity, event.source, event.originalDamage, EntityDamagedEvent.After))
+  fun livingDamageEventBefore(event: LivingDamageEvent.Pre) {
+    EntityDamagedEvent.Before.callback(
+      EntityDamagedEvent.EntityDamage(
+        event.entity,
+        event.source,
+        event.originalDamage,
+        EntityDamagedEvent.Before
+      )
+    )
+    if (EntityDamagedEvent.Before.isCancelled()) event.newDamage = EntityDamagedEvent.Before.value!!
+  }
 
-    fun chatEvent(event: ServerChatEvent) {
-        PlayerChatEvent.Before.callback(PlayerChatEvent.PlayerChatMessage(event.player, event.message, PlayerChatEvent.Before))
-        if(PlayerChatEvent.Before.isCancelled()) event.isCanceled = true
-        PlayerChatEvent.After.callback(PlayerChatEvent.PlayerChatMessage(event.player, event.message, PlayerChatEvent.After))
-    }
+  fun livingDamageEventAfter(event: LivingDamageEvent.Post) =
+    EntityDamagedEvent.After.callback(
+      EntityDamagedEvent.EntityDamage(
+        event.entity,
+        event.source,
+        event.originalDamage,
+        EntityDamagedEvent.After
+      )
+    )
 
-    fun playerJoinedEvent(event: PlayerLoggedInEvent) {
-        if(!event.entity.level().isClientSide) PlayerJoinedEvent.callback(event.entity as ServerPlayer)
-    }
+  fun chatEvent(event: ServerChatEvent) {
+    PlayerChatEvent.Before.callback(
+      PlayerChatEvent.PlayerChatMessage(
+        event.player,
+        event.message,
+        PlayerChatEvent.Before
+      )
+    )
+    if (PlayerChatEvent.Before.isCancelled()) event.isCanceled = true
+    PlayerChatEvent.After.callback(
+      PlayerChatEvent.PlayerChatMessage(
+        event.player,
+        event.message,
+        PlayerChatEvent.After
+      )
+    )
+  }
 
-    fun playerTickEventBefore(event: net.neoforged.neoforge.event.tick.PlayerTickEvent.Pre) {
-        if(event.entity is ServerPlayer)
-            PlayerTickEvent.Before.callback(event.entity as ServerPlayer)
-    }
-    fun playerTickEventAfter(event: net.neoforged.neoforge.event.tick.PlayerTickEvent.Post) {
-        if(event.entity is ServerPlayer)
-            PlayerTickEvent.After.callback(event.entity as ServerPlayer)
-    }
+  fun playerJoinedEvent(event: PlayerLoggedInEvent) {
+    if (!event.entity.level().isClientSide) PlayerJoinedEvent.callback(event.entity as ServerPlayer)
+  }
 
-    fun serverLifecycleEvent(event: ServerStartedEvent) {
-        ServerStartEvent.callback(event.server)
-    }
+  fun playerTickEventBefore(event: net.neoforged.neoforge.event.tick.PlayerTickEvent.Pre) {
+    if (event.entity is ServerPlayer)
+      PlayerTickEvent.Before.callback(event.entity as ServerPlayer)
+  }
 
-    fun attributeEvent(event: EntityAttributeCreationEvent) {
-        EntityAttributes.register{ (type, builder) ->
-            event.put(type.get(), builder.get().build())
-        }
-    }
+  fun playerTickEventAfter(event: net.neoforged.neoforge.event.tick.PlayerTickEvent.Post) {
+    if (event.entity is ServerPlayer)
+      PlayerTickEvent.After.callback(event.entity as ServerPlayer)
+  }
 
-    fun modifyLootTable(event: LootTableLoadEvent) {
-        val pools = mutableListOf<LootPool.Builder>()
-        LootTablePopulateEvent.callback(
-            LootTablePopulateEvent.LootTableContext(ResourceKey.create(Registries.LOOT_TABLE, event.name), true, pools)
-        )
-        pools.forEach { event.table.addPool(it.build()) }
-    }
+  fun serverLifecycleEvent(event: ServerStartedEvent) {
+    ServerStartEvent.callback(event.server)
+  }
 
-    fun registerEvent(event: RegisterEvent) {
-        event.register(NeoForgeRegistries.Keys.BIOME_MODIFIER_SERIALIZERS) { register -> // todo fix
-            register.register(Unfocused.location("add_feature"), NeoForgeMod.ADD_FEATURES_BIOME_MODIFIER_TYPE.get())
-            register.register(Unfocused.location("remove_feature"), NeoForgeMod.REMOVE_FEATURES_BIOME_MODIFIER_TYPE.get())
-            register.register(Unfocused.location("add_spawn"), NeoForgeMod.ADD_SPAWNS_BIOME_MODIFIER_TYPE.get())
-            register.register(Unfocused.location("remove_spawn"), NeoForgeMod.REMOVE_SPAWNS_BIOME_MODIFIER_TYPE.get())
-            register.register(Unfocused.location("add_carver"), NeoForgeMod.ADD_CARVERS_BIOME_MODIFIER_TYPE.get())
-            register.register(Unfocused.location("remove_carver"), NeoForgeMod.REMOVE_CARVERS_BIOME_MODIFIER_TYPE.get())
-        }
+  fun attributeEvent(event: EntityAttributeCreationEvent) {
+    EntityAttributes.register { (type, builder) ->
+      event.put(type.get(), builder.get().build())
     }
+  }
 
-    fun tradeRegisterEvent(event: VillagerTradesEvent) {
-        Trades.register{ trade ->
-            if(trade.profession == event.type) {
-                event.trades.computeIfAbsent(
-                    trade.rarity,
-                    Int2ObjectFunction<NonNullList<VillagerTrades.ItemListing>> { NonNullList.create() }
-                ).add(trade.trade)
-            }
-        }
+  fun modifyLootTable(event: LootTableLoadEvent) {
+    val pools = mutableListOf<LootPool.Builder>()
+    LootTablePopulateEvent.callback(
+      LootTablePopulateEvent.LootTableContext(ResourceKey.create(Registries.LOOT_TABLE, event.name), true, pools)
+    )
+    pools.forEach { event.table.addPool(it.build()) }
+  }
+
+  fun registerEvent(event: RegisterEvent) {
+    event.register(NeoForgeRegistries.Keys.BIOME_MODIFIER_SERIALIZERS) { register -> // todo fix
+      register.register(Unfocused.location("add_feature"), NeoForgeMod.ADD_FEATURES_BIOME_MODIFIER_TYPE.get())
+      register.register(Unfocused.location("remove_feature"), NeoForgeMod.REMOVE_FEATURES_BIOME_MODIFIER_TYPE.get())
+      register.register(Unfocused.location("add_spawn"), NeoForgeMod.ADD_SPAWNS_BIOME_MODIFIER_TYPE.get())
+      register.register(Unfocused.location("remove_spawn"), NeoForgeMod.REMOVE_SPAWNS_BIOME_MODIFIER_TYPE.get())
+      register.register(Unfocused.location("add_carver"), NeoForgeMod.ADD_CARVERS_BIOME_MODIFIER_TYPE.get())
+      register.register(Unfocused.location("remove_carver"), NeoForgeMod.REMOVE_CARVERS_BIOME_MODIFIER_TYPE.get())
     }
+  }
 
-    fun wanderingTradesRegisterEvent(event: WandererTradesEvent) {
-        Trades.register{ trade ->
-            if(trade.rarity > 0)
-                event.rareTrades.add(trade.trade)
-            else
-                event.genericTrades.add(trade.trade)
-        }
+  fun tradeRegisterEvent(event: VillagerTradesEvent) {
+    Trades.register { trade ->
+      if (trade.profession == event.type) {
+        event.trades.computeIfAbsent(
+          trade.rarity,
+          Int2ObjectFunction<NonNullList<VillagerTrades.ItemListing>> { NonNullList.create() }
+        ).add(trade.trade)
+      }
     }
+  }
 
-    fun commandRegistrationEvent(event: RegisterCommandsEvent) {
-        CommandRegistration.register{
-            it.callback(event.dispatcher, event.buildContext, event.commandSelection)
-        }
+  fun wanderingTradesRegisterEvent(event: WandererTradesEvent) {
+    Trades.register { trade ->
+      if (trade.rarity > 0)
+        event.rareTrades.add(trade.trade)
+      else
+        event.genericTrades.add(trade.trade)
     }
+  }
 
-    fun register(bus: IEventBus) {
-        NeoForge.EVENT_BUS.addListener(::livingDamageEventBefore)
-        NeoForge.EVENT_BUS.addListener(::livingDamageEventAfter)
-        NeoForge.EVENT_BUS.addListener(::chatEvent)
-        NeoForge.EVENT_BUS.addListener(::playerJoinedEvent)
-        NeoForge.EVENT_BUS.addListener(::playerTickEventBefore)
-        NeoForge.EVENT_BUS.addListener(::playerTickEventAfter)
-        NeoForge.EVENT_BUS.addListener(::serverLifecycleEvent)
-        NeoForge.EVENT_BUS.addListener(::modifyLootTable)
-        NeoForge.EVENT_BUS.addListener(::tradeRegisterEvent)
-        NeoForge.EVENT_BUS.addListener(::wanderingTradesRegisterEvent)
-        NeoForge.EVENT_BUS.addListener(::commandRegistrationEvent)
-
-        bus.addListener(EventPriority.LOWEST, ::registerEvent)
-        bus.addListener(::attributeEvent)
-        bus.register(UnfocusedModNetworking)
+  fun commandRegistrationEvent(event: RegisterCommandsEvent) {
+    CommandRegistration.register {
+      it.callback(event.dispatcher, event.buildContext, event.commandSelection)
     }
+  }
+
+  fun register(bus: IEventBus) {
+    NeoForge.EVENT_BUS.addListener(::livingDamageEventBefore)
+    NeoForge.EVENT_BUS.addListener(::livingDamageEventAfter)
+    NeoForge.EVENT_BUS.addListener(::chatEvent)
+    NeoForge.EVENT_BUS.addListener(::playerJoinedEvent)
+    NeoForge.EVENT_BUS.addListener(::playerTickEventBefore)
+    NeoForge.EVENT_BUS.addListener(::playerTickEventAfter)
+    NeoForge.EVENT_BUS.addListener(::serverLifecycleEvent)
+    NeoForge.EVENT_BUS.addListener(::modifyLootTable)
+    NeoForge.EVENT_BUS.addListener(::tradeRegisterEvent)
+    NeoForge.EVENT_BUS.addListener(::wanderingTradesRegisterEvent)
+    NeoForge.EVENT_BUS.addListener(::commandRegistrationEvent)
+
+    bus.addListener(EventPriority.LOWEST, ::registerEvent)
+    bus.addListener(::attributeEvent)
+    bus.register(UnfocusedModNetworking)
+  }
 }

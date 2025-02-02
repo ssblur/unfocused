@@ -13,32 +13,35 @@ import java.util.function.Supplier
 
 @Suppress("unused", "unchecked_cast")
 object ColorHelper {
-    data class ColorHolder(val dyeColor: DyeColor) {
-        val colorName = dyeColor.name
-        val nameAllCaps inline get() = colorName.uppercase()
-        val nameAllLowerCase inline get() = colorName.lowercase()
-        val nameTitleCase
-            inline get() = "_[a-z]".toRegex().replace(colorName) {
-                it.value.substring(1).uppercase()
-            }
+  data class ColorHolder(val dyeColor: DyeColor) {
+    val colorName = dyeColor.name
+    val nameAllCaps inline get() = colorName.uppercase()
+    val nameAllLowerCase inline get() = colorName.lowercase()
+    val nameTitleCase
+      inline get() = "_[a-z]".toRegex().replace(colorName) {
+        it.value.substring(1).uppercase()
+      }
 
-        val fireworksColor inline get() = dyeColor.fireworkColor
-        val textColor inline get() = dyeColor.textColor
-    }
+    val fireworksColor inline get() = dyeColor.fireworkColor
+    val textColor inline get() = dyeColor.textColor
+  }
 
-    /**
-     * Runs a function once per color, with corresponding color info.
-     * Useful for
-     */
-    fun <T> forEachColor(handler: Function<ColorHolder, T>) = DyeColor.entries.map{
-        handler.apply(ColorHolder(it))
-    }
+  /**
+   * Runs a function once per color, with corresponding color info.
+   * Useful for
+   */
+  fun <T> forEachColor(handler: Function<ColorHolder, T>) = DyeColor.entries.map {
+    handler.apply(ColorHolder(it))
+  }
 
-    fun registerColor(color: ItemColor, vararg items: Supplier<ItemLike>) = UtilityExpectPlatform.registerColor(color, *items)
-    fun registerColor(color: BlockColor, vararg blocks: Supplier<Block>) = UtilityExpectPlatform.registerColor(color, *blocks)
+  fun registerColor(color: ItemColor, vararg items: Supplier<ItemLike>) =
+    UtilityExpectPlatform.registerColor(color, *items)
 
-    fun RegistrySupplier<Item>.registerColor(color: ItemColor) = registerColor(color, this as RegistrySupplier<ItemLike>)
-    fun RegistrySupplier<Block>.registerColor(color: BlockColor) = registerColor(color, this)
-    fun Item.registerColor(color: ItemColor) = registerColor(color, { this })
-    fun Block.registerColor(color: BlockColor) = registerColor(color, { this })
+  fun registerColor(color: BlockColor, vararg blocks: Supplier<Block>) =
+    UtilityExpectPlatform.registerColor(color, *blocks)
+
+  fun RegistrySupplier<Item>.registerColor(color: ItemColor) = registerColor(color, this as RegistrySupplier<ItemLike>)
+  fun RegistrySupplier<Block>.registerColor(color: BlockColor) = registerColor(color, this)
+  fun Item.registerColor(color: ItemColor) = registerColor(color, { this })
+  fun Block.registerColor(color: BlockColor) = registerColor(color, { this })
 }

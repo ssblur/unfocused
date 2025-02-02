@@ -8,32 +8,32 @@ import net.minecraft.world.level.block.state.BlockState
 
 @Suppress("unused")
 object BlockPropertiesExtension {
-    private val SPAWN_NEVER = { a: BlockState?, b: BlockGetter?, c: BlockPos?, d: EntityType<*>? -> false }
-    private val NEVER = { a: BlockState?, b: BlockGetter?, c: BlockPos? -> false }
+  private val SPAWN_NEVER = { a: BlockState?, b: BlockGetter?, c: BlockPos?, d: EntityType<*>? -> false }
+  private val NEVER = { a: BlockState?, b: BlockGetter?, c: BlockPos? -> false }
 
-    fun Properties.isNeverAValidSpawn(): Properties {
-        this.isValidSpawn(SPAWN_NEVER)
-        return this
-    }
+  fun Properties.isNeverAValidSpawn(): Properties {
+    this.isValidSpawn(SPAWN_NEVER)
+    return this
+  }
 
-    fun Properties.isNeverSuffocating(): Properties {
-        this.isSuffocating(NEVER)
-        return this
-    }
+  fun Properties.isNeverSuffocating(): Properties {
+    this.isSuffocating(NEVER)
+    return this
+  }
 
-    fun Properties.isNeverViewBlocking(): Properties {
-        this.isViewBlocking(NEVER)
-        return this
-    }
+  fun Properties.isNeverViewBlocking(): Properties {
+    this.isViewBlocking(NEVER)
+    return this
+  }
 
-    fun Properties.isNeverRedstoneConductor(): Properties {
-        this.isRedstoneConductor(NEVER)
-        return this
-    }
+  fun Properties.isNeverRedstoneConductor(): Properties {
+    this.isRedstoneConductor(NEVER)
+    return this
+  }
 
-    fun Properties.isEphemeral(): Properties =
-        this.isNeverSuffocating()
-            .isNeverAValidSpawn()
-            .isNeverRedstoneConductor()
-            .isNeverViewBlocking()
+  fun Properties.isEphemeral(): Properties =
+    this.isNeverSuffocating()
+      .isNeverAValidSpawn()
+      .isNeverRedstoneConductor()
+      .isNeverViewBlocking()
 }

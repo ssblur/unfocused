@@ -9,15 +9,15 @@ import net.minecraft.commands.Commands
 
 @Suppress("unusedreceiverparameter", "unused")
 object CommandRegistration: SimpleEvent<CommandRegistration.CommandRegistrationCallback>(retroactive = true) {
-    fun interface CommandRegistrationCallback {
-        fun callback(
-            dispatcher: CommandDispatcher<CommandSourceStack>,
-            registry: CommandBuildContext,
-            selection: Commands.CommandSelection
-        )
-    }
+  fun interface CommandRegistrationCallback {
+    fun callback(
+      dispatcher: CommandDispatcher<CommandSourceStack>,
+      registry: CommandBuildContext,
+      selection: Commands.CommandSelection
+    )
+  }
 
-    fun ModInitializer.registerCommand(callback: CommandRegistrationCallback) {
-        CommandRegistration.callback(callback)
-    }
+  fun ModInitializer.registerCommand(callback: CommandRegistrationCallback) {
+    CommandRegistration.callback(callback)
+  }
 }

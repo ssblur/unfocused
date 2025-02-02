@@ -14,7 +14,7 @@ public class LivingEntityMixin {
   private void unfocused$hurt$pre(DamageSource damageSource, float f, CallbackInfoReturnable<Boolean> cir) {
     LivingEntity self = (LivingEntity) (Object) this;
     EntityDamagedEvent.Companion.getBefore().callback(new EntityDamagedEvent.EntityDamage(self, damageSource, f, EntityDamagedEvent.Companion.getBefore()));
-    if(EntityDamagedEvent.Companion.getBefore().isCancelled()) cir.setReturnValue(false);
+    if (EntityDamagedEvent.Companion.getBefore().isCancelled()) cir.setReturnValue(false);
   }
 
 

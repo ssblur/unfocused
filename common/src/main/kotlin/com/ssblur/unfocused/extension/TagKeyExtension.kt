@@ -8,11 +8,11 @@ import net.minecraft.world.level.block.state.BlockState
 
 @Suppress("unused")
 object TagKeyExtension {
-    operator fun TagKey<Block>.contains(state: BlockState): Boolean {
-        return state.`is`(this)
-    }
+  operator fun TagKey<Block>.contains(state: BlockState): Boolean {
+    return state.`is`(this)
+  }
 
-    operator fun TagKey<Item>.contains(item: ItemStack): Boolean {
-        return item.`is`(this)
-    }
+  operator fun TagKey<Item>.contains(item: ItemStack): Boolean {
+    return item.`is`(this)
+  }
 }

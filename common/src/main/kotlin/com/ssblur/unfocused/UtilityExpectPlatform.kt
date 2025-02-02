@@ -1,4 +1,5 @@
 @file:JvmName("UtilityExpectPlatform")
+
 package com.ssblur.unfocused
 
 import dev.architectury.injectables.annotations.ExpectPlatform
@@ -14,36 +15,36 @@ import java.util.function.Supplier
 
 @Suppress("unused", "unused_parameter")
 object UtilityExpectPlatform {
-    @ExpectPlatform
-    @JvmStatic
-    fun creativeTabBuilder(): CreativeModeTab.Builder = throw AssertionError()
+  @ExpectPlatform
+  @JvmStatic
+  fun creativeTabBuilder(): CreativeModeTab.Builder = throw AssertionError()
 
-    @ExpectPlatform
-    @JvmStatic
-    fun isClient(): Boolean = throw AssertionError()
+  @ExpectPlatform
+  @JvmStatic
+  fun isClient(): Boolean = throw AssertionError()
 
-    @ExpectPlatform
-    @JvmStatic
-    fun isServer(): Boolean = throw AssertionError()
+  @ExpectPlatform
+  @JvmStatic
+  fun isServer(): Boolean = throw AssertionError()
 
-    @Environment(EnvType.CLIENT)
-    @ExpectPlatform
-    @JvmStatic
-    fun registerColor(color: ItemColor, vararg items: Supplier<ItemLike>) {
-        throw AssertionError()
-    }
+  @Environment(EnvType.CLIENT)
+  @ExpectPlatform
+  @JvmStatic
+  fun registerColor(color: ItemColor, vararg items: Supplier<ItemLike>) {
+    throw AssertionError()
+  }
 
-    @Environment(EnvType.CLIENT)
-    @ExpectPlatform
-    @JvmStatic
-    fun registerColor(color: BlockColor, vararg blocks: Supplier<Block>) {
-        throw AssertionError()
-    }
+  @Environment(EnvType.CLIENT)
+  @ExpectPlatform
+  @JvmStatic
+  fun registerColor(color: BlockColor, vararg blocks: Supplier<Block>) {
+    throw AssertionError()
+  }
 
 
-    @ExpectPlatform
-    @JvmStatic
-    fun configDir(): Path {
-        throw AssertionError()
-    }
+  @ExpectPlatform
+  @JvmStatic
+  fun configDir(): Path {
+    throw AssertionError()
+  }
 }

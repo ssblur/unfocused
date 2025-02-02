@@ -21,60 +21,70 @@ import org.joml.Vector2d
 
 @Suppress("unchecked_cast", "unused", "unused_parameter")
 object UnfocusedModClientEvents {
-    fun clientTickEventBefore(event: ClientTickEvent.Pre) = Minecraft.getInstance().level?.let(ClientLevelTickEvent.Before::callback)
-    fun clientTickEventAfter(event: ClientTickEvent.Post) = Minecraft.getInstance().level?.let(ClientLevelTickEvent.After::callback)
-    fun clientScrollEvent(event: InputEvent.MouseScrollingEvent) {
-        MouseScrollEvent.callback(MouseScrollEvent.KeyPress(Minecraft.getInstance(), Vector2d(event.scrollDeltaX, event.scrollDeltaY), MouseScrollEvent))
-        if(MouseScrollEvent.isCancelled()) event.isCanceled = true
-    }
+  fun clientTickEventBefore(event: ClientTickEvent.Pre) =
+    Minecraft.getInstance().level?.let(ClientLevelTickEvent.Before::callback)
 
-    fun registerEntityRendererEvent(event: EntityRenderersEvent.RegisterRenderers) {
-        BlockEntityRendering.register{ pair ->
-            event.registerBlockEntityRenderer(pair.type.get(), pair.renderer as BlockEntityRendererProvider<BlockEntity>)
+  fun clientTickEventAfter(event: ClientTickEvent.Post) =
+    Minecraft.getInstance().level?.let(ClientLevelTickEvent.After::callback)
+
+  fun clientScrollEvent(event: InputEvent.MouseScrollingEvent) {
+    MouseScrollEvent.callback(
+      MouseScrollEvent.KeyPress(
+        Minecraft.getInstance(),
+        Vector2d(event.scrollDeltaX, event.scrollDeltaY),
+        MouseScrollEvent
+      )
+    )
+    if (MouseScrollEvent.isCancelled()) event.isCanceled = true
+  }
+
+  fun registerEntityRendererEvent(event: EntityRenderersEvent.RegisterRenderers) {
+    BlockEntityRendering.register { pair ->
+      event.registerBlockEntityRenderer(pair.type.get(), pair.renderer as BlockEntityRendererProvider<BlockEntity>)
+    }
+    EntityRendering.register { pair ->
+      event.registerEntityRenderer(pair.type.get(), pair.renderer as EntityRendererProvider<Entity>)
+    }
+  }
+
+  fun registerParticleProviders(event: RegisterParticleProvidersEvent) {
+    ParticleFactories.register { pair ->
+      pair.ifLeft {
+        event.registerSpecial(it.particle, it.provider)
+      }.ifRight {
+        event.registerSpriteSet(it.particle) { sprite ->
+          ParticleProvider { options, clientLevel, d, e, f, g, h, i ->
+            it.provider(sprite).createParticle(options, clientLevel, d, e, f, g, h, i)
+          }
         }
-        EntityRendering.register{ pair ->
-            event.registerEntityRenderer(pair.type.get(), pair.renderer as EntityRendererProvider<Entity>)
-        }
+      }
     }
+  }
 
-    fun registerParticleProviders(event: RegisterParticleProvidersEvent) {
-        ParticleFactories.register{ pair ->
-            pair.ifLeft {
-                event.registerSpecial(it.particle, it.provider)
-            }.ifRight{
-                event.registerSpriteSet(it.particle) { sprite ->
-                    ParticleProvider { options, clientLevel, d, e, f, g, h, i ->
-                        it.provider(sprite).createParticle(options, clientLevel, d, e, f, g, h, i)
-                    }
-                }
-            }
-        }
+  fun clientLoreEvent(event: ItemTooltipEvent) {
+    ClientLoreEvent.callback(ClientLoreEvent.LoreContext(event.itemStack, event.toolTip, event.context, event.flags))
+  }
+
+  fun blockColorEvent(event: RegisterColorHandlersEvent.Block) {
+    UtilityExpectPlatformImpl.BLOCK_COLORS.forEach { (color, supplier) ->
+      event.register(color, supplier.get())
     }
+  }
 
-    fun clientLoreEvent(event: ItemTooltipEvent) {
-        ClientLoreEvent.callback(ClientLoreEvent.LoreContext(event.itemStack, event.toolTip, event.context, event.flags))
+  fun itemColorEvent(event: RegisterColorHandlersEvent.Item) {
+    UtilityExpectPlatformImpl.ITEM_COLORS.forEach { (color, supplier) ->
+      event.register(color, supplier.get())
     }
+  }
 
-    fun blockColorEvent(event: RegisterColorHandlersEvent.Block) {
-        UtilityExpectPlatformImpl.BLOCK_COLORS.forEach { (color, supplier) ->
-            event.register(color, supplier.get())
-        }
-    }
+  fun register(bus: IEventBus) {
+    NeoForge.EVENT_BUS.addListener(::clientTickEventAfter)
+    NeoForge.EVENT_BUS.addListener(::clientTickEventBefore)
+    NeoForge.EVENT_BUS.addListener(::clientScrollEvent)
+    NeoForge.EVENT_BUS.addListener(::clientLoreEvent)
 
-    fun itemColorEvent(event: RegisterColorHandlersEvent.Item) {
-        UtilityExpectPlatformImpl.ITEM_COLORS.forEach { (color, supplier) ->
-            event.register(color, supplier.get())
-        }
-    }
-
-    fun register(bus: IEventBus) {
-        NeoForge.EVENT_BUS.addListener(::clientTickEventAfter)
-        NeoForge.EVENT_BUS.addListener(::clientTickEventBefore)
-        NeoForge.EVENT_BUS.addListener(::clientScrollEvent)
-        NeoForge.EVENT_BUS.addListener(::clientLoreEvent)
-
-        bus.addListener(::itemColorEvent)
-        bus.addListener(::blockColorEvent)
-        bus.addListener(::registerEntityRendererEvent)
-    }
+    bus.addListener(::itemColorEvent)
+    bus.addListener(::blockColorEvent)
+    bus.addListener(::registerEntityRendererEvent)
+  }
 }

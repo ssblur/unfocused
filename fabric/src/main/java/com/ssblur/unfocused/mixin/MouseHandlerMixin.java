@@ -30,7 +30,7 @@ public class MouseHandlerMixin {
           MouseScrollEvent.INSTANCE
         )
       );
-      if(MouseScrollEvent.INSTANCE.isCancelled()) info.cancel();
+      if (MouseScrollEvent.INSTANCE.isCancelled()) info.cancel();
     }
   }
 }

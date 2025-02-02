@@ -5,7 +5,7 @@ import net.minecraft.world.level.block.entity.BlockEntityType
 
 @Suppress("unused")
 object BlockEntityTypeBuilderExtension {
-    fun <T: BlockEntity> BlockEntityType.Builder<T>.build(): BlockEntityType<T> {
-        return this.build(null)
-    }
+  fun <T: BlockEntity> BlockEntityType.Builder<T>.build(): BlockEntityType<T> {
+    return this.build(null)
+  }
 }

@@ -14,24 +14,39 @@ typealias ParticleChoice = Either<ParticleTypeAndProvider, ParticleTypeAndProvid
 
 @Suppress("unchecked_cast", "unused")
 object ParticleFactories: SimpleEvent<ParticleChoice>(retroactive = true) {
-    data class ParticleTypeAndProvider(val particle: ParticleType<in ParticleOptions>, val provider: ParticleProvider<in ParticleOptions>)
-    fun <T: ParticleOptions> RegistrySupplier<ParticleType<T>>.registerFactory(provider: ParticleProvider<T>) {
-        this.then{
-            ParticleFactories.callback(
-                Either.left(ParticleTypeAndProvider(it as ParticleType<in ParticleOptions>, provider as ParticleProvider<in ParticleOptions>))
-            )
-        }
-    }
+  data class ParticleTypeAndProvider(
+    val particle: ParticleType<in ParticleOptions>,
+    val provider: ParticleProvider<in ParticleOptions>
+  )
 
-    data class ParticleTypeAndProviderProvider(val particle: ParticleType<in ParticleOptions>, val provider: (SpriteSet) -> ParticleProvider.Sprite<in ParticleOptions>)
-    fun <T: ParticleOptions> RegistrySupplier<ParticleType<T>>.registerFactory(provider: (SpriteSet) -> ParticleProvider.Sprite<T>) {
-        this.then{
-            ParticleFactories.callback(
-                Either.right(ParticleTypeAndProviderProvider(
-                    it as ParticleType<in ParticleOptions>,
-                    provider as (SpriteSet) -> ParticleProvider.Sprite<in ParticleOptions>)
-                )
-            )
-        }
+  fun <T: ParticleOptions> RegistrySupplier<ParticleType<T>>.registerFactory(provider: ParticleProvider<T>) {
+    this.then {
+      ParticleFactories.callback(
+        Either.left(
+          ParticleTypeAndProvider(
+            it as ParticleType<in ParticleOptions>,
+            provider as ParticleProvider<in ParticleOptions>
+          )
+        )
+      )
     }
+  }
+
+  data class ParticleTypeAndProviderProvider(
+    val particle: ParticleType<in ParticleOptions>,
+    val provider: (SpriteSet) -> ParticleProvider.Sprite<in ParticleOptions>
+  )
+
+  fun <T: ParticleOptions> RegistrySupplier<ParticleType<T>>.registerFactory(provider: (SpriteSet) -> ParticleProvider.Sprite<T>) {
+    this.then {
+      ParticleFactories.callback(
+        Either.right(
+          ParticleTypeAndProviderProvider(
+            it as ParticleType<in ParticleOptions>,
+            provider as (SpriteSet) -> ParticleProvider.Sprite<in ParticleOptions>
+          )
+        )
+      )
+    }
+  }
 }

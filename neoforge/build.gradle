@@ -4,25 +4,25 @@ plugins {
 }
 
 architectury {
-    platformSetupLoomIde()
-    neoForge()
+  platformSetupLoomIde()
+  neoForge()
 }
 
 configurations {
-    common {
-        canBeResolved = true
-        canBeConsumed = false
-    }
-    compileClasspath.extendsFrom common
-    runtimeClasspath.extendsFrom common
-    developmentNeoForge.extendsFrom common
+  common {
+    canBeResolved = true
+    canBeConsumed = false
+  }
+  compileClasspath.extendsFrom common
+  runtimeClasspath.extendsFrom common
+  developmentNeoForge.extendsFrom common
 
-    // Files in this configuration will be bundled into your mod using the Shadow plugin.
-    // Don't use the `shadow` configuration from the plugin itself as it's meant for excluding files.
-    shadowBundle {
-        canBeResolved = true
-        canBeConsumed = false
-    }
+  // Files in this configuration will be bundled into your mod using the Shadow plugin.
+  // Don't use the `shadow` configuration from the plugin itself as it's meant for excluding files.
+  shadowBundle {
+    canBeResolved = true
+    canBeConsumed = false
+  }
 }
 
 repositories {
@@ -46,11 +46,11 @@ dependencies {
 }
 
 processResources {
-    inputs.property 'version', project.version
+  inputs.property 'version', project.version
 
-    filesMatching('META-INF/neoforge.mods.toml') {
-        expand version: project.version
-    }
+  filesMatching('META-INF/neoforge.mods.toml') {
+    expand version: project.version
+  }
 }
 
 shadowJar {
@@ -61,7 +61,7 @@ shadowJar {
 }
 
 remapJar {
-    inputFile.set shadowJar.archiveFile
+  inputFile.set shadowJar.archiveFile
 }
 
 kotlin {

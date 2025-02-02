@@ -10,28 +10,28 @@ import net.minecraft.server.level.ServerPlayer
 
 @Suppress("unchecked_cast")
 object UnfocusedModNetworking {
-    fun init() {
-        NetworkManager.subscribeToS2CRegistration(
-            { type ->
-                val id: CustomPacketPayload.Type<KClassPacket<*>> = CustomPacketPayload.Type(type.location)
-                PayloadTypeRegistry.playS2C().register(id, KClassPacket.codec(type.location, type.type))
+  fun init() {
+    NetworkManager.subscribeToS2CRegistration(
+      { type ->
+        val id: CustomPacketPayload.Type<KClassPacket<*>> = CustomPacketPayload.Type(type.location)
+        PayloadTypeRegistry.playS2C().register(id, KClassPacket.codec(type.location, type.type))
 
-                ClientPlayNetworking.registerGlobalReceiver(id) { payload, context ->
-                    NetworkManager.s2cTypes.forEach {
-                        if(it.location == type.location)
-                            (it.receiver as NetworkManager.S2CReceiver<Any>).receive(payload.value)
-                    }
-                }
-            },
-            { location, type, payload, players ->
-                players.forEach { ServerPlayNetworking.send(it as ServerPlayer, KClassPacket(location, type, payload)) }
-            }
-        )
-
-        NetworkManager.s2cQueue.register{ (players, packet) ->
-            players.forEach{
-                ServerPlayNetworking.send(it as ServerPlayer, packet)
-            }
+        ClientPlayNetworking.registerGlobalReceiver(id) { payload, context ->
+          NetworkManager.s2cTypes.forEach {
+            if (it.location == type.location)
+              (it.receiver as NetworkManager.S2CReceiver<Any>).receive(payload.value)
+          }
         }
+      },
+      { location, type, payload, players ->
+        players.forEach { ServerPlayNetworking.send(it as ServerPlayer, KClassPacket(location, type, payload)) }
+      }
+    )
+
+    NetworkManager.s2cQueue.register { (players, packet) ->
+      players.forEach {
+        ServerPlayNetworking.send(it as ServerPlayer, packet)
+      }
     }
+  }
 }

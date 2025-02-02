@@ -7,5 +7,10 @@ import net.minecraft.world.item.ItemStack
 import net.minecraft.world.item.TooltipFlag
 
 object ClientLoreEvent: SimpleEvent<ClientLoreEvent.LoreContext>(false) {
-    data class LoreContext(val stack: ItemStack, val lore: MutableList<Component>, val context: Item.TooltipContext, val flag: TooltipFlag)
+  data class LoreContext(
+    val stack: ItemStack,
+    val lore: MutableList<Component>,
+    val context: Item.TooltipContext,
+    val flag: TooltipFlag
+  )
 }

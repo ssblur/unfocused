@@ -7,11 +7,11 @@ import net.neoforged.neoforge.event.AddReloadListenerEvent
 
 
 object UnfocusedModData {
-    fun event(event: AddReloadListenerEvent) {
-        DataLoaderRegistry.register{
-            event.addListener(DataLoaderListener(it.path, it.type) { value, location: ResourceLocation ->
-                it.loader.load(value, location)
-            })
-        }
+  fun event(event: AddReloadListenerEvent) {
+    DataLoaderRegistry.register {
+      event.addListener(DataLoaderListener(it.path, it.type) { value, location: ResourceLocation ->
+        it.loader.load(value, location)
+      })
     }
+  }
 }

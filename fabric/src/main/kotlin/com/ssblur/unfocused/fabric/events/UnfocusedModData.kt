@@ -13,22 +13,24 @@ import java.util.concurrent.CompletableFuture
 import java.util.concurrent.Executor
 
 object UnfocusedModData {
-    fun init() {
-        DataLoaderRegistry.register{
-            ResourceManagerHelper.get(PackType.SERVER_DATA).registerReloadListener(object: IdentifiableResourceReloadListener{
-                override fun reload(
-                    barrier: PreparableReloadListener.PreparationBarrier,
-                    manager: ResourceManager,
-                    filler: ProfilerFiller,
-                    filler2: ProfilerFiller,
-                    executor: Executor,
-                    executor2: Executor
-                ): CompletableFuture<Void> =
-                    DataLoaderListener(it.path, it.type) { value, location: ResourceLocation ->
-                        it.loader.load(value, location)
-                    }.reload(barrier, manager, filler, filler2, executor, executor2)
-                override fun getFabricId() = it.mod.location(it.path)
-            })
-        }
+  fun init() {
+    DataLoaderRegistry.register {
+      ResourceManagerHelper.get(PackType.SERVER_DATA)
+        .registerReloadListener(object: IdentifiableResourceReloadListener {
+          override fun reload(
+            barrier: PreparableReloadListener.PreparationBarrier,
+            manager: ResourceManager,
+            filler: ProfilerFiller,
+            filler2: ProfilerFiller,
+            executor: Executor,
+            executor2: Executor
+          ): CompletableFuture<Void> =
+            DataLoaderListener(it.path, it.type) { value, location: ResourceLocation ->
+              it.loader.load(value, location)
+            }.reload(barrier, manager, filler, filler2, executor, executor2)
+
+          override fun getFabricId() = it.mod.location(it.path)
+        })
     }
+  }
 }

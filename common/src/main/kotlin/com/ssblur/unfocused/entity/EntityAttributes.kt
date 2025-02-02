@@ -10,11 +10,15 @@ import java.util.function.Supplier
 
 @Suppress("unused")
 object EntityAttributes: SimpleEvent<EntityAttributes.EntityTypeAndAttributes<out LivingEntity>>(retroactive = true) {
-    data class EntityTypeAndAttributes<T: LivingEntity>(val type: RegistrySupplier<EntityType<T>>, val builder: Supplier<AttributeSupplier.Builder>)
-    fun <T: LivingEntity> ModInitializer.registerEntityAttributes(
-        type: RegistrySupplier<EntityType<T>>,
-        builder: Supplier<AttributeSupplier.Builder>
-    ) {
-        EntityAttributes.callback(EntityTypeAndAttributes(type, builder))
-    }
+  data class EntityTypeAndAttributes<T: LivingEntity>(
+    val type: RegistrySupplier<EntityType<T>>,
+    val builder: Supplier<AttributeSupplier.Builder>
+  )
+
+  fun <T: LivingEntity> ModInitializer.registerEntityAttributes(
+    type: RegistrySupplier<EntityType<T>>,
+    builder: Supplier<AttributeSupplier.Builder>
+  ) {
+    EntityAttributes.callback(EntityTypeAndAttributes(type, builder))
+  }
 }

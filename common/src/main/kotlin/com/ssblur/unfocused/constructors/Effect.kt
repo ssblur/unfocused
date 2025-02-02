@@ -6,21 +6,26 @@ import net.minecraft.world.entity.LivingEntity
 
 @Suppress("unused")
 class Effect(mobEffectCategory: MobEffectCategory, color: Int): MobEffect(mobEffectCategory, color) {
-    fun interface EffectApplicator{
-        fun apply(livingEntity: LivingEntity)
-    }
-    var function: EffectApplicator? = null
+  fun interface EffectApplicator {
+    fun apply(livingEntity: LivingEntity)
+  }
 
-    constructor(mobEffectCategory: MobEffectCategory = MobEffectCategory.NEUTRAL, color: Int = 0x0, function: EffectApplicator): this(mobEffectCategory, color) {
-        this.function = function
-    }
+  var function: EffectApplicator? = null
 
-    override fun applyEffectTick(livingEntity: LivingEntity, i: Int): Boolean {
-        function?.apply(livingEntity)
-        return true
-    }
+  constructor(
+    mobEffectCategory: MobEffectCategory = MobEffectCategory.NEUTRAL,
+    color: Int = 0x0,
+    function: EffectApplicator
+  ): this(mobEffectCategory, color) {
+    this.function = function
+  }
 
-    override fun shouldApplyEffectTickThisTick(i: Int, j: Int): Boolean {
-        return function != null
-    }
+  override fun applyEffectTick(livingEntity: LivingEntity, i: Int): Boolean {
+    function?.apply(livingEntity)
+    return true
+  }
+
+  override fun shouldApplyEffectTickThisTick(i: Int, j: Int): Boolean {
+    return function != null
+  }
 }

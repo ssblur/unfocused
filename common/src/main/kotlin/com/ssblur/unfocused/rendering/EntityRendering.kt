@@ -9,8 +9,15 @@ import net.minecraft.world.entity.EntityType
 
 @Suppress("unused")
 object EntityRendering: SimpleEvent<EntityRendering.EntityAndRenderer<out Entity>>(retroactive = true) {
-    data class EntityAndRenderer<T: Entity>(val type: RegistrySupplier<EntityType<T>>, val renderer: EntityRendererProvider<T>)
-    fun <T: Entity> ModInitializer.registerEntityRenderer(type: RegistrySupplier<EntityType<T>>, renderer: EntityRendererProvider<T>) {
-        EntityRendering.callback(EntityAndRenderer(type, renderer))
-    }
+  data class EntityAndRenderer<T: Entity>(
+    val type: RegistrySupplier<EntityType<T>>,
+    val renderer: EntityRendererProvider<T>
+  )
+
+  fun <T: Entity> ModInitializer.registerEntityRenderer(
+    type: RegistrySupplier<EntityType<T>>,
+    renderer: EntityRendererProvider<T>
+  ) {
+    EntityRendering.callback(EntityAndRenderer(type, renderer))
+  }
 }

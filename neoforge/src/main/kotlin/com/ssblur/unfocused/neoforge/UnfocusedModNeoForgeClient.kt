@@ -7,7 +7,7 @@ import net.neoforged.fml.common.Mod
 
 @Mod(value = "unfocused", dist = [Dist.CLIENT])
 class UnfocusedModNeoForgeClient(bus: IEventBus) {
-    init {
-        UnfocusedModClientEvents.register(bus)
-    }
+  init {
+    UnfocusedModClientEvents.register(bus)
+  }
 }
