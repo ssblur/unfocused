@@ -2,6 +2,7 @@ package com.ssblur.unfocused.fabric
 
 import com.ssblur.unfocused.event.client.ClientLevelTickEvent
 import com.ssblur.unfocused.event.client.ClientLoreEvent
+import com.ssblur.unfocused.event.client.ClientScreenRegistrationEvent
 import com.ssblur.unfocused.extension.BlockExtension
 import com.ssblur.unfocused.rendering.BlockEntityRendering
 import com.ssblur.unfocused.rendering.EntityRendering
@@ -12,6 +13,7 @@ import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents
 import net.fabricmc.fabric.api.client.item.v1.ItemTooltipCallback
 import net.fabricmc.fabric.api.client.particle.v1.ParticleFactoryRegistry
 import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry
+import net.minecraft.client.gui.screens.MenuScreens
 import net.minecraft.client.particle.ParticleProvider
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderers
@@ -53,6 +55,9 @@ class UnfocusedModFabricClient: ClientModInitializer {
     ClientTickEvents.END_CLIENT_TICK.register { instance -> instance.level?.let { ClientLevelTickEvent.After.callback(it) } }
     ItemTooltipCallback.EVENT.register { stack, context, flag, lore ->
       ClientLoreEvent.callback(ClientLoreEvent.LoreContext(stack, lore, context, flag))
+    }
+    ClientScreenRegistrationEvent.register{
+      MenuScreens.register(it.menu, it.supplier::create)
     }
   }
 }
