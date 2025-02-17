@@ -19,6 +19,7 @@ import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderers
 import net.minecraft.client.renderer.entity.EntityRendererProvider
 import net.minecraft.world.entity.Entity
+import net.minecraft.world.inventory.AbstractContainerMenu
 import net.minecraft.world.level.block.entity.BlockEntity
 
 @Suppress("unchecked_cast")
@@ -57,7 +58,7 @@ class UnfocusedModFabricClient: ClientModInitializer {
       ClientLoreEvent.callback(ClientLoreEvent.LoreContext(stack, lore, context, flag))
     }
     ClientScreenRegistrationEvent.register{
-      MenuScreens.register(it.menu, it.supplier::create)
+      MenuScreens.register(it.menu, it.supplier::create as MenuScreens.ScreenConstructor<AbstractContainerMenu, *>)
     }
   }
 }

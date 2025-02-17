@@ -9,10 +9,12 @@ import com.ssblur.unfocused.rendering.BlockEntityRendering
 import com.ssblur.unfocused.rendering.EntityRendering
 import com.ssblur.unfocused.rendering.ParticleFactories
 import net.minecraft.client.Minecraft
+import net.minecraft.client.gui.screens.MenuScreens
 import net.minecraft.client.particle.ParticleProvider
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider
 import net.minecraft.client.renderer.entity.EntityRendererProvider
 import net.minecraft.world.entity.Entity
+import net.minecraft.world.inventory.AbstractContainerMenu
 import net.minecraft.world.level.block.entity.BlockEntity
 import net.neoforged.bus.api.IEventBus
 import net.neoforged.neoforge.client.event.*
@@ -80,7 +82,7 @@ object UnfocusedModClientEvents {
 
   fun registerScreenEvent(event: RegisterMenuScreensEvent) {
     ClientScreenRegistrationEvent.register{
-      event.register(it.menu, it.supplier::create)
+      event.register(it.menu, it.supplier::create as MenuScreens.ScreenConstructor<AbstractContainerMenu, *>)
     }
   }
 
