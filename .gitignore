@@ -23,5 +23,6 @@ classes/
 .env.ps1
 
 publish.bat
+publish.sh
 
 *~
