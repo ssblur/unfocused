@@ -82,7 +82,7 @@ object UnfocusedModClientEvents {
 
   fun registerScreenEvent(event: RegisterMenuScreensEvent) {
     ClientScreenRegistrationEvent.register{
-      event.register(it.menu, it.supplier::create as MenuScreens.ScreenConstructor<AbstractContainerMenu, *>)
+      event.register(it.menu, it.supplier as MenuScreens.ScreenConstructor<AbstractContainerMenu, *>)
     }
   }
 
