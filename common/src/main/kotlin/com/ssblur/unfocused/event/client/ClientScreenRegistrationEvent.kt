@@ -12,19 +12,19 @@ import net.minecraft.world.inventory.AbstractContainerMenu
 import net.minecraft.world.inventory.MenuType
 
 @Environment(EnvType.CLIENT)
-object ClientScreenRegistrationEvent: SimpleEvent<ClientScreenRegistrationEvent.Context<in AbstractContainerMenu, Screen>>(true) {
-  fun interface ScreenConstructor<T: AbstractContainerMenu, U: Screen> {
+object ClientScreenRegistrationEvent: SimpleEvent<ClientScreenRegistrationEvent.Context<in AbstractContainerMenu>>(true) {
+  fun interface ScreenConstructor<T: AbstractContainerMenu, U> where U: Screen, U: MenuAccess<T> {
     fun create(abstractContainerMenu: T, inventory: Inventory?, component: Component?): U
   }
 
-  data class Context<T: AbstractContainerMenu, U: Screen>(
+  data class Context<T: AbstractContainerMenu> (
     val menu: MenuType<T>,
-    val supplier: ScreenConstructor<T, U>
+    val supplier: ScreenConstructor<T, *>
   )
 
   @Suppress("UNCHECKED_CAST", "unused", "unusedreceiverparameter")
   fun <T: AbstractContainerMenu, U> ModInitializer.registerScreen(menu: MenuType<T>, supplier: ScreenConstructor<T, U>)
     where U: Screen, U: MenuAccess<T> {
-    ClientScreenRegistrationEvent.callback(Context(menu, supplier) as Context<in AbstractContainerMenu, Screen>)
+    ClientScreenRegistrationEvent.callback(Context(menu, supplier) as Context<in AbstractContainerMenu>)
   }
 }

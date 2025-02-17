@@ -58,7 +58,7 @@ class UnfocusedModFabricClient: ClientModInitializer {
       ClientLoreEvent.callback(ClientLoreEvent.LoreContext(stack, lore, context, flag))
     }
     ClientScreenRegistrationEvent.register{
-      MenuScreens.register(it.menu, it.supplier::create as MenuScreens.ScreenConstructor<AbstractContainerMenu, *>)
+      MenuScreens.register(it.menu, it.supplier::create as MenuScreens.ScreenConstructor<in AbstractContainerMenu, *>)
     }
   }
 }
