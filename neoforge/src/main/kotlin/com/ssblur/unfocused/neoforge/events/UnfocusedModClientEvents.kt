@@ -96,5 +96,6 @@ object UnfocusedModClientEvents {
     bus.addListener(::blockColorEvent)
     bus.addListener(::registerEntityRendererEvent)
     bus.addListener(::registerScreenEvent)
+    bus.addListener(::registerParticleProviders)
   }
 }
