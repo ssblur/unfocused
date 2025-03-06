@@ -95,6 +95,7 @@ class UnfocusedModFabric: ModInitializer {
       )
     }
 
+
     ServerLifecycleEvents.SERVER_STARTED.register(ServerStartEvent::callback)
 
     LootTableEvents.MODIFY.register { key, builder, source, provider ->
