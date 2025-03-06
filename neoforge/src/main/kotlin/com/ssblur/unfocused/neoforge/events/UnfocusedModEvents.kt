@@ -21,6 +21,7 @@ import net.neoforged.neoforge.event.RegisterCommandsEvent
 import net.neoforged.neoforge.event.ServerChatEvent
 import net.neoforged.neoforge.event.entity.EntityAttributeCreationEvent
 import net.neoforged.neoforge.event.entity.living.LivingDamageEvent
+import net.neoforged.neoforge.event.entity.player.PlayerEvent.ItemCraftedEvent
 import net.neoforged.neoforge.event.entity.player.PlayerEvent.PlayerLoggedInEvent
 import net.neoforged.neoforge.event.server.ServerStartedEvent
 import net.neoforged.neoforge.event.village.VillagerTradesEvent
@@ -138,6 +139,10 @@ object UnfocusedModEvents {
     }
   }
 
+  fun itemCraftedEvent(event: ItemCraftedEvent) {
+    PlayerCraftEvent.callback(PlayerCraftEvent.PlayerCraftData(event.entity, event.crafting, event.inventory))
+  }
+
   fun register(bus: IEventBus) {
     NeoForge.EVENT_BUS.addListener(::livingDamageEventBefore)
     NeoForge.EVENT_BUS.addListener(::livingDamageEventAfter)
@@ -150,6 +155,7 @@ object UnfocusedModEvents {
     NeoForge.EVENT_BUS.addListener(::tradeRegisterEvent)
     NeoForge.EVENT_BUS.addListener(::wanderingTradesRegisterEvent)
     NeoForge.EVENT_BUS.addListener(::commandRegistrationEvent)
+    NeoForge.EVENT_BUS.addListener(::itemCraftedEvent)
 
     bus.addListener(EventPriority.LOWEST, ::registerEvent)
     bus.addListener(::attributeEvent)
