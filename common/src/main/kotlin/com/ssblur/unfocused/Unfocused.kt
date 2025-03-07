@@ -23,4 +23,6 @@ object Unfocused: ModInitializer("unfocused") {
       }
     }
   }
+
+  fun isModLoaded(id: String) = UtilityExpectPlatform.isModLoaded(id)
 }

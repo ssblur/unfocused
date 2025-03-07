@@ -47,4 +47,10 @@ object UtilityExpectPlatform {
   fun configDir(): Path {
     throw AssertionError()
   }
+
+  @ExpectPlatform
+  @JvmStatic
+  fun isModLoaded(name: String): Boolean {
+    throw AssertionError()
+  }
 }

@@ -8,6 +8,7 @@ import net.minecraft.world.item.CreativeModeTab
 import net.minecraft.world.level.ItemLike
 import net.minecraft.world.level.block.Block
 import net.neoforged.api.distmarker.Dist
+import net.neoforged.fml.ModList
 import net.neoforged.fml.loading.FMLEnvironment
 import net.neoforged.fml.loading.FMLPaths
 import java.nio.file.Path
@@ -43,4 +44,9 @@ object UtilityExpectPlatformImpl {
 
   @JvmStatic
   fun configDir(): Path = FMLPaths.CONFIGDIR.get()
+
+  @JvmStatic
+  fun isModLoaded(name: String): Boolean {
+    return ModList.get().isLoaded(name)
+  }
 }

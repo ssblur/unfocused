@@ -41,4 +41,9 @@ object UtilityExpectPlatformImpl {
 
   @JvmStatic
   fun configDir(): Path = FabricLoader.getInstance().configDir
+
+  @JvmStatic
+  fun isModLoaded(name: String): Boolean {
+    return FabricLoader.getInstance().isModLoaded(name)
+  }
 }

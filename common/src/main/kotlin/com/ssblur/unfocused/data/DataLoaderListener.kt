@@ -4,6 +4,7 @@ import com.google.gson.FieldNamingPolicy
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import com.google.gson.JsonElement
+import com.ssblur.unfocused.Unfocused
 import net.minecraft.resources.ResourceLocation
 import net.minecraft.server.packs.resources.ResourceManager
 import net.minecraft.server.packs.resources.SimpleJsonResourceReloadListener
@@ -25,6 +26,7 @@ open class DataLoaderListener<T: Any>(path: String, val type: KClass<T>, val cal
       if (obj.isJsonObject) {
         val value = obj.asJsonObject
         if (value.has("disabled") && value.get("disabled").asBoolean) return@forEach
+        if (value.has("required") && !Unfocused.isModLoaded(value.get("required").asString)) return@forEach
         callback.load(GSON.fromJson(obj, type.javaObjectType), location)
       }
     }
