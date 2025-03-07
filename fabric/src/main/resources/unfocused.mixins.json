@@ -4,8 +4,8 @@
   "compatibilityLevel": "JAVA_21",
   "minVersion": "0.8",
   "client": [
-    "AlchimiaeMinecraftMixin",
-    "MouseHandlerMixin"
+    "MouseHandlerMixin",
+    "UnfocusedMinecraftMixin"
   ],
   "mixins": [
     "LivingEntityMixin",

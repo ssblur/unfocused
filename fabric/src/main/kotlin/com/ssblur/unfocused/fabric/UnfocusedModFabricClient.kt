@@ -60,5 +60,6 @@ class UnfocusedModFabricClient: ClientModInitializer {
     ClientScreenRegistrationEvent.register{
       MenuScreens.register(it.menu, it.supplier as MenuScreens.ScreenConstructor<in AbstractContainerMenu, *>)
     }
+
   }
 }

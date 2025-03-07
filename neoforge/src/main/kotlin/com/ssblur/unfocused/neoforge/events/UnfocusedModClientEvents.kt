@@ -1,9 +1,6 @@
 package com.ssblur.unfocused.neoforge.events
 
-import com.ssblur.unfocused.event.client.ClientLevelTickEvent
-import com.ssblur.unfocused.event.client.ClientLoreEvent
-import com.ssblur.unfocused.event.client.ClientScreenRegistrationEvent
-import com.ssblur.unfocused.event.client.MouseScrollEvent
+import com.ssblur.unfocused.event.client.*
 import com.ssblur.unfocused.neoforge.UtilityExpectPlatformImpl
 import com.ssblur.unfocused.rendering.BlockEntityRendering
 import com.ssblur.unfocused.rendering.EntityRendering
@@ -86,11 +83,16 @@ object UnfocusedModClientEvents {
     }
   }
 
+  fun logoutEvent(event: ClientPlayerNetworkEvent.LoggingOut) {
+    ClientDisconnectEvent.callback(event.player)
+  }
+
   fun register(bus: IEventBus) {
     NeoForge.EVENT_BUS.addListener(::clientTickEventAfter)
     NeoForge.EVENT_BUS.addListener(::clientTickEventBefore)
     NeoForge.EVENT_BUS.addListener(::clientScrollEvent)
     NeoForge.EVENT_BUS.addListener(::clientLoreEvent)
+    NeoForge.EVENT_BUS.addListener(::logoutEvent)
 
     bus.addListener(::itemColorEvent)
     bus.addListener(::blockColorEvent)

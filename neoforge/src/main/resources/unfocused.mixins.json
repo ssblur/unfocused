@@ -3,9 +3,7 @@
   "package": "com.ssblur.unfocused.mixin",
   "compatibilityLevel": "JAVA_21",
   "minVersion": "0.8",
-  "client": [
-    "AlchimiaeMinecraftMixin"
-  ],
+  "client": [],
   "mixins": [],
   "injectors": {
     "defaultRequire": 1
