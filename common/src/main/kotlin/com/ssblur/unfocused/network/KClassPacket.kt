@@ -1,13 +1,11 @@
 package com.ssblur.unfocused.network
 
-import com.google.gson.GsonBuilder
-import com.google.gson.ToNumberPolicy
 import net.minecraft.network.RegistryFriendlyByteBuf
 import net.minecraft.network.codec.StreamCodec
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload
 import net.minecraft.resources.ResourceLocation
+import serialization.GsonBuilder
 import kotlin.reflect.KClass
-import kotlin.reflect.full.declaredMemberProperties
 
 @Suppress("unused")
 class KClassPacket<T: Any>(val location: ResourceLocation, type: KClass<T>, val value: Any): CustomPacketPayload {
@@ -26,15 +24,7 @@ class KClassPacket<T: Any>(val location: ResourceLocation, type: KClass<T>, val 
       location: ResourceLocation,
       type: KClass<T>
     ): StreamCodec<RegistryFriendlyByteBuf, KClassPacket<*>> {
-      val gson = GsonBuilder() // While I'm using Gson I might as well trim it down a bit
-        .setFieldNamingStrategy {
-          if (type.declaredMemberProperties.indexOfFirst { f -> f.name == it.name } >= 0)
-            type.declaredMemberProperties.indexOfFirst { f -> f.name == it.name }.toString()
-          else it.name
-        }
-        .disableHtmlEscaping()
-        .setNumberToNumberStrategy(ToNumberPolicy.LONG_OR_DOUBLE)
-        .create()
+      val gson = GsonBuilder.streamBuilder(type).create()
       return StreamCodec.of(
         { buffer, payload ->
           buffer.writeUtf(gson.toJson(payload.value, type.javaObjectType).drop(1).dropLast(1))
