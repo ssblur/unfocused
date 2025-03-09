@@ -60,10 +60,10 @@ object NetworkManager {
   }
 
   @Internal
-  fun subscribeToS2CRegistration(subscriber: S2CSubscriber, messenger: S2CMessenger) {
+  fun subscribeToS2CRegistration(subscriber: S2CSubscriber, messenger: S2CMessenger? = null) {
     s2cTypes.forEach { subscriber.post(it) }
     s2cSubscribers += subscriber
-    s2cMessengers += messenger
+    messenger?.let { s2cMessengers += it }
   }
 
 
@@ -106,10 +106,10 @@ object NetworkManager {
   }
 
   @Internal
-  fun subscribeToC2SRegistration(subscriber: C2SSubscriber, messenger: C2SMessenger) {
+  fun subscribeToC2SRegistration(subscriber: C2SSubscriber, messenger: C2SMessenger? = null) {
     c2sTypes.forEach { subscriber.post(it) }
     c2sSubscribers += subscriber
-    c2sMessengers += messenger
+    messenger?.let { c2sMessengers += it }
   }
 
   fun CustomPacketPayload.sendToServer() {
