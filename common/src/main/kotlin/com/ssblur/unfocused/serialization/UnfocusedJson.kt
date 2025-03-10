@@ -1,4 +1,4 @@
-package serialization
+package com.ssblur.unfocused.serialization
 
 import com.google.gson.GsonBuilder
 import com.google.gson.ToNumberPolicy
@@ -6,7 +6,7 @@ import net.minecraft.resources.ResourceLocation
 import kotlin.reflect.KClass
 import kotlin.reflect.full.declaredMemberProperties
 
-object GsonBuilder {
+object UnfocusedJson {
   fun builder(): GsonBuilder {
     return GsonBuilder()
       .disableHtmlEscaping()

@@ -2,9 +2,9 @@ package com.ssblur.unfocused.data
 
 import com.google.gson.FieldNamingPolicy
 import com.google.gson.Gson
-import com.google.gson.GsonBuilder
 import com.google.gson.JsonElement
 import com.ssblur.unfocused.Unfocused
+import com.ssblur.unfocused.serialization.UnfocusedJson
 import net.minecraft.resources.ResourceLocation
 import net.minecraft.server.packs.resources.ResourceManager
 import net.minecraft.server.packs.resources.SimpleJsonResourceReloadListener
@@ -14,7 +14,9 @@ import kotlin.reflect.KClass
 open class DataLoaderListener<T: Any>(path: String, val type: KClass<T>, val callback: DataLoader<T>):
   SimpleJsonResourceReloadListener(GSON, path) {
   companion object {
-    var GSON: Gson = GsonBuilder().setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES).create()
+    var GSON: Gson = UnfocusedJson.builder()
+      .setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES)
+      .create()
   }
 
   override fun apply(

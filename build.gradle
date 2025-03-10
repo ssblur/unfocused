@@ -21,10 +21,14 @@ architectury {
 
 allprojects {
   group = rootProject.maven_group
-  def matcher = gitVersion() =~ /^v(\d+\.\d+\.\d+-?)+.*/
-  matcher.find()
-  version = matcher.group(1)
-  if (version.endsWith("-")) version += "SNAPSHOT"
+  try {
+    def matcher = gitVersion() =~ /^v(\d+\.\d+\.\d+-?)+.*/
+    matcher.find()
+    version = matcher.group(1)
+    if (version.endsWith("-")) version += "SNAPSHOT"
+  } catch(Exception ignored) {
+    version = "1"
+  }
 }
 
 subprojects {

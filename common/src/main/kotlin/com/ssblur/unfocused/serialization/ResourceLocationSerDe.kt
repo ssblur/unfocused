@@ -1,4 +1,4 @@
-package serialization
+package com.ssblur.unfocused.serialization
 
 import com.google.gson.*
 import net.minecraft.resources.ResourceLocation
