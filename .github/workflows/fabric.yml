@@ -41,6 +41,7 @@ jobs:
           changelog: ${{ steps.changelog.outputs.changelog }}
           dependencies: |
             fabric-api
+            fabric-language-kotlin
 
           github-token: ${{ secrets.GITHUB_TOKEN }}
 
