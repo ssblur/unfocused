@@ -20,7 +20,7 @@ object BiomeModifiers {
   val event = SimpleEvent<Pair<ResourceLocation, BiomeModification>>(retroactive = true)
 
   init {
-    Unfocused.registerDataLoader("neoforge/biome_modifier", BiomeModification::class) { modification, location ->
+    Unfocused.registerDataLoader("neoforge/biome_modifier", BiomeModification::class, true) { modification, location ->
       event.callback(Pair(location, modification))
     }
   }

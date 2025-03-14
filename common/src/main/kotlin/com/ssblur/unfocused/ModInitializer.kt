@@ -5,6 +5,7 @@ import com.ssblur.unfocused.config.Config
 import com.ssblur.unfocused.config.GameRuleConfig
 import com.ssblur.unfocused.registry.RegistrySupplier
 import com.ssblur.unfocused.registry.RegistryTypes
+import com.ssblur.unfocused.serialization.KClassCodec
 import net.minecraft.advancements.CriterionTrigger
 import net.minecraft.core.Registry
 import net.minecraft.core.component.DataComponentType
@@ -33,6 +34,7 @@ import net.minecraft.world.level.storage.loot.functions.LootItemFunctionType
 import net.minecraft.world.level.storage.loot.predicates.LootItemConditionType
 import java.util.function.Consumer
 import java.util.function.Supplier
+import kotlin.reflect.KClass
 
 @Suppress("unused", "unchecked_cast")
 open class ModInitializer(val id: String) {
@@ -88,6 +90,13 @@ open class ModInitializer(val id: String) {
     val builder = DataComponentType.builder<T>()
     consumer.accept(builder)
     val componentType = builder.build()
+    DATA_COMPONENTS.register(id) { componentType }
+    return componentType
+  }
+
+  fun <T: Any> registerDataComponent(id: String, type: KClass<T>): DataComponentType<T> {
+    val builder = DataComponentType.builder<T>()
+    val componentType = builder.networkSynchronized(KClassCodec.streamCodec(type)).persistent(KClassCodec.codec(type)).build()
     DATA_COMPONENTS.register(id) { componentType }
     return componentType
   }

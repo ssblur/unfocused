@@ -11,7 +11,7 @@ import net.minecraft.server.packs.resources.SimpleJsonResourceReloadListener
 import net.minecraft.util.profiling.ProfilerFiller
 import kotlin.reflect.KClass
 
-open class DataLoaderListener<T: Any>(path: String, val type: KClass<T>, val callback: DataLoader<T>):
+open class DataLoaderListener<T: Any>(path: String, val type: KClass<T>, val failEasy: Boolean = false, val callback: DataLoader<T>):
   SimpleJsonResourceReloadListener(GSON, path) {
   companion object {
     var GSON: Gson = UnfocusedJson.builder()
@@ -29,7 +29,11 @@ open class DataLoaderListener<T: Any>(path: String, val type: KClass<T>, val cal
         val value = obj.asJsonObject
         if (value.has("disabled") && value.get("disabled").asBoolean) return@forEach
         if (value.has("required") && !Unfocused.isModLoaded(value.get("required").asString)) return@forEach
-        callback.load(GSON.fromJson(obj, type.javaObjectType), location)
+        try {
+          callback.load(GSON.fromJson(obj, type.javaObjectType), location)
+        } catch(e: IllegalStateException) {
+          if(!failEasy) throw e
+        }
       }
     }
   }

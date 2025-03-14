@@ -25,7 +25,7 @@ object UnfocusedModData {
             executor: Executor,
             executor2: Executor
           ): CompletableFuture<Void> =
-            DataLoaderListener(it.path, it.type) { value, location: ResourceLocation ->
+            DataLoaderListener(it.path, it.type, it.failEasy) { value, location: ResourceLocation ->
               it.loader.load(value, location)
             }.reload(barrier, manager, filler, filler2, executor, executor2)
 

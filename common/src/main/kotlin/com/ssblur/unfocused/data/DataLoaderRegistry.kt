@@ -12,7 +12,8 @@ object DataLoaderRegistry {
     val path: String,
     val type: KClass<T>,
     val loader: DataLoader<T>,
-    val mod: ModInitializer
+    val mod: ModInitializer,
+    val failEasy: Boolean
   )
 
   private val event = SimpleEvent<DataLoaderEntry<in Any>>(true)
@@ -20,8 +21,8 @@ object DataLoaderRegistry {
     event.register(subscriber)
   }
 
-  fun <T: Any> ModInitializer.registerDataLoader(path: String, type: KClass<T>, dataLoader: DataLoader<T>) {
-    val entry = DataLoaderEntry(path, type, dataLoader, this)
+  fun <T: Any> ModInitializer.registerDataLoader(path: String, type: KClass<T>, failEasy: Boolean = false, dataLoader: DataLoader<T>) {
+    val entry = DataLoaderEntry(path, type, dataLoader, this, failEasy)
     event.callback(entry as DataLoaderEntry<in Any>)
   }
 
