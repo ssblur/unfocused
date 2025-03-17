@@ -3,6 +3,7 @@ package com.ssblur.unfocused.data
 import com.google.gson.FieldNamingPolicy
 import com.google.gson.Gson
 import com.google.gson.JsonElement
+import com.google.gson.JsonSyntaxException
 import com.ssblur.unfocused.Unfocused
 import com.ssblur.unfocused.serialization.UnfocusedJson
 import net.minecraft.resources.ResourceLocation
@@ -31,8 +32,8 @@ open class DataLoaderListener<T: Any>(path: String, val type: KClass<T>, val fai
         if (value.has("required") && !Unfocused.isModLoaded(value.get("required").asString)) return@forEach
         try {
           callback.load(GSON.fromJson(obj, type.javaObjectType), location)
-        } catch(e: IllegalStateException) {
-          if(!failEasy) throw e
+        } catch (e: JsonSyntaxException) {
+          if (!failEasy) throw e
         }
       }
     }
