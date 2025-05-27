@@ -20,6 +20,7 @@ import net.minecraft.world.entity.Entity
 import net.minecraft.world.entity.EntityType
 import net.minecraft.world.inventory.AbstractContainerMenu
 import net.minecraft.world.inventory.MenuType
+import net.minecraft.world.item.ArmorMaterial
 import net.minecraft.world.item.BlockItem
 import net.minecraft.world.item.Item
 import net.minecraft.world.item.crafting.Recipe
@@ -57,6 +58,7 @@ open class ModInitializer(val id: String) {
   val CREATIVE_TABS = RegistryTypes.CREATIVE_TABS.create(id)
   val PARTICLE_TYPES = RegistryTypes.PARTICLE_TYPES.create(id)
   val MENUS = RegistryTypes.MENUS.create(id)
+  val ARMOR = RegistryTypes.ARMOR.create(id)
 
   fun registerBlock(id: String, supplier: Supplier<Block>): RegistrySupplier<Block> {
     return BLOCKS.register(id, supplier)
@@ -73,6 +75,10 @@ open class ModInitializer(val id: String) {
 
   fun registerItem(id: String, supplier: Supplier<Item>): RegistrySupplier<Item> {
     return ITEMS.register(id, supplier)
+  }
+
+  fun registerArmorMaterial(id: String, supplier: Supplier<ArmorMaterial>): RegistrySupplier<ArmorMaterial> {
+    return ARMOR.register(id, supplier)
   }
 
   fun registerEffect(id: String, supplier: Supplier<MobEffect>): RegistrySupplier<MobEffect> {

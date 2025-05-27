@@ -74,6 +74,9 @@ class UnfocusedModFabric: ModInitializer {
     RegistryTypes.MENUS.subscribe{ location, supplier ->
       Registry.register(BuiltInRegistries.MENU, location, supplier.get())
     }
+    RegistryTypes.ARMOR.subscribe{ location, supplier ->
+      Registry.register(BuiltInRegistries.ARMOR_MATERIAL, location, supplier.get())
+    }
 
     ServerMessageEvents.ALLOW_CHAT_MESSAGE.register { message, sender, params ->
       PlayerChatEvent.Before.callback(

@@ -38,4 +38,5 @@ object RegistryTypes {
   val CREATIVE_TABS = RegistryType(Registries.CREATIVE_MODE_TAB)
   val PARTICLE_TYPES = RegistryType(Registries.PARTICLE_TYPE)
   val MENUS = RegistryType(Registries.MENU)
+  val ARMOR = RegistryType(Registries.ARMOR_MATERIAL)
 }

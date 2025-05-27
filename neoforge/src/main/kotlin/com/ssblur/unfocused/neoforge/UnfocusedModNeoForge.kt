@@ -33,6 +33,7 @@ class UnfocusedModNeoForge(bus: IEventBus) {
     ProxyRegistry(Registries.CREATIVE_MODE_TAB, RegistryTypes.CREATIVE_TABS).register(bus)
     ProxyRegistry(Registries.PARTICLE_TYPE, RegistryTypes.PARTICLE_TYPES).register(bus)
     ProxyRegistry(Registries.MENU, RegistryTypes.MENUS).register(bus)
+    ProxyRegistry(Registries.ARMOR_MATERIAL, RegistryTypes.ARMOR).register(bus)
 
     BiomeModifiers.AddFeaturesBiomeModifier.DIRECT_CODEC
 
