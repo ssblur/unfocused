@@ -10,6 +10,7 @@ import net.minecraft.world.item.CreativeModeTab
 import net.minecraft.world.item.Item
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.level.ItemLike
+import net.minecraft.world.level.block.Block
 import java.util.function.Supplier
 
 @Suppress("unused")
@@ -78,5 +79,13 @@ object CreativeTabs {
   fun RegistrySupplier<CreativeModeTab>.add(item: ItemStack): RegistrySupplier<CreativeModeTab> {
     acceptor.callback(CreativeTabEntry(location!!, null, item))
     return this
+  }
+
+  fun Pair<RegistrySupplier<Block>, RegistrySupplier<Item>>.tab(supplier: RegistrySupplier<CreativeModeTab>) {
+    this.second.tab(supplier)
+  }
+
+  fun Pair<RegistrySupplier<Block>, RegistrySupplier<Item>>.tab(location: ResourceLocation) {
+    this.second.tab(location)
   }
 }
