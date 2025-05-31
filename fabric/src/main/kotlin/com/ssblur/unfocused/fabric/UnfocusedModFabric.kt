@@ -118,7 +118,7 @@ class UnfocusedModFabric: ModInitializer {
             {
               if (modification.biomes.startsWith("#"))
                 it.hasTag(TagKey.create(Registries.BIOME, ResourceLocation.parse(modification.biomes.substring(1))))
-              it.biomeKey.location().equals(modification.biomes)
+              it.biomeKey.location().toString() == modification.biomes
             },
             GenerationStep.Decoration.entries.first { it.getName().equals(modification.step ?: "raw_generation") },
             ResourceKey.create(Registries.PLACED_FEATURE, ResourceLocation.parse(modification.features!!))
@@ -135,7 +135,7 @@ class UnfocusedModFabric: ModInitializer {
               {
                 if (modification.biomes.startsWith("#"))
                   it.hasTag(TagKey.create(Registries.BIOME, ResourceLocation.parse(modification.biomes.substring(1))))
-                it.biomeKey.location().equals(modification.biomes)
+                it.biomeKey.location().toString() == modification.biomes
               },
               BuiltInRegistries.ENTITY_TYPE.get(ResourceLocation.parse(entity.type)).category,
               BuiltInRegistries.ENTITY_TYPE.get(ResourceLocation.parse(entity.type)),
@@ -154,7 +154,7 @@ class UnfocusedModFabric: ModInitializer {
             {
               if (modification.biomes.startsWith("#"))
                 it.hasTag(TagKey.create(Registries.BIOME, ResourceLocation.parse(modification.biomes.substring(1))))
-              it.biomeKey.location().equals(modification.biomes)
+              it.biomeKey.location().toString() == modification.biomes
             },
             GenerationStep.Carving.entries.first { it.getName() == modification.step!! },
             ResourceKey.create(Registries.CONFIGURED_CARVER, ResourceLocation.parse(modification.carvers!!))
