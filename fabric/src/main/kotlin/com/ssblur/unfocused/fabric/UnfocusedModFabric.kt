@@ -1,13 +1,13 @@
 package com.ssblur.unfocused.fabric
 
 import com.ssblur.unfocused.Unfocused
+import com.ssblur.unfocused.biome.BiomeModifiers
 import com.ssblur.unfocused.command.CommandRegistration
 import com.ssblur.unfocused.entity.EntityAttributes
 import com.ssblur.unfocused.entity.Trades
 import com.ssblur.unfocused.event.common.LootTablePopulateEvent
 import com.ssblur.unfocused.event.common.PlayerChatEvent
 import com.ssblur.unfocused.event.common.ServerStartEvent
-import com.ssblur.unfocused.fabric.biome.BiomeModifiers
 import com.ssblur.unfocused.fabric.events.UnfocusedModData
 import com.ssblur.unfocused.registry.RegistryTypes
 import net.fabricmc.api.ModInitializer
@@ -22,9 +22,6 @@ import net.minecraft.core.Registry
 import net.minecraft.core.registries.BuiltInRegistries
 import net.minecraft.core.registries.Registries
 import net.minecraft.resources.ResourceKey
-import net.minecraft.resources.ResourceLocation
-import net.minecraft.tags.TagKey
-import net.minecraft.world.level.levelgen.GenerationStep
 import net.minecraft.world.level.storage.loot.LootPool
 
 class UnfocusedModFabric: ModInitializer {
@@ -111,60 +108,30 @@ class UnfocusedModFabric: ModInitializer {
       FabricDefaultAttributeRegistry.register(type.get(), builder.get())
     }
 
-    BiomeModifiers.event.register { (_, modification) ->
-      when (modification.type) {
-        "unfocused:add_feature" -> {
-          BiomeModifications.addFeature(
-            {
-              if (modification.biomes.startsWith("#"))
-                it.hasTag(TagKey.create(Registries.BIOME, ResourceLocation.parse(modification.biomes.substring(1))))
-              it.biomeKey.location().toString() == modification.biomes
-            },
-            GenerationStep.Decoration.entries.first { it.getName().equals(modification.step ?: "raw_generation") },
-            ResourceKey.create(Registries.PLACED_FEATURE, ResourceLocation.parse(modification.features!!))
-          )
-        }
-
-        "unfocused:remove_feature" -> {
-          // todo
-        }
-
-        "unfocused:add_spawn" -> {
-          for (entity in modification.spawners!!)
-            BiomeModifications.addSpawn(
-              {
-                if (modification.biomes.startsWith("#"))
-                  it.hasTag(TagKey.create(Registries.BIOME, ResourceLocation.parse(modification.biomes.substring(1))))
-                it.biomeKey.location().toString() == modification.biomes
-              },
-              BuiltInRegistries.ENTITY_TYPE.get(ResourceLocation.parse(entity.type)).category,
-              BuiltInRegistries.ENTITY_TYPE.get(ResourceLocation.parse(entity.type)),
-              entity.weight,
-              entity.minCount,
-              entity.maxCount
-            )
-        }
-
-        "unfocused:remove_spawn" -> {
-          // todo
-        }
-
-        "unfocused:add_carver" -> {
-          BiomeModifications.addCarver(
-            {
-              if (modification.biomes.startsWith("#"))
-                it.hasTag(TagKey.create(Registries.BIOME, ResourceLocation.parse(modification.biomes.substring(1))))
-              it.biomeKey.location().toString() == modification.biomes
-            },
-            GenerationStep.Carving.entries.first { it.getName() == modification.step!! },
-            ResourceKey.create(Registries.CONFIGURED_CARVER, ResourceLocation.parse(modification.carvers!!))
-          )
-        }
-
-        "unfocused:remove_carver" -> {
-          // todo
-        }
-      }
+    BiomeModifiers.featureEvent.register{ (_, modification) ->
+      BiomeModifications.addFeature(
+        { modification.isValid(it.biomeRegistryEntry) },
+        modification.step,
+        ResourceKey.create(Registries.PLACED_FEATURE, modification.feature)
+      )
+    }
+    BiomeModifiers.carverEvent.register{ (_, modification) ->
+      BiomeModifications.addCarver(
+        { modification.isValid(it.biomeRegistryEntry) },
+        modification.step,
+        ResourceKey.create(Registries.CONFIGURED_CARVER, modification.carver)
+      )
+    }
+    BiomeModifiers.spawnEvent.register{ (_, modification) ->
+      for (entity in modification.spawners)
+        BiomeModifications.addSpawn(
+          { modification.isValid(it.biomeRegistryEntry) },
+          BuiltInRegistries.ENTITY_TYPE.get(entity.type).category,
+          BuiltInRegistries.ENTITY_TYPE.get(entity.type),
+          entity.weight,
+          entity.minCount,
+          entity.maxCount
+        )
     }
 
     Trades.register { trade ->

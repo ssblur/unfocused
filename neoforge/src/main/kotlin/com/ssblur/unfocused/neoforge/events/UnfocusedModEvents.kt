@@ -1,10 +1,12 @@
 package com.ssblur.unfocused.neoforge.events
 
 import com.ssblur.unfocused.Unfocused
+import com.ssblur.unfocused.biome.BiomeModifiers
 import com.ssblur.unfocused.command.CommandRegistration
 import com.ssblur.unfocused.entity.EntityAttributes
 import com.ssblur.unfocused.entity.Trades
 import com.ssblur.unfocused.event.common.*
+import com.ssblur.unfocused.neoforge.biome.RegistryAwareBiomeModifier
 import it.unimi.dsi.fastutil.ints.Int2ObjectFunction
 import net.minecraft.core.NonNullList
 import net.minecraft.core.registries.Registries
@@ -15,7 +17,6 @@ import net.minecraft.world.level.storage.loot.LootPool
 import net.neoforged.bus.api.EventPriority
 import net.neoforged.bus.api.IEventBus
 import net.neoforged.neoforge.common.NeoForge
-import net.neoforged.neoforge.common.NeoForgeMod
 import net.neoforged.neoforge.event.LootTableLoadEvent
 import net.neoforged.neoforge.event.RegisterCommandsEvent
 import net.neoforged.neoforge.event.ServerChatEvent
@@ -103,13 +104,8 @@ object UnfocusedModEvents {
   }
 
   fun registerEvent(event: RegisterEvent) {
-    event.register(NeoForgeRegistries.Keys.BIOME_MODIFIER_SERIALIZERS) { register -> // todo fix
-      register.register(Unfocused.location("add_feature"), NeoForgeMod.ADD_FEATURES_BIOME_MODIFIER_TYPE.get())
-      register.register(Unfocused.location("remove_feature"), NeoForgeMod.REMOVE_FEATURES_BIOME_MODIFIER_TYPE.get())
-      register.register(Unfocused.location("add_spawn"), NeoForgeMod.ADD_SPAWNS_BIOME_MODIFIER_TYPE.get())
-      register.register(Unfocused.location("remove_spawn"), NeoForgeMod.REMOVE_SPAWNS_BIOME_MODIFIER_TYPE.get())
-      register.register(Unfocused.location("add_carver"), NeoForgeMod.ADD_CARVERS_BIOME_MODIFIER_TYPE.get())
-      register.register(Unfocused.location("remove_carver"), NeoForgeMod.REMOVE_CARVERS_BIOME_MODIFIER_TYPE.get())
+    event.register(NeoForgeRegistries.Keys.BIOME_MODIFIER_SERIALIZERS) { register ->
+      register.register(Unfocused.location("features"), RegistryAwareBiomeModifier.CODEC)
     }
   }
 
@@ -156,6 +152,10 @@ object UnfocusedModEvents {
     NeoForge.EVENT_BUS.addListener(::wanderingTradesRegisterEvent)
     NeoForge.EVENT_BUS.addListener(::commandRegistrationEvent)
     NeoForge.EVENT_BUS.addListener(::itemCraftedEvent)
+
+    BiomeModifiers.featureEvent.register{
+      println(it.second.feature)
+    }
 
     bus.addListener(EventPriority.LOWEST, ::registerEvent)
     bus.addListener(::attributeEvent)

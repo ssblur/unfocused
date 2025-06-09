@@ -15,7 +15,7 @@ open class Event<T, R>(
   var cancelled = false
   var value: R? = null
 
-  fun callback(event: T) {
+  open fun callback(event: T) {
     if (retroactive)
       if (!clearAfterRun || subscribers.isEmpty())
         events += event

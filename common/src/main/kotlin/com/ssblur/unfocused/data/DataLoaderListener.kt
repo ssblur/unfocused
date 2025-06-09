@@ -30,6 +30,7 @@ open class DataLoaderListener<T: Any>(path: String, val type: KClass<T>, val fai
         val value = obj.asJsonObject
         if (value.has("disabled") && value.get("disabled").asBoolean) return@forEach
         if (value.has("required") && !Unfocused.isModLoaded(value.get("required").asString)) return@forEach
+
         try {
           callback.load(GSON.fromJson(obj, type.javaObjectType), location)
         } catch (e: JsonSyntaxException) {
