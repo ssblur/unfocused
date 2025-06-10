@@ -19,7 +19,7 @@ object TemplatePoolInjects {
 
   data class WeightedPoolElement(
     val element: PoolElement,
-    val weight: Int
+    val weight: Int?
   )
 
   data class PoolElement(
@@ -49,7 +49,7 @@ object TemplatePoolInjects {
               processorLists.getHolderOrThrow(ResourceKey.create(Registries.PROCESSOR_LIST, element.element.processors))
             )
           ).apply(element.element.projection)
-        for(i in 0..element.weight)
+        for(i in 0..(element.weight ?: 2))
           templates.add(poolElement)
         (pool as StructureTemplatePoolAccessor).rawTemplates = rawTemplates + Pair(poolElement, element.weight)
       }

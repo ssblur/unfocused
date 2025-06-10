@@ -23,7 +23,8 @@
     ]
   },
   "mixins": [
-    "unfocused.mixins.json"
+    "unfocused.mixins.json",
+    "unfocused-common.mixins.json"
   ],
   "depends": {
     "fabricloader": ">=0.16.9",
