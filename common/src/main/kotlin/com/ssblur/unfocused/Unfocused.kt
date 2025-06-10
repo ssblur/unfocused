@@ -1,5 +1,6 @@
 package com.ssblur.unfocused
 
+import com.ssblur.unfocused.biome.TemplatePoolInjects
 import com.ssblur.unfocused.config.GameRuleConfig
 import com.ssblur.unfocused.event.common.ServerStartEvent
 import org.apache.logging.log4j.LogManager
@@ -21,6 +22,11 @@ object Unfocused: ModInitializer("unfocused") {
           }
         }
       }
+    }
+
+    TemplatePoolInjects
+    ServerStartEvent.register{
+      TemplatePoolInjects.inject(it)
     }
   }
 
