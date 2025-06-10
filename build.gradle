@@ -25,8 +25,6 @@ allprojects {
     def matcher = gitVersion() =~ /^v(\d+\.\d+\.\d+(-\d+\.\d+\.\d+)?-?)?.*/
     matcher.find()
     version = matcher.group(1)
-    println(version)
-    println(matcher)
     if (version.endsWith("-")) version += "SNAPSHOT"
   } catch(Exception ignored) {
     version = "1"
