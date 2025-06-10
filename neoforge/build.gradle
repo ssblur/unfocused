@@ -49,8 +49,10 @@ processResources {
   inputs.property 'version', project.version
 
   filesMatching('META-INF/neoforge.mods.toml') {
-    expand version: project.version
-    expand kff_version: rootProject.kff_version
+    expand(
+            version: project.version,
+            kff_version: rootProject.kff_version
+    )
   }
 }
 
