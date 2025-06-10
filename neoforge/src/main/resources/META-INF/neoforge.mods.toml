@@ -27,6 +27,13 @@ versionRange = "[1.21.1,)"
 ordering = "NONE"
 side = "BOTH"
 
+[[dependencies.unfocused]]
+modId = "kotlinforforge"
+type = "required"
+versionRange = "[${kff_version},)"
+ordering = "NONE"
+side = "BOTH"
+
 [[mixins]]
 config = "unfocused.mixins.json"
 

@@ -31,7 +31,7 @@
     "minecraft": "~1.21.1",
     "java": ">=21",
     "fabric-api": "*",
-    "fabric-language-kotlin": ">=1.10.8+kotlin.1.9.0"
+    "fabric-language-kotlin": ">=${flk_version}"
   },
   "suggests": {
     "another-mod": "*"

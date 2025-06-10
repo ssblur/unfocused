@@ -11,8 +11,7 @@
     "LivingEntityMixin",
     "PlayerListMixin",
     "PlayerMixin",
-    "ResultSlotMixin",
-    "StructureTemplatePoolAccessor"
+    "ResultSlotMixin"
   ],
   "injectors": {
     "defaultRequire": 1
