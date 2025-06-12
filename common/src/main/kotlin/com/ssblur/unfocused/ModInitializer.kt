@@ -14,6 +14,7 @@ import net.minecraft.core.particles.ParticleType
 import net.minecraft.core.registries.Registries
 import net.minecraft.resources.ResourceKey
 import net.minecraft.resources.ResourceLocation
+import net.minecraft.sounds.SoundEvent
 import net.minecraft.tags.TagKey
 import net.minecraft.world.effect.MobEffect
 import net.minecraft.world.entity.Entity
@@ -59,6 +60,7 @@ open class ModInitializer(val id: String) {
   val PARTICLE_TYPES = RegistryTypes.PARTICLE_TYPES.create(id)
   val MENUS = RegistryTypes.MENUS.create(id)
   val ARMOR = RegistryTypes.ARMOR.create(id)
+  val SOUNDS = RegistryTypes.SOUNDS.create(id)
 
   fun registerBlock(id: String, supplier: Supplier<Block>): RegistrySupplier<Block> {
     return BLOCKS.register(id, supplier)
@@ -167,6 +169,10 @@ open class ModInitializer(val id: String) {
 
   fun <T: AbstractContainerMenu> registerMenu(id: String, supplier: Supplier<MenuType<T>>): RegistrySupplier<MenuType<T>> {
     return MENUS.register(id, supplier as Supplier<MenuType<*>>) as RegistrySupplier<MenuType<T>>
+  }
+
+  fun registerSound(id: String, supplier: Supplier<SoundEvent>): RegistrySupplier<SoundEvent> {
+    return SOUNDS.register(id, supplier)
   }
 
   fun location(path: String) = ResourceLocation.fromNamespaceAndPath(id, path)

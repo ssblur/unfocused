@@ -39,4 +39,5 @@ object RegistryTypes {
   val PARTICLE_TYPES = RegistryType(Registries.PARTICLE_TYPE)
   val MENUS = RegistryType(Registries.MENU)
   val ARMOR = RegistryType(Registries.ARMOR_MATERIAL)
+  val SOUNDS = RegistryType(Registries.SOUND_EVENT)
 }
