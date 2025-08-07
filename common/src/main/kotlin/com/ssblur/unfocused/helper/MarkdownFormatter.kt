@@ -1,12 +1,32 @@
 package com.ssblur.unfocused.helper
 
 import net.minecraft.network.chat.ClickEvent
-import net.minecraft.network.chat.FormattedText
+import net.minecraft.network.chat.Component
+import net.minecraft.network.chat.MutableComponent
 import net.minecraft.network.chat.Style
+import net.minecraft.resources.ResourceLocation
 
 object MarkdownFormatter {
-  fun markdownToFormattedText(markdown: String): FormattedText {
-    val elements = mutableListOf<FormattedText>()
+  data class PageHolder(
+    val component: Component,
+    val images: List<ResourceLocation>,
+    val recipes: List<ResourceLocation>,
+    val items: List<ResourceLocation>,
+  )
+
+  fun append(base: MutableComponent, text: String, bold: Boolean, italic: Boolean, strikethrough: Boolean): MutableComponent {
+    return base.append(
+      Component.literal(text).withStyle(
+        Style.EMPTY
+          .withBold(bold)
+          .withItalic(italic)
+          .withStrikethrough(strikethrough)
+      )
+    )
+  }
+
+  fun parseMarkdown(markdown: String): PageHolder {
+    var element = Component.literal("")
     val lines = markdown.split("\n").map { it.trim() }
     lines.forEach {
       var line = it
@@ -20,36 +40,42 @@ object MarkdownFormatter {
       if(isTitle) line = line.substring(1)
 
       if(line.isEmpty())
-        elements.add(FormattedText.of("\n"))
+        element = element.append(Component.literal("\n"))
 
       while(line.isNotEmpty()) {
-        var changed = false
         if(line.startsWith("***")) {
+          element = append(element, current, isBold, isItalic, isStrikeThrough)
+          current = ""
           isBold = !isBold
           isItalic = !isItalic
-          changed = true
           line = line.substring(3)
+          continue
         } else if(line.startsWith("**")) {
+          element = append(element, current, isBold, isItalic, isStrikeThrough)
+          current = ""
           isBold = !isBold
-          changed = true
           line = line.substring(2)
+          continue
         } else if(line.startsWith("*")) {
+          element = append(element, current, isBold, isItalic, isStrikeThrough)
+          current = ""
           isItalic = !isItalic
-          changed = true
           line = line.substring(1)
+          continue
         } else if(line.startsWith("~~")) {
+          element = append(element, current, isBold, isItalic, isStrikeThrough)
+          current = ""
           isStrikeThrough = !isStrikeThrough
-          changed = true
           line = line.substring(2)
+          continue
         } else if(line.matches("^\\[(.*?)]\\((.*?)\\)".toRegex())) {
           val match = "^\\[(.*?)]\\((.*?)\\)(.*)".toRegex().matchEntire(line)!!
           val text = match.groups[0]!!.value
           val link = match.groups[1]!!.value
           val isExternal = link.startsWith("http://") || link.startsWith("https://")
           val remainder = match.groups[2]!!.value
-          elements.add(
-            FormattedText.of(
-              text,
+          element = element.append(
+            Component.literal(text).withStyle(
               Style.EMPTY
                 .withBold(isBold)
                 .withItalic(isItalic)
@@ -62,35 +88,19 @@ object MarkdownFormatter {
             )
           )
           line = remainder
+          continue
         }
+        // TODO: recognize images and item / recipe embeds
 
-        if(changed) {
-          elements.add(
-            FormattedText.of(
-              current,
-              Style.EMPTY
-                .withBold(isBold)
-                .withItalic(isItalic)
-                .withStrikethrough(isStrikeThrough)
-            )
-          )
-          current = ""
-        } else {
-          current += line[0]
-          line = line.substring(1)
-        }
+        current += line[0]
+        line = line.substring(1)
       }
-      if(line.isNotEmpty())
-        elements.add(
-          FormattedText.of(
-            current,
-            Style.EMPTY
-              .withBold(isBold)
-              .withItalic(isItalic)
-              .withStrikethrough(isStrikeThrough)
-          )
-        )
+      if(current.isNotEmpty())
+        element = append(element, current, isBold, isItalic, isStrikeThrough)
     }
-    return FormattedText.composite(elements)
+
+    return PageHolder(element, listOf(), listOf(), listOf())
   }
+
+  fun parseMarkdownWithoutImages(markdown: String) = parseMarkdown(markdown).component
 }

@@ -20,15 +20,19 @@ class MarkdownWidget(x: Int, y: Int, w: Int, h: Int) : PositionedWidget(x, y, w,
     fun get() = markdownTextInternal
     fun set(value: String) {
       markdownTextInternal = value
-      formattedText = MarkdownFormatter.markdownToFormattedText(markdownText)
+      parsed = MarkdownFormatter.parseMarkdown(markdownText)
+      formattedText = parsed.component
     }
 
-  var formattedText: FormattedText = MarkdownFormatter.markdownToFormattedText(markdownText)
+  var parsed: MarkdownFormatter.PageHolder = MarkdownFormatter.parseMarkdown(markdownText)
+  var formattedText: FormattedText = parsed.component
     private set
 
   override fun draw(guiGraphics: GuiGraphics) {
     val font = Minecraft.getInstance().font
     guiGraphics.drawWordWrap(font, formattedText, 0, 0, 0xff000000u.toInt(), w)
+    // draw related recipes and items
+    // draw images
   }
 
   override fun updateNarration(narrationElementOutput: NarrationElementOutput) {
