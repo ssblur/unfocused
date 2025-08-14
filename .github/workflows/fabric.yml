@@ -36,7 +36,7 @@ jobs:
         with:
           mod-file: fabric/build/libs/unfocused-fabric-${{ steps.tag.outputs.version }}.jar
           version-name: "${{ steps.tag.outputs.version }}-fabric"
-          minecraft-version: 1.21.1
+          minecraft-version: 1.21.8
           mod-loader: fabric
           changelog: ${{ steps.changelog.outputs.changelog }}
           dependencies: |
