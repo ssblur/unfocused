@@ -5,6 +5,7 @@ import com.ssblur.unfocused.network.NetworkManager
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload
 import net.minecraft.server.level.ServerPlayer
 import net.neoforged.bus.api.SubscribeEvent
+import net.neoforged.neoforge.client.network.ClientPacketDistributor
 import net.neoforged.neoforge.network.PacketDistributor
 import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent
 
@@ -24,7 +25,7 @@ object UnfocusedModNetworking {
           }
         }
       },
-      { location, type, payload -> PacketDistributor.sendToServer(KClassPacket(location, type, payload)) }
+      { location, type, payload -> ClientPacketDistributor.sendToServer(KClassPacket(location, type, payload)) }
     )
 
     NetworkManager.subscribeToS2CRegistration(
@@ -54,7 +55,7 @@ object UnfocusedModNetworking {
     }
 
     NetworkManager.c2sQueue.register {
-      PacketDistributor.sendToServer(it)
+      ClientPacketDistributor.sendToServer(it)
     }
   }
 }

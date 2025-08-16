@@ -20,7 +20,7 @@ object BiomeModifiers {
 
   class BiomeCarver(
     override val biome: String,
-    val step: GenerationStep.Carving,
+    val step: GenerationStep.Decoration,
     val carver: ResourceLocation
   ): BiomeModifier()
 

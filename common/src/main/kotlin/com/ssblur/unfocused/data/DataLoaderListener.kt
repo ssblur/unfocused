@@ -6,14 +6,16 @@ import com.google.gson.JsonElement
 import com.google.gson.JsonSyntaxException
 import com.ssblur.unfocused.Unfocused
 import com.ssblur.unfocused.serialization.UnfocusedJson
+import net.minecraft.resources.FileToIdConverter
 import net.minecraft.resources.ResourceLocation
 import net.minecraft.server.packs.resources.ResourceManager
 import net.minecraft.server.packs.resources.SimpleJsonResourceReloadListener
+import net.minecraft.util.ExtraCodecs
 import net.minecraft.util.profiling.ProfilerFiller
 import kotlin.reflect.KClass
 
 open class DataLoaderListener<T: Any>(path: String, val type: KClass<T>, val failEasy: Boolean = false, val callback: DataLoader<T>):
-  SimpleJsonResourceReloadListener(GSON, path) {
+  SimpleJsonResourceReloadListener<JsonElement>(ExtraCodecs.JSON, FileToIdConverter.json(path)) {
   companion object {
     var GSON: Gson = UnfocusedJson.builder()
       .setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES)

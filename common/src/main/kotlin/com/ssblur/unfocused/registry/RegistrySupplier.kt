@@ -47,7 +47,7 @@ class RegistrySupplier<T>(
   }
 
   fun ref() = location?.let {
-    BuiltInRegistries.REGISTRY.get(registryKey!!.location())?.getHolder(it)?.getOrNull()
+    BuiltInRegistries.REGISTRY.get(registryKey!!.location())?.getOrNull()?.value()?.get(it)?.getOrNull()
   } as Holder.Reference<T>
 
   override fun value() = get()!!

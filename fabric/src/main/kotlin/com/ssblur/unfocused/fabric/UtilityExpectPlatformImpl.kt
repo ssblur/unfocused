@@ -9,8 +9,8 @@ import net.fabricmc.fabric.api.itemgroup.v1.FabricItemGroup
 import net.fabricmc.loader.api.FabricLoader
 import net.fabricmc.loader.impl.FabricLoaderImpl
 import net.minecraft.client.color.block.BlockColor
-import net.minecraft.client.color.item.ItemColor
 import net.minecraft.world.item.CreativeModeTab
+import net.minecraft.world.item.component.DyedItemColor
 import net.minecraft.world.level.ItemLike
 import net.minecraft.world.level.block.Block
 import java.nio.file.Path
@@ -29,8 +29,8 @@ object UtilityExpectPlatformImpl {
 
   @Environment(EnvType.CLIENT)
   @JvmStatic
-  fun registerColor(color: ItemColor, vararg items: Supplier<ItemLike>) {
-    ColorProviderRegistry.ITEM.register(color, *items.map { it.get() }.toTypedArray())
+  fun registerColor(color: DyedItemColor, vararg items: Supplier<ItemLike>) {
+//    ColorProviderRegistry.ITEM.register(color, *items.map { it.get() }.toTypedArray())
   }
 
   @Environment(EnvType.CLIENT)

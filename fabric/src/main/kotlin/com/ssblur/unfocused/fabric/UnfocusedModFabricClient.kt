@@ -8,10 +8,10 @@ import com.ssblur.unfocused.rendering.BlockEntityRendering
 import com.ssblur.unfocused.rendering.EntityRendering
 import com.ssblur.unfocused.rendering.ParticleFactories
 import net.fabricmc.api.ClientModInitializer
-import net.fabricmc.fabric.api.blockrenderlayer.v1.BlockRenderLayerMap
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents
 import net.fabricmc.fabric.api.client.item.v1.ItemTooltipCallback
 import net.fabricmc.fabric.api.client.particle.v1.ParticleFactoryRegistry
+import net.fabricmc.fabric.api.client.rendering.v1.BlockRenderLayerMap
 import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry
 import net.minecraft.client.gui.screens.MenuScreens
 import net.minecraft.client.particle.ParticleProvider
@@ -25,7 +25,7 @@ import net.minecraft.world.level.block.entity.BlockEntity
 @Suppress("unchecked_cast")
 class UnfocusedModFabricClient: ClientModInitializer {
   override fun onInitializeClient() {
-    BlockExtension.register { pair -> BlockRenderLayerMap.INSTANCE.putBlock(pair.first, pair.second) }
+    BlockExtension.register { pair -> BlockRenderLayerMap.putBlock(pair.first, pair.second) }
     BlockEntityRendering.register { pair ->
       BlockEntityRenderers.register(pair.type.get(), pair.renderer as BlockEntityRendererProvider<BlockEntity>)
     }

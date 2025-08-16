@@ -7,11 +7,12 @@ buildscript {
     classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
   }
 }
+
 plugins {
   id 'dev.architectury.loom' version '1.10-SNAPSHOT' apply false
   id "com.palantir.git-version" version "0.15.0"
   id 'architectury-plugin' version '3.4-SNAPSHOT'
-  id 'com.github.johnrengelman.shadow' version '8.1.1' apply false
+  id 'com.gradleup.shadow' version '8.3.6' apply false
 }
 apply plugin: 'kotlin'
 
@@ -63,7 +64,7 @@ subprojects {
   }
 
   tasks.withType(JavaCompile).configureEach {
-    it.options.release = 21
+    it.options.release = rootProject.jvm_version as Integer
   }
 
   // Configure Maven publishing.

@@ -28,19 +28,18 @@ class RegistryAwareBiomeModifier(val registryOps: RegistryOps<JsonElement>): Bio
             builder.generationSettings.addFeature(value.step, feature)
         }
 
-        BiomeModifiers.carverEvent.register { (key, value) ->
-          val carver = carverGetter.getOrThrow(ResourceKey.create(Registries.CONFIGURED_CARVER, value.carver))
-          if(value.isValid(arg))
-            builder.generationSettings.addCarver(value.step, carver)
-        }
+//        BiomeModifiers.carverEvent.register { (key, value) ->
+//          val carver = carverGetter.getOrThrow(ResourceKey.create(Registries.CONFIGURED_CARVER, value.carver))
+//          if(value.isValid(arg))
+//            builder.generationSettings.addCarver(value.step, carver)
+//        }
 
         BiomeModifiers.spawnEvent.register { (key, value) ->
           for(spawn in value.spawners) {
             val entity = entityGetter.getOrThrow(ResourceKey.create(Registries.ENTITY_TYPE, spawn.type))
             if(value.isValid(arg))
-              builder.mobSpawnSettings.addSpawn(spawn.category, MobSpawnSettings.SpawnerData(
+              builder.mobSpawnSettings.addSpawn(spawn.category, spawn.weight, MobSpawnSettings.SpawnerData(
                 entity.value(),
-                spawn.weight,
                 spawn.minCount,
                 spawn.maxCount
               ))

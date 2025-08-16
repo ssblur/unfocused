@@ -20,6 +20,6 @@ repositories {
 }
 
 kotlin {
-  jvmToolchain(21)
+  jvmToolchain(rootProject.jvm_version as Integer)
 }
 

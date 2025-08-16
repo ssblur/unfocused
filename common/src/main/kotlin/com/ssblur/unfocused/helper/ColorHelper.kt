@@ -3,9 +3,9 @@ package com.ssblur.unfocused.helper
 import com.ssblur.unfocused.UtilityExpectPlatform
 import com.ssblur.unfocused.registry.RegistrySupplier
 import net.minecraft.client.color.block.BlockColor
-import net.minecraft.client.color.item.ItemColor
 import net.minecraft.world.item.DyeColor
 import net.minecraft.world.item.Item
+import net.minecraft.world.item.component.DyedItemColor
 import net.minecraft.world.level.ItemLike
 import net.minecraft.world.level.block.Block
 import java.util.function.Function
@@ -34,14 +34,14 @@ object ColorHelper {
     handler.apply(ColorHolder(it))
   }
 
-  fun registerColor(color: ItemColor, vararg items: Supplier<ItemLike>) =
+  fun registerColor(color: DyedItemColor, vararg items: Supplier<ItemLike>) =
     UtilityExpectPlatform.registerColor(color, *items)
 
   fun registerColor(color: BlockColor, vararg blocks: Supplier<Block>) =
     UtilityExpectPlatform.registerColor(color, *blocks)
 
-  fun RegistrySupplier<Item>.registerColor(color: ItemColor) = registerColor(color, this as RegistrySupplier<ItemLike>)
+  fun RegistrySupplier<Item>.registerColor(color: DyedItemColor) = registerColor(color, this as RegistrySupplier<ItemLike>)
   fun RegistrySupplier<Block>.registerColor(color: BlockColor) = registerColor(color, this)
-  fun Item.registerColor(color: ItemColor) = registerColor(color, { this })
+  fun Item.registerColor(color: DyedItemColor) = registerColor(color, { this })
   fun Block.registerColor(color: BlockColor) = registerColor(color, { this })
 }

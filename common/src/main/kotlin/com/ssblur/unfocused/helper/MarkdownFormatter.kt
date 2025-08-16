@@ -5,6 +5,7 @@ import net.minecraft.network.chat.Component
 import net.minecraft.network.chat.MutableComponent
 import net.minecraft.network.chat.Style
 import net.minecraft.resources.ResourceLocation
+import java.net.URI
 
 object MarkdownFormatter {
   data class PageHolder(
@@ -81,10 +82,12 @@ object MarkdownFormatter {
                 .withItalic(isItalic)
                 .withStrikethrough(isStrikeThrough)
                 .withUnderlined(true)
-                .withClickEvent(ClickEvent(
-                  if(isExternal) ClickEvent.Action.OPEN_URL else ClickEvent.Action.RUN_COMMAND,
-                  if(isExternal) link else "unfocused open $link"
-                ))
+                .withClickEvent(
+                  if(isExternal)
+                    ClickEvent.OpenUrl(URI(link))
+                        else
+                    ClickEvent.RunCommand("unfocused open $link")
+                )
             )
           )
           line = remainder
