@@ -3,15 +3,8 @@
 package com.ssblur.unfocused
 
 import dev.architectury.injectables.annotations.ExpectPlatform
-import net.fabricmc.api.EnvType
-import net.fabricmc.api.Environment
-import net.minecraft.client.color.block.BlockColor
 import net.minecraft.world.item.CreativeModeTab
-import net.minecraft.world.item.component.DyedItemColor
-import net.minecraft.world.level.ItemLike
-import net.minecraft.world.level.block.Block
 import java.nio.file.Path
-import java.util.function.Supplier
 
 @Suppress("unused", "unused_parameter")
 object UtilityExpectPlatform {
@@ -26,21 +19,6 @@ object UtilityExpectPlatform {
   @ExpectPlatform
   @JvmStatic
   fun isServer(): Boolean = throw AssertionError()
-
-  @Environment(EnvType.CLIENT)
-  @ExpectPlatform
-  @JvmStatic
-  fun registerColor(color: DyedItemColor, vararg items: Supplier<ItemLike>) {
-    throw AssertionError()
-  }
-
-  @Environment(EnvType.CLIENT)
-  @ExpectPlatform
-  @JvmStatic
-  fun registerColor(color: BlockColor, vararg blocks: Supplier<Block>) {
-    throw AssertionError()
-  }
-
 
   @ExpectPlatform
   @JvmStatic

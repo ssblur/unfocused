@@ -1,17 +1,15 @@
 package com.ssblur.unfocused.neoforge.events
 
 import com.ssblur.unfocused.event.client.*
-import com.ssblur.unfocused.neoforge.UtilityExpectPlatformImpl
+import com.ssblur.unfocused.neoforge.UtilityExpectPlatformClientImpl
 import com.ssblur.unfocused.rendering.BlockEntityRendering
 import com.ssblur.unfocused.rendering.EntityRendering
 import com.ssblur.unfocused.rendering.ParticleFactories
 import net.minecraft.client.Minecraft
-import net.minecraft.client.gui.screens.MenuScreens
 import net.minecraft.client.particle.ParticleProvider
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider
 import net.minecraft.client.renderer.entity.EntityRendererProvider
 import net.minecraft.world.entity.Entity
-import net.minecraft.world.inventory.AbstractContainerMenu
 import net.minecraft.world.level.block.entity.BlockEntity
 import net.neoforged.bus.api.IEventBus
 import net.neoforged.neoforge.client.event.*
@@ -66,7 +64,7 @@ object UnfocusedModClientEvents {
   }
 
   fun blockColorEvent(event: RegisterColorHandlersEvent.Block) {
-    UtilityExpectPlatformImpl.BLOCK_COLORS.forEach { (color, supplier) ->
+    UtilityExpectPlatformClientImpl.BLOCK_COLORS.forEach { (color, supplier) ->
       event.register(color, supplier.get())
     }
   }
@@ -79,7 +77,7 @@ object UnfocusedModClientEvents {
 
   fun registerScreenEvent(event: RegisterMenuScreensEvent) {
     ClientScreenRegistrationEvent.register{
-      event.register(it.menu, it.supplier as MenuScreens.ScreenConstructor<AbstractContainerMenu, *>)
+      event.register(it.menu, it.supplier)
     }
   }
 

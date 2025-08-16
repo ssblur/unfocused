@@ -1,6 +1,6 @@
 package com.ssblur.unfocused.helper
 
-import com.ssblur.unfocused.UtilityExpectPlatform
+import com.ssblur.unfocused.UtilityExpectPlatformClient
 import com.ssblur.unfocused.registry.RegistrySupplier
 import net.minecraft.client.color.block.BlockColor
 import net.minecraft.world.item.DyeColor
@@ -35,10 +35,10 @@ object ColorHelper {
   }
 
   fun registerColor(color: DyedItemColor, vararg items: Supplier<ItemLike>) =
-    UtilityExpectPlatform.registerColor(color, *items)
+    UtilityExpectPlatformClient.registerColor(color, *items)
 
   fun registerColor(color: BlockColor, vararg blocks: Supplier<Block>) =
-    UtilityExpectPlatform.registerColor(color, *blocks)
+    UtilityExpectPlatformClient.registerColor(color, *blocks)
 
   fun RegistrySupplier<Item>.registerColor(color: DyedItemColor) = registerColor(color, this as RegistrySupplier<ItemLike>)
   fun RegistrySupplier<Block>.registerColor(color: BlockColor) = registerColor(color, this)
