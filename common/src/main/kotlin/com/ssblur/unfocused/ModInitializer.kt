@@ -29,11 +29,13 @@ import net.minecraft.world.item.crafting.RecipeType
 import net.minecraft.world.level.block.Block
 import net.minecraft.world.level.block.entity.BlockEntity
 import net.minecraft.world.level.block.entity.BlockEntityType
+import net.minecraft.world.level.block.state.BlockBehaviour
 import net.minecraft.world.level.levelgen.feature.Feature
 import net.minecraft.world.level.storage.loot.functions.LootItemFunction
 import net.minecraft.world.level.storage.loot.functions.LootItemFunctionType
 import net.minecraft.world.level.storage.loot.predicates.LootItemConditionType
 import java.util.function.Consumer
+import java.util.function.Function
 import java.util.function.Supplier
 import kotlin.reflect.KClass
 
@@ -61,21 +63,27 @@ open class ModInitializer(val id: String) {
 //  val ARMOR = RegistryTypes.ARMOR.create(id)
   val SOUNDS = RegistryTypes.SOUNDS.create(id)
 
-  fun registerBlock(id: String, supplier: Supplier<Block>): RegistrySupplier<Block> {
-    return BLOCKS.register(id, supplier)
+  fun registerBlock(id: String, supplier: Function<BlockBehaviour.Properties, Block>): RegistrySupplier<Block> {
+    val behaviour = BlockBehaviour.Properties.of()
+    val key = ResourceKey.create(Registries.BLOCK, location(id))
+    behaviour.setId(key)
+    return BLOCKS.register(id) { supplier.apply(behaviour) }
   }
 
   fun registerBlockWithItem(
     id: String,
-    supplier: Supplier<Block>
+    supplier: Function<BlockBehaviour.Properties, Block>
   ): Pair<RegistrySupplier<Block>, RegistrySupplier<Item>> {
-    val block = BLOCKS.register(id, supplier)
-    val item = ITEMS.register(id) { BlockItem(block.get(), Item.Properties()) }
+    val block = registerBlock(id, supplier)
+    val item = registerItem(id) { BlockItem(block.get(), it) }
     return Pair(block, item)
   }
 
-  fun registerItem(id: String, supplier: Supplier<Item>): RegistrySupplier<Item> {
-    return ITEMS.register(id, supplier)
+  fun registerItem(id: String, supplier: Function<Item.Properties, Item>): RegistrySupplier<Item> {
+    val properties = Item.Properties()
+    val key = ResourceKey.create(Registries.ITEM, location(id))
+    properties.setId(key)
+    return ITEMS.register(id) { supplier.apply(properties) }
   }
 
 //  fun registerArmorMaterial(id: String, supplier: Supplier<ArmorMaterial>): RegistrySupplier<ArmorMaterial> {
