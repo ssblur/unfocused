@@ -8,7 +8,7 @@ import net.minecraft.world.level.GameRules.register
 @Suppress("unused")
 class GameRuleConfig(val mod: ModInitializer) {
   fun registerBoolean(name: String, default: Boolean): () -> Boolean {
-    val configured = mod.CONFIG.get(name, if (default) "true" else "false").toBooleanStrict()
+    val configured = mod.CONFIG.get(name, if (default) "true" else "false") == "true"
     val rule = register("${mod.id}:$name", GameRules.Category.MISC, GameRules.BooleanValue.create(configured))
     BOOL_RULES[rule] = configured
     return { BOOL_RULES[rule] ?: configured }
