@@ -71,9 +71,6 @@ class UnfocusedModFabric: ModInitializer {
     RegistryTypes.MENUS.subscribe{ location, supplier ->
       Registry.register(BuiltInRegistries.MENU, location, supplier.get())
     }
-//    RegistryTypes.ARMOR.subscribe{ location, supplier ->
-//      Registry.register(BuiltInRegistries.ARMOR_MATERIAL, location, supplier.get())
-//    }
     RegistryTypes.SOUNDS.subscribe{ location, supplier ->
       Registry.register(BuiltInRegistries.SOUND_EVENT, location, supplier.get())
     }

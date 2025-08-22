@@ -26,6 +26,7 @@ import net.minecraft.world.item.Item
 import net.minecraft.world.item.crafting.Recipe
 import net.minecraft.world.item.crafting.RecipeSerializer
 import net.minecraft.world.item.crafting.RecipeType
+import net.minecraft.world.item.equipment.ArmorMaterial
 import net.minecraft.world.level.block.Block
 import net.minecraft.world.level.block.entity.BlockEntity
 import net.minecraft.world.level.block.entity.BlockEntityType
@@ -60,7 +61,6 @@ open class ModInitializer(val id: String) {
   val CREATIVE_TABS = RegistryTypes.CREATIVE_TABS.create(id)
   val PARTICLE_TYPES = RegistryTypes.PARTICLE_TYPES.create(id)
   val MENUS = RegistryTypes.MENUS.create(id)
-//  val ARMOR = RegistryTypes.ARMOR.create(id)
   val SOUNDS = RegistryTypes.SOUNDS.create(id)
 
   fun registerBlock(id: String, supplier: Function<BlockBehaviour.Properties, Block>): RegistrySupplier<Block> {
@@ -86,9 +86,12 @@ open class ModInitializer(val id: String) {
     return ITEMS.register(id) { supplier.apply(properties) }
   }
 
-//  fun registerArmorMaterial(id: String, supplier: Supplier<ArmorMaterial>): RegistrySupplier<ArmorMaterial> {
-//    return ARMOR.register(id, supplier)
-//  }
+  @Deprecated("Armor Materials should no longer be registered.")
+  fun registerArmorMaterial(id: String, supplier: Supplier<ArmorMaterial>): RegistrySupplier<ArmorMaterial> {
+    Unfocused.LOGGER.warn("Tried to register Armor Material $id, which no longer needs to be registered.")
+    Unfocused.LOGGER.warn("This function will be removed in a future version of Unfocused.")
+    return RegistrySupplier(supplier, location(id), null)
+  }
 
   fun registerEffect(id: String, supplier: Supplier<MobEffect>): RegistrySupplier<MobEffect> {
     return EFFECTS.register(id, supplier)
