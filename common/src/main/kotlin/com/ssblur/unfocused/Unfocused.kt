@@ -24,10 +24,7 @@ object Unfocused: ModInitializer("unfocused") {
       }
     }
 
-    TemplatePoolInjects
-    ServerStartEvent.register{
-      TemplatePoolInjects.inject(it)
-    }
+    TemplatePoolInjects.register()
   }
 
   fun isModLoaded(id: String) = UtilityExpectPlatform.isModLoaded(id)

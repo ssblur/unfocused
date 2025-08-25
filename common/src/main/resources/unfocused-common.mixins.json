@@ -6,7 +6,8 @@
   "client": [
   ],
   "mixins": [
-    "StructureTemplatePoolAccessor"
+    "StructureTemplatePoolAccessor",
+    "StructureTemplatePoolMixin"
   ],
   "injectors": {
     "defaultRequire": 1
