@@ -69,12 +69,6 @@ object UnfocusedModClientEvents {
     }
   }
 
-//  fun itemColorEvent(event: RegisterColorHandlersEvent.Item) {
-//    UtilityExpectPlatformImpl.ITEM_COLORS.forEach { (color, supplier) ->
-//      event.register(color, supplier.get())
-//    }
-//  }
-
   fun registerScreenEvent(event: RegisterMenuScreensEvent) {
     ClientScreenRegistrationEvent.register{
       event.register(it.menu, it.supplier)
@@ -92,7 +86,6 @@ object UnfocusedModClientEvents {
     NeoForge.EVENT_BUS.addListener(::clientLoreEvent)
     NeoForge.EVENT_BUS.addListener(::logoutEvent)
 
-//    bus.addListener(::itemColorEvent)
     bus.addListener(::blockColorEvent)
     bus.addListener(::registerEntityRendererEvent)
     bus.addListener(::registerScreenEvent)
