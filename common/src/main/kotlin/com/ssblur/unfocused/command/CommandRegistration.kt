@@ -8,7 +8,7 @@ import net.minecraft.commands.CommandSourceStack
 import net.minecraft.commands.Commands
 
 @Suppress("unusedreceiverparameter", "unused")
-object CommandRegistration: SimpleEvent<CommandRegistration.CommandRegistrationCallback>(retroactive = true) {
+object CommandRegistration: SimpleEvent<CommandRegistration.CommandRegistrationCallback>(retroactive = true, clearAfterRun = false) {
   fun interface CommandRegistrationCallback {
     fun callback(
       dispatcher: CommandDispatcher<CommandSourceStack>,
@@ -18,6 +18,6 @@ object CommandRegistration: SimpleEvent<CommandRegistration.CommandRegistrationC
   }
 
   fun ModInitializer.registerCommand(callback: CommandRegistrationCallback) {
-    CommandRegistration.callback(callback)
+    callback(callback)
   }
 }

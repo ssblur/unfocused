@@ -16,7 +16,7 @@ object DataLoaderRegistry {
     val failEasy: Boolean
   )
 
-  private val event = SimpleEvent<DataLoaderEntry<in Any>>(true)
+  private val event = SimpleEvent<DataLoaderEntry<in Any>>(true, clearAfterRun = false)
   fun register(subscriber: Event.Listener<DataLoaderEntry<in Any>>) {
     event.register(subscriber)
   }
