@@ -3,6 +3,7 @@ package com.ssblur.unfocused
 import com.ssblur.unfocused.biome.TemplatePoolInjects
 import com.ssblur.unfocused.config.GameRuleConfig
 import com.ssblur.unfocused.event.common.ServerStartEvent
+import com.ssblur.unfocused.test.UnfocusedTestMod
 import org.apache.logging.log4j.LogManager
 
 object Unfocused: ModInitializer("unfocused") {
@@ -28,6 +29,11 @@ object Unfocused: ModInitializer("unfocused") {
     ServerStartEvent.register{
       TemplatePoolInjects.inject(it)
     }
+
+    // This gets packed into Unfocused releases, intentionally.
+    // I keep having things break in release that don't break in dev. :\
+    if(System.getenv("UNFOCUSED_TEST_MOD_ENABLED") == "true")
+      UnfocusedTestMod.init()
   }
 
   fun isModLoaded(id: String) = UtilityExpectPlatform.isModLoaded(id)
