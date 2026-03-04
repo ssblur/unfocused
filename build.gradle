@@ -25,7 +25,13 @@ allprojects {
     def matcher = gitVersion() =~ /^v(\d+\.\d+\.\d+(-\d+\.\d+\.\d+)?-?)?.*/
     matcher.find()
     version = matcher.group(1)
-    if (version.endsWith("-")) version += "SNAPSHOT"
+    if (version.endsWith("-")) {
+      def split = version.split(/\./)
+      def last = split.length - 1
+      split[last] = Integer.valueOf(split[last]) + 1
+      version = String.join(".", split)
+      version += "SNAPSHOT"
+    }
   } catch(Exception ignored) {
     version = "1"
   }
