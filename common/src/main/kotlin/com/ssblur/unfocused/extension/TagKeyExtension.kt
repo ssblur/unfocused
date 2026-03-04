@@ -12,6 +12,10 @@ object TagKeyExtension {
     return state.`is`(this)
   }
 
+  operator fun TagKey<Block>.contains(block: Block): Boolean {
+    return block.defaultBlockState().`is`(this)
+  }
+
   operator fun TagKey<Item>.contains(item: ItemStack): Boolean {
     return item.`is`(this)
   }
