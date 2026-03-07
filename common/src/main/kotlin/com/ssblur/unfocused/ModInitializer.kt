@@ -175,7 +175,10 @@ open class ModInitializer(val id: String) {
     return SOUNDS.register(id, supplier)
   }
 
-  fun location(path: String) = ResourceLocation.fromNamespaceAndPath(id, path)
+  fun location(path: String): ResourceLocation {
+    return if(path.contains(':')) ResourceLocation.parse(path)
+      else ResourceLocation.fromNamespaceAndPath(id, path)
+  }
 
   fun <T> registerTag(registry: ResourceKey<Registry<T>>, path: ResourceLocation) = TagKey.create(registry, path)
   fun <T> registerTag(registry: ResourceKey<Registry<T>>, path: String) = registerTag(registry, location(path))
