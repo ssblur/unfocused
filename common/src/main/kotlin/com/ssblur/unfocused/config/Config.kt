@@ -52,7 +52,7 @@ class Config(val id: String, val delimiter: String = "=", val topComment: String
         writer.write("## If your world has already been created, you can change most of them\n")
         writer.write("## using '/gamerule $id:[var]'\n\n\n")
       } else {
-        writer.write(topComment!!)
+        writer.write(topComment ?: "")
       }
 
     var key: String
