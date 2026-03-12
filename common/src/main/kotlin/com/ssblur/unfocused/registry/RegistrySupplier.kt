@@ -39,11 +39,12 @@ class RegistrySupplier<T>(
     return value!!
   }
 
-  fun then(consumer: Consumer<T>) {
+  fun then(consumer: Consumer<T>): RegistrySupplier<T> {
     if (value == null)
       pending += consumer
     else
       consumer.accept(value!!)
+    return this
   }
 
   fun ref() = location?.let {
