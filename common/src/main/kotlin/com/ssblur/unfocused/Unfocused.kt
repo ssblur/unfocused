@@ -60,10 +60,7 @@ object Unfocused: ModInitializer("unfocused") {
           Commands.literal("open")
             .then(Commands.argument("page", StringArgumentType.greedyString()).executes { openCommand(it) })
             .executes { openCommandEmpty(it) }
-        )
-      )
-      dispatcher.register(
-        Commands.literal("unfocused").then(
+        ).then(
           Commands.literal("config")
             .requires { s: CommandSourceStack -> s.hasPermission(4) }
             .executes { configCommand(it) }

@@ -46,7 +46,7 @@ object MarkdownFormatter {
   fun parseMarkdown(markdown: String, imagesEnabled: Boolean = true, linkColor: UInt = 0x3333ffu): List<MarkdownPacket> {
     val elements = mutableListOf<MarkdownPacket>()
     var lastComponent = Component.empty()
-    val lines = markdown.split("\n").map { it.trim() }
+    val lines = markdown.split("\n").map { it.trimStart() }
 
     lines.forEach {
       var line = it
@@ -60,8 +60,8 @@ object MarkdownFormatter {
       val isTitle = line.startsWith('#')
       if(isTitle) line = line.substring(1).trimStart()
 
-      if(line.isEmpty()) {
-        lastComponent = lastComponent.append("\n")
+      if(line.trim().isEmpty()) {
+        lastComponent = lastComponent.append(Component.literal("\n\n"))
       }
 
       while(line.isNotEmpty()) {
@@ -102,8 +102,8 @@ object MarkdownFormatter {
           continue
         } else if(imagesEnabled && line.matches("^<recipe (.*?)/?>.*".toRegex())) {
           val match = "^<recipe.*?href=\"?(.*?)\"?.*?/?>(.*)".toRegex().matchEntire(line)!!
-          val recipe = match.groups[0]!!.value
-          val remainder = match.groups[1]!!.value
+          val recipe = match.groups[1]!!.value
+          val remainder = match.groups[2]!!.value
 
           elements.add(MarkdownPacket(component = lastComponent))
           lastComponent = Component.empty()
@@ -111,23 +111,23 @@ object MarkdownFormatter {
           if(line.matches("^.*?</recipe\\w*>.*".toRegex())) {
             val match = "^(.*?)</recipe\\w*>(.*)".toRegex().matchEntire(line)!!
             elements.add(MarkdownPacket(
-              recipe = MarkdownRecipe(ResourceLocation.parse(recipe), match.groups[0]!!.value)
+              recipe = MarkdownRecipe(ResourceLocation.parse(recipe), match.groups[1]!!.value)
             ))
-            line = match.groups[1]!!.value
+            line = match.groups[2]!!.value
             continue
           }
           line = remainder
           continue
         } else if(line.matches("^<item (.*?)/?>.*".toRegex())) {
           val match = "^<item.*?href=\"?(.*?)\"?.*?/?>(.*)".toRegex().matchEntire(line)!!
-          val item = match.groups[0]!!.value
-          val remainder = match.groups[1]!!.value
+          val item = match.groups[1]!!.value
+          val remainder = match.groups[2]!!.value
           elements.add(MarkdownPacket(component = lastComponent))
           lastComponent = Component.empty()
           if(line.matches("^.*?</item\\w*>.*".toRegex())) {
             val match = "^(.*?)</item\\w*>(.*)".toRegex().matchEntire(line)!!
-            elements.add(MarkdownPacket(item = MarkdownItem(ResourceLocation.parse(item), match.groups[0]!!.value)))
-            line = match.groups[1]!!.value
+            elements.add(MarkdownPacket(item = MarkdownItem(ResourceLocation.parse(item), match.groups[1]!!.value)))
+            line = match.groups[2]!!.value
             continue
           }
           line = remainder
