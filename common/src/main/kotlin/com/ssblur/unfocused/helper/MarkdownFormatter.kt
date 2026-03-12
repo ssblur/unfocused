@@ -180,6 +180,7 @@ object MarkdownFormatter {
     return elements
   }
 
+  @Suppress("unused")
   fun Iterable<MarkdownPacket>.textOnly() = this.filter { it.component != null }
   fun Iterable<MarkdownPacket>.asComponent(): Component {
     val component = Component.empty()
@@ -188,5 +189,4 @@ object MarkdownFormatter {
     }
     return component
   }
-  fun parseMarkdownWithoutImages(markdown: String) = parseMarkdown(markdown, false).textOnly()
 }

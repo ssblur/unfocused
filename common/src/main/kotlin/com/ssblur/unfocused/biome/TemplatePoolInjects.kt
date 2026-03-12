@@ -34,7 +34,7 @@ object TemplatePoolInjects {
     val poolRegistry = server.registryAccess().registry(Registries.TEMPLATE_POOL).orElseThrow()
     val processorLists = server.registryAccess().registry(Registries.PROCESSOR_LIST).orElseThrow()
 
-    injects.forEach { (resourceLocation, poolInject) ->
+    injects.forEach { (_, poolInject) ->
       val pool = poolRegistry.get(poolInject.pool)!! as StructureTemplatePoolAccessor
       val templates = pool.templates
       val rawTemplates = pool.rawTemplates
@@ -47,10 +47,11 @@ object TemplatePoolInjects {
               element.element.processors ?: ResourceLocation.parse("minecraft:empty")
             ))
           ).apply(element.element.projection)
-        for(i in 0..(element.weight ?: 2))
-          templates.add(poolElement)
+        (0..(element.weight ?: 2)).forEach { _ -> templates.add(poolElement) }
         pool.rawTemplates = rawTemplates + Pair(poolElement, element.weight)
       }
     }
   }
+
+  fun init() {}
 }

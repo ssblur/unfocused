@@ -16,11 +16,10 @@ class MarkdownWidget(x: Int, y: Int, w: Int, h: Int, text: String = "") : Positi
   /**
    * The raw text that is used to do markdown formatting and such.
    * This is what you should set when updating the internal text here.
-   * @see formattedText for pre-formatted, ready-to-render text output generated based on this
    */
   var markdownText: String
     get() = markdownTextInternal
-    set(value: String) {
+    set(value) {
       markdownTextInternal = value
       parsed = MarkdownFormatter.parseMarkdown(markdownText, linkColor = linkColor)
     }
@@ -38,6 +37,7 @@ class MarkdownWidget(x: Int, y: Int, w: Int, h: Int, text: String = "") : Positi
   }
 
   var linkColor: UInt = 0x3333ffu
+  @Suppress("unused")
   fun setLinkColor(r: Int, g: Int, b: Int) {
     linkColor = (r and 255 shl 16).toUInt() or (g and 255 shl 8).toUInt() or (b and 255).toUInt()
   }

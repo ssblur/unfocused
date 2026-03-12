@@ -44,7 +44,7 @@ object Unfocused: ModInitializer("unfocused") {
       }
     }
 
-    TemplatePoolInjects
+    TemplatePoolInjects.init()
     ServerStartEvent.register{
       TemplatePoolInjects.inject(it)
     }
@@ -54,7 +54,7 @@ object Unfocused: ModInitializer("unfocused") {
     if(System.getenv("UNFOCUSED_TEST_MOD_ENABLED") == "true")
       UnfocusedTestMod.init()
 
-    registerCommand { dispatcher, registry, selection ->
+    registerCommand { dispatcher, _, _ ->
       dispatcher.register(
         Commands.literal("unfocused").then(
           Commands.literal("open")

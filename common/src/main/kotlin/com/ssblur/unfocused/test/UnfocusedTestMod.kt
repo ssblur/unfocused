@@ -26,7 +26,7 @@ object UnfocusedTestMod: ModInitializer("unfocusedtest") {
   fun init() {
     LOGGER.info("Unfocused Test Mod loaded")
 
-    registerCommand { dispatcher, registry, selection ->
+    registerCommand { dispatcher, _, _ ->
       dispatcher.register(
         Commands.literal("unfocused_test").then(
           Commands.literal("menu")
