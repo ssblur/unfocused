@@ -3,6 +3,9 @@ package com.ssblur.unfocused.screen
 import com.ssblur.unfocused.extension.WidgetExtension.renderAll
 import com.ssblur.unfocused.screen.widget.PositionedWidget
 import net.minecraft.client.gui.GuiGraphics
+import net.minecraft.client.gui.components.Renderable
+import net.minecraft.client.gui.components.events.GuiEventListener
+import net.minecraft.client.gui.narration.NarratableEntry
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen
 import net.minecraft.network.chat.Component
 import net.minecraft.world.entity.player.Inventory
@@ -11,11 +14,16 @@ import net.minecraft.world.inventory.AbstractContainerMenu
 abstract class UnfocusedScreen<T : AbstractContainerMenu>(abstractContainerMenu: T, inventory: Inventory, component: Component) :
   AbstractContainerScreen<T>(abstractContainerMenu, inventory, component) {
   var widgets: MutableList<PositionedWidget> = mutableListOf()
-  fun <T: PositionedWidget> add(guiEventListener: T): T {
-    val widget = super.addRenderableWidget(guiEventListener)
-    widget.parent = this
-    widgets.add(widget)
-    return super.addWidget(widget)
+  fun <T: Renderable> add(guiEventListener: T): T {
+    if(guiEventListener is NarratableEntry && guiEventListener is GuiEventListener) {
+      val widget = super.addRenderableWidget(guiEventListener)
+      if(widget is PositionedWidget) {
+        widget.parent = this
+        widgets.add(widget)
+      }
+      return widget
+    }
+    return addRenderableOnly(guiEventListener)
   }
 
   override fun clearWidgets() {

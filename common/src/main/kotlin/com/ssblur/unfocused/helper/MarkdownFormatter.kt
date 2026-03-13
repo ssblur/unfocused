@@ -39,7 +39,7 @@ object MarkdownFormatter {
           .withItalic(italic)
           .withStrikethrough(strikethrough)
           .withUnderlined(underline || title)
-      )
+      ).append(Component.literal(if(title) "\n\n" else ""))
     )
   }
 
@@ -101,7 +101,7 @@ object MarkdownFormatter {
           line = remainder
           continue
         } else if(imagesEnabled && line.matches("^<recipe (.*?)/?>.*".toRegex())) {
-          val match = "^<recipe.*?href=\"?(.*?)\"?.*?/?>(.*)".toRegex().matchEntire(line)!!
+          val match = "^<recipe.*?href=\"(.*?)\".*?/?>(.*)".toRegex().matchEntire(line)!!
           val recipe = match.groups[1]!!.value
           val remainder = match.groups[2]!!.value
 
@@ -109,7 +109,7 @@ object MarkdownFormatter {
           lastComponent = Component.empty()
 
           if(line.matches("^.*?</recipe\\w*>.*".toRegex())) {
-            val match = "^(.*?)</recipe\\w*>(.*)".toRegex().matchEntire(line)!!
+            val match = "^(.*?)</recipe\\w*>(.*)".toRegex().matchEntire(remainder)!!
             elements.add(MarkdownPacket(
               recipe = MarkdownRecipe(ResourceLocation.parse(recipe), match.groups[1]!!.value)
             ))
@@ -119,13 +119,14 @@ object MarkdownFormatter {
           line = remainder
           continue
         } else if(line.matches("^<item (.*?)/?>.*".toRegex())) {
-          val match = "^<item.*?href=\"?(.*?)\"?.*?/?>(.*)".toRegex().matchEntire(line)!!
+          val match = "^<item.*?href=\"(.*?)\".*?/?>(.*)".toRegex().matchEntire(line)!!
           val item = match.groups[1]!!.value
+          println(match.groups)
           val remainder = match.groups[2]!!.value
           elements.add(MarkdownPacket(component = lastComponent))
           lastComponent = Component.empty()
           if(line.matches("^.*?</item\\w*>.*".toRegex())) {
-            val match = "^(.*?)</item\\w*>(.*)".toRegex().matchEntire(line)!!
+            val match = "^(.*?)</item\\w*>(.*)".toRegex().matchEntire(remainder)!!
             elements.add(MarkdownPacket(item = MarkdownItem(ResourceLocation.parse(item), match.groups[1]!!.value)))
             line = match.groups[2]!!.value
             continue

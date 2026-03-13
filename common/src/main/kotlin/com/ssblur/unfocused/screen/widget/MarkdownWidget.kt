@@ -10,7 +10,7 @@ import net.minecraft.client.gui.narration.NarrationElementOutput
 import net.minecraft.network.chat.Component
 import net.minecraft.network.chat.Style
 
-class MarkdownWidget(x: Int, y: Int, w: Int, h: Int, text: String = "") : PositionedWidget(x, y, w, h) {
+class MarkdownWidget(x: Int, y: Int, w: Int, h: Int, text: String = "", var shadow: Boolean = true) : PositionedWidget(x, y, w, h) {
   private var markdownTextInternal: String = ""
 
   /**
@@ -60,7 +60,7 @@ class MarkdownWidget(x: Int, y: Int, w: Int, h: Int, text: String = "") : Positi
       if(packet.component != null) {
         val lines = font.split(packet.component, w)
         for(line in lines) {
-          guiGraphics.drawString(font, line, 0, y, color.toInt())
+          guiGraphics.drawString(font, line, 0, y, color.toInt(), shadow)
           if(mouseY >= y && mouseY < (y + lineHeight)) {
             hoveredStyle = font.splitter.componentStyleAtWidth(line, mouseX) ?: hoveredStyle
           }
@@ -68,16 +68,16 @@ class MarkdownWidget(x: Int, y: Int, w: Int, h: Int, text: String = "") : Positi
         }
       } else if(packet.item != null) {
         // render item
-        guiGraphics.drawWordWrap(font, Component.literal(packet.item.text), 0, y, w, color.toInt())
-        y += font.wordWrapHeight(Component.literal(packet.item.text), w)
+        guiGraphics.drawWordWrap(font, Component.literal(packet.item.resource.toString()), 0, y, w, color.toInt())
+        y += font.wordWrapHeight(Component.literal(packet.item.resource.toString()), w)
         guiGraphics.drawWordWrap(font, Component.translatable("extra.unfocused.unimplemented"), 0, y, w, color.toInt())
         y += font.wordWrapHeight(Component.translatable("extra.unfocused.unimplemented"), w)
         guiGraphics.drawWordWrap(font, Component.translatable("extra.unfocused.unimplemented_2"), 0, y, w, color.toInt())
         y += font.wordWrapHeight(Component.translatable("extra.unfocused.unimplemented_2"), w)
       } else if(packet.recipe != null) {
         // render recipe
-        guiGraphics.drawWordWrap(font, Component.literal(packet.recipe.altText), 0, y, w, color.toInt())
-        y += font.wordWrapHeight(Component.literal(packet.recipe.altText), w)
+        guiGraphics.drawWordWrap(font, Component.literal(packet.recipe.resource.toString()), 0, y, w, color.toInt())
+        y += font.wordWrapHeight(Component.literal(packet.recipe.resource.toString()), w)
         guiGraphics.drawWordWrap(font, Component.translatable("extra.unfocused.unimplemented"), 0, y, w, color.toInt())
         y += font.wordWrapHeight(Component.translatable("extra.unfocused.unimplemented"), w)
         guiGraphics.drawWordWrap(font, Component.translatable("extra.unfocused.unimplemented_2"), 0, y, w, color.toInt())
