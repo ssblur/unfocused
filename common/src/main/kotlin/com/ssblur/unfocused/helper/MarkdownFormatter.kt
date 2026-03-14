@@ -11,6 +11,7 @@ object MarkdownFormatter {
   data class MarkdownItem(
     val resource: ResourceLocation,
     val text: String,
+    val data: String?,
   )
   data class MarkdownImage(
     val resource: ResourceLocation,
@@ -125,13 +126,21 @@ object MarkdownFormatter {
           continue
         } else if(line.matches("^<item (.*?)/?>.*".toRegex())) {
           val match = "^<item.*?href=\"(.*?)\".*?/?>(.*)".toRegex().matchEntire(line)!!
-          val item = match.groups[1]!!.value
+          var item = match.groups[1]!!.value
           val remainder = match.groups[2]!!.value
+          val data: String?
+          if(item.contains('{')) {
+            val match = "^(.*?)(\\{.*})".toRegex().matchEntire(item)!!
+            item = match.groups[1]!!.value
+            data = match.groups[2]!!.value
+          } else {
+            data = null
+          }
           elements.add(MarkdownPacket(component = lastComponent))
           lastComponent = Component.empty()
           if(line.matches("^.*?</item\\w*>.*".toRegex())) {
             val match = "^(.*?)</item\\w*>(.*)".toRegex().matchEntire(remainder)!!
-            elements.add(MarkdownPacket(item = MarkdownItem(ResourceLocation.parse(item), match.groups[1]!!.value)))
+            elements.add(MarkdownPacket(item = MarkdownItem(ResourceLocation.parse(item), match.groups[1]!!.value, data)))
             line = match.groups[2]!!.value
             continue
           }
