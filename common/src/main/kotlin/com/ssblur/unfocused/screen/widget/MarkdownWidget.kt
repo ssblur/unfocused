@@ -55,6 +55,7 @@ class MarkdownWidget(x: Int, y: Int, w: Int, h: Int, text: String = "", var shad
   }
 
   val font: Font = Minecraft.getInstance().font
+  val itemCache: MutableMap<ResourceLocation, ItemStack> = mutableMapOf()
   private var hoveredStyle: Style? = null
   private var hoveredItem: ItemStack? = null
   override fun draw(guiGraphics: GuiGraphics, mouseX: Int, mouseY: Int, f: Float) {
@@ -107,9 +108,5 @@ class MarkdownWidget(x: Int, y: Int, w: Int, h: Int, text: String = "", var shad
 
   override fun updateNarration(narrationElementOutput: NarrationElementOutput) {
     narrationElementOutput.add(NarratedElementType.TITLE, parsed.asComponent())
-  }
-
-  companion object {
-    private val itemCache: MutableMap<ResourceLocation, ItemStack> = mutableMapOf()
   }
 }
