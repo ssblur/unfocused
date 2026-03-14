@@ -7,8 +7,12 @@ import net.minecraft.client.gui.Font
 import net.minecraft.client.gui.GuiGraphics
 import net.minecraft.client.gui.narration.NarratedElementType
 import net.minecraft.client.gui.narration.NarrationElementOutput
+import net.minecraft.core.registries.BuiltInRegistries
 import net.minecraft.network.chat.Component
 import net.minecraft.network.chat.Style
+import net.minecraft.resources.ResourceLocation
+import net.minecraft.world.item.ItemStack
+import kotlin.math.max
 
 class MarkdownWidget(x: Int, y: Int, w: Int, h: Int, text: String = "", var shadow: Boolean = true) : PositionedWidget(x, y, w, h) {
   private var markdownTextInternal: String = ""
@@ -52,8 +56,10 @@ class MarkdownWidget(x: Int, y: Int, w: Int, h: Int, text: String = "", var shad
 
   val font: Font = Minecraft.getInstance().font
   private var hoveredStyle: Style? = null
+  private var hoveredItem: ItemStack? = null
   override fun draw(guiGraphics: GuiGraphics, mouseX: Int, mouseY: Int, f: Float) {
     hoveredStyle = null
+    hoveredItem = null
     var y = 0
     val lineHeight = font.lineHeight
     for(packet in parsed) {
@@ -67,17 +73,19 @@ class MarkdownWidget(x: Int, y: Int, w: Int, h: Int, text: String = "", var shad
           y += lineHeight
         }
       } else if(packet.item != null) {
-        // render item
-        guiGraphics.drawWordWrap(font, Component.literal(packet.item.resource.toString()), 0, y, w, color.toInt())
-        y += font.wordWrapHeight(Component.literal(packet.item.resource.toString()), w)
-        guiGraphics.drawWordWrap(font, Component.translatable("extra.unfocused.unimplemented"), 0, y, w, color.toInt())
-        y += font.wordWrapHeight(Component.translatable("extra.unfocused.unimplemented"), w)
-        guiGraphics.drawWordWrap(font, Component.translatable("extra.unfocused.unimplemented_2"), 0, y, w, color.toInt())
-        y += font.wordWrapHeight(Component.translatable("extra.unfocused.unimplemented_2"), w)
+        itemCache[packet.item.resource] = itemCache[packet.item.resource] ?:
+          ItemStack(BuiltInRegistries.ITEM.get(packet.item.resource))
+        itemCache[packet.item.resource]?.let{
+          guiGraphics.renderFakeItem(it, 5, y+5)
+          guiGraphics.drawWordWrap(font, it.hoverName, 26, y + 10, w, color.toInt())
+          val oy = y
+          y += max(font.wordWrapHeight(it.hoverName, w), 26)
+          if(mouseY in oy..y) hoveredItem = it
+        }
       } else if(packet.recipe != null) {
         // render recipe
-        guiGraphics.drawWordWrap(font, Component.literal(packet.recipe.resource.toString()), 0, y, w, color.toInt())
-        y += font.wordWrapHeight(Component.literal(packet.recipe.resource.toString()), w)
+        guiGraphics.drawWordWrap(font, Component.literal("Recipe: ").append(packet.recipe.resource.toString()), 0, y, w, color.toInt())
+        y += font.wordWrapHeight(Component.literal("Recipe: ").append(packet.recipe.resource.toString()), w)
         guiGraphics.drawWordWrap(font, Component.translatable("extra.unfocused.unimplemented"), 0, y, w, color.toInt())
         y += font.wordWrapHeight(Component.translatable("extra.unfocused.unimplemented"), w)
         guiGraphics.drawWordWrap(font, Component.translatable("extra.unfocused.unimplemented_2"), 0, y, w, color.toInt())
@@ -93,10 +101,15 @@ class MarkdownWidget(x: Int, y: Int, w: Int, h: Int, text: String = "", var shad
 
   override fun drawOverlay(guiGraphics: GuiGraphics, mouseX: Int, mouseY: Int, f: Float) {
     super.drawOverlay(guiGraphics, mouseX, mouseY, f)
-    guiGraphics.renderComponentHoverEffect(font, hoveredStyle, mouseX, mouseY)
+    if(hoveredStyle != null) guiGraphics.renderComponentHoverEffect(font, hoveredStyle, mouseX, mouseY)
+    if(hoveredItem != null) guiGraphics.renderTooltip(font, hoveredItem!!, mouseX, mouseY)
   }
 
   override fun updateNarration(narrationElementOutput: NarrationElementOutput) {
     narrationElementOutput.add(NarratedElementType.TITLE, parsed.asComponent())
+  }
+
+  companion object {
+    private val itemCache: MutableMap<ResourceLocation, ItemStack> = mutableMapOf()
   }
 }

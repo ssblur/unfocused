@@ -121,7 +121,6 @@ object MarkdownFormatter {
         } else if(line.matches("^<item (.*?)/?>.*".toRegex())) {
           val match = "^<item.*?href=\"(.*?)\".*?/?>(.*)".toRegex().matchEntire(line)!!
           val item = match.groups[1]!!.value
-          println(match.groups)
           val remainder = match.groups[2]!!.value
           elements.add(MarkdownPacket(component = lastComponent))
           lastComponent = Component.empty()

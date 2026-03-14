@@ -153,9 +153,7 @@ object UnfocusedModEvents {
     NeoForge.EVENT_BUS.addListener(::commandRegistrationEvent)
     NeoForge.EVENT_BUS.addListener(::itemCraftedEvent)
 
-    BiomeModifiers.featureEvent.register{
-      println(it.second.feature)
-    }
+    BiomeModifiers.featureEvent.register{}
 
     bus.addListener(EventPriority.LOWEST, ::registerEvent)
     bus.addListener(::attributeEvent)
