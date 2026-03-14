@@ -57,8 +57,13 @@ object MarkdownFormatter {
       var isItalic = false
       var isStrikeThrough = false
       val isUnderline = false
-      val isTitle = line.startsWith('#')
-      if(isTitle) line = line.substring(1).trimStart()
+      val isTitle = line.trimStart().startsWith('#')
+      if(isTitle) line = line.trimStart().substring(1).trimStart()
+      val isList = line.trimStart().startsWith("* ") || line.trimStart().startsWith("- ")
+      if(isList) {
+        line = line.trimStart().substring(1).trimStart()
+        lastComponent = lastComponent.append("\n  • ")
+      }
 
       if(line.trim().isEmpty()) {
         lastComponent = lastComponent.append(Component.literal("\n\n"))

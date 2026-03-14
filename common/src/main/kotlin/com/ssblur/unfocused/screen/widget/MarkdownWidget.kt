@@ -84,11 +84,11 @@ class MarkdownWidget(x: Int, y: Int, w: Int, h: Int, text: String = "", var shad
         }
       } else if(packet.recipe != null) {
         // render recipe
-        guiGraphics.drawWordWrap(font, Component.literal("Recipe: ").append(packet.recipe.resource.toString()), 0, y, w, color.toInt())
+        guiGraphics.drawWordWrap(font, Component.literal("Recipe: ").append(packet.recipe.resource.toString()), 0, y, w, 0xffbbbbbbu.toInt())
         y += font.wordWrapHeight(Component.literal("Recipe: ").append(packet.recipe.resource.toString()), w)
-        guiGraphics.drawWordWrap(font, Component.translatable("extra.unfocused.unimplemented"), 0, y, w, color.toInt())
+        guiGraphics.drawWordWrap(font, Component.translatable("extra.unfocused.unimplemented"), 0, y, w, 0xffbbbbbbu.toInt())
         y += font.wordWrapHeight(Component.translatable("extra.unfocused.unimplemented"), w)
-        guiGraphics.drawWordWrap(font, Component.translatable("extra.unfocused.unimplemented_2"), 0, y, w, color.toInt())
+        guiGraphics.drawWordWrap(font, Component.translatable("extra.unfocused.unimplemented_2"), 0, y, w, 0xffbbbbbbu.toInt())
         y += font.wordWrapHeight(Component.translatable("extra.unfocused.unimplemented_2"), w)
       } else if(packet.image != null) {
         val lh = font.lineHeight * 8
