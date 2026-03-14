@@ -10,7 +10,6 @@ import net.minecraft.client.gui.narration.NarrationElementOutput
 import net.minecraft.core.registries.BuiltInRegistries
 import net.minecraft.network.chat.Component
 import net.minecraft.network.chat.Style
-import net.minecraft.resources.ResourceLocation
 import net.minecraft.world.item.ItemStack
 import kotlin.math.max
 
@@ -55,7 +54,7 @@ class MarkdownWidget(x: Int, y: Int, w: Int, h: Int, text: String = "", var shad
   }
 
   val font: Font = Minecraft.getInstance().font
-  val itemCache: MutableMap<ResourceLocation, ItemStack> = mutableMapOf()
+  val itemCache: MutableMap<MarkdownFormatter.MarkdownItem, ItemStack> = mutableMapOf()
   private var hoveredStyle: Style? = null
   private var hoveredItem: ItemStack? = null
   override fun draw(guiGraphics: GuiGraphics, mouseX: Int, mouseY: Int, f: Float) {
@@ -74,9 +73,9 @@ class MarkdownWidget(x: Int, y: Int, w: Int, h: Int, text: String = "", var shad
           y += lineHeight
         }
       } else if(packet.item != null) {
-        itemCache[packet.item.resource] = itemCache[packet.item.resource] ?:
+        itemCache[packet.item] = itemCache[packet.item] ?:
           ItemStack(BuiltInRegistries.ITEM.get(packet.item.resource))
-        itemCache[packet.item.resource]?.let{
+        itemCache[packet.item]?.let{
           guiGraphics.renderFakeItem(it, 5, y+5)
           guiGraphics.drawWordWrap(font, it.hoverName, 26, y + 10, w, color.toInt())
           val oy = y
