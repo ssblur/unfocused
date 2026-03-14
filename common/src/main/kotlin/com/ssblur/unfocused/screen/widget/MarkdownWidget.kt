@@ -17,7 +17,7 @@ class MarkdownWidget(x: Int, y: Int, w: Int, h: Int, text: String = "", var shad
   private var markdownTextInternal: String = ""
 
   /**
-   * The raw text that is used to do markdown formatting and such.
+   * The raw text that is used to do Markdown formatting and such.
    * This is what you should set when updating the internal text here.
    */
   var markdownText: String

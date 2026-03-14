@@ -10,6 +10,7 @@ import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen
 import net.minecraft.network.chat.Component
 import net.minecraft.world.entity.player.Inventory
 import net.minecraft.world.inventory.AbstractContainerMenu
+import net.minecraft.world.inventory.Slot
 
 abstract class UnfocusedScreen<T : AbstractContainerMenu>(abstractContainerMenu: T, inventory: Inventory, component: Component) :
   AbstractContainerScreen<T>(abstractContainerMenu, inventory, component) {
@@ -52,4 +53,7 @@ abstract class UnfocusedScreen<T : AbstractContainerMenu>(abstractContainerMenu:
   ) {}
 
   override fun renderLabels(guiGraphics: GuiGraphics, i: Int, j: Int) {}
+
+  fun renderSlotBackground(slot: Slot) { TODO() }
+  fun renderAllSlotBackgrounds() { TODO() }
 }

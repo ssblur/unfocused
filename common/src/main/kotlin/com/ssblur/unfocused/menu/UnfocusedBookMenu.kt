@@ -18,7 +18,7 @@ class UnfocusedBookMenu(i: Int, val inventory: Inventory? = null): AbstractConta
    * e.g. assets/unfocused/unfocused/markdown/en_us/book.md would be unfocused:book
    * Root/fallback lang is en_us by default, but if a book is available in the current language it will be preferred
    */
-  var location: ResourceLocation?
+  var location: ResourceLocation? // don't worry about how jank this is ender (:
     get() = slot.item[DataComponents.ITEM_NAME]?.string?.let { Unfocused.location(it) }
     set(value) {
       val item = ItemStack(Items.STICK)
@@ -27,7 +27,6 @@ class UnfocusedBookMenu(i: Int, val inventory: Inventory? = null): AbstractConta
     }
   private val container = SimpleContainer(1)
   private val slot: Slot = addSlot(Slot(container, 0, Integer.MAX_VALUE, Integer.MAX_VALUE))
-  override fun quickMoveStack(player: Player, i: Int) = ItemStack.EMPTY
+  override fun quickMoveStack(player: Player, i: Int): ItemStack = ItemStack.EMPTY
   override fun stillValid(player: Player) = true
-
 }
