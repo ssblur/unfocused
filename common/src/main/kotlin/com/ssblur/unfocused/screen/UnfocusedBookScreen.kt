@@ -28,7 +28,7 @@ class UnfocusedBookScreen(val bookMenu: UnfocusedBookMenu, inventory: Inventory,
         LocalizedMarkdownReader.read(it),
         false
       )).setColor(0, 0, 0)
-    }?:run {
+    } ?: run {
       add(MarkdownWidget(
         100,
         30,
@@ -39,8 +39,8 @@ class UnfocusedBookScreen(val bookMenu: UnfocusedBookMenu, inventory: Inventory,
       )).setColor(0, 0, 0)
     }
 
-    add(ButtonWidget(260, 180, 65, 24, Component.literal("Close")) {
-      Minecraft.getInstance().player!!.closeContainer()
+    add(ButtonWidget(260, 180, 65, 24, Component.translatable("extra.unfocused.close")) {
+      Minecraft.getInstance().player?.closeContainer()
     })
   }
 

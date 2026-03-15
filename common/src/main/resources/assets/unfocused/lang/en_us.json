@@ -4,5 +4,6 @@
   "extra.unfocused.go_to_external": "Open link (%1$s)",
   "extra.unfocused.unimplemented": "This feature is not yet implemented.",
   "extra.unfocused.unimplemented_2": "If you're seeing this and didn't intentionally enable the test mod, please report this!",
-  "extra.unfocused.no_page": "No page provided, can't open the correct page in the guidebook!"
+  "extra.unfocused.no_page": "No page provided, can't open the correct page in the guidebook!",
+  "extra.unfocused.close": "Close"
 }

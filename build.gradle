@@ -1,3 +1,5 @@
+import java.time.Instant
+
 buildscript {
   ext.kotlin_version = rootProject.kotlin_version
   repositories {
@@ -26,13 +28,11 @@ allprojects {
     matcher.find()
     version = matcher.group(1)
     if (version.endsWith("-")) {
-      def split = version.split(/\./)
-      def last = split.length - 1
-      split[last] = Integer.valueOf(split[last]) + 1
-      version = String.join(".", split)
-      version += "SNAPSHOT"
+      def instant = String.valueOf(System.getenv("UNFOCUSED_VERSION_TIMESTAMP") ?: Instant.now().toEpochMilli())
+      version += "SNAPSHOT-" + instant
     }
-  } catch(Exception ignored) {
+  } catch(Exception e) {
+    e.printStackTrace()
     version = "1"
   }
 }
@@ -86,7 +86,7 @@ subprojects {
     repositories {
       maven {
         name = "ssblur-maven"
-        url = version.endsWith("SNAPSHOT") ? uri("https://mvn.blur.lol/snapshots") : uri("https://mvn.blur.lol/releases")
+        url = version.contains("SNAPSHOT") ? uri("https://mvn.blur.lol/snapshots") : uri("https://mvn.blur.lol/releases")
 
         credentials {
           username = System.getenv("SSBLURMVNUSERNAME")
