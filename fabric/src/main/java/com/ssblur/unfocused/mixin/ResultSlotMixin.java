@@ -23,7 +23,7 @@ public class ResultSlotMixin {
     private CraftingContainer craftSlots;
 
     @Inject(method = "checkTakeAchievements", at = @At("HEAD"))
-    private void alchimiae$checkTakeAchievements(ItemStack itemStack, CallbackInfo ci) {
+    private void unfocused$checkTakeAchievements(ItemStack itemStack, CallbackInfo ci) {
         PlayerCraftEvent.INSTANCE.callback(new PlayerCraftEvent.PlayerCraftData(player, itemStack, craftSlots));
     }
 }

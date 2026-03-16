@@ -11,6 +11,7 @@ import it.unimi.dsi.fastutil.ints.Int2ObjectFunction
 import net.minecraft.core.NonNullList
 import net.minecraft.core.registries.Registries
 import net.minecraft.resources.ResourceKey
+import net.minecraft.server.level.ServerLevel
 import net.minecraft.server.level.ServerPlayer
 import net.minecraft.world.entity.npc.VillagerTrades
 import net.minecraft.world.level.storage.loot.LootPool
@@ -22,6 +23,7 @@ import net.neoforged.neoforge.event.RegisterCommandsEvent
 import net.neoforged.neoforge.event.ServerChatEvent
 import net.neoforged.neoforge.event.entity.EntityAttributeCreationEvent
 import net.neoforged.neoforge.event.entity.living.LivingDamageEvent
+import net.neoforged.neoforge.event.entity.living.MobSpawnEvent
 import net.neoforged.neoforge.event.entity.player.PlayerEvent.ItemCraftedEvent
 import net.neoforged.neoforge.event.entity.player.PlayerEvent.PlayerLoggedInEvent
 import net.neoforged.neoforge.event.server.ServerStartedEvent
@@ -139,6 +141,16 @@ object UnfocusedModEvents {
     PlayerCraftEvent.callback(PlayerCraftEvent.PlayerCraftData(event.entity, event.crafting, event.inventory))
   }
 
+  fun entitySpawnedEvent(event: MobSpawnEvent.PositionCheck) {
+    if(event.level is ServerLevel)
+      com.ssblur.unfocused.event.common.MobSpawnEvent.callback(
+        com.ssblur.unfocused.event.common.MobSpawnEvent.EntitySpawn(
+          event.entity,
+          event.level as ServerLevel
+        )
+      )
+  }
+
   fun register(bus: IEventBus) {
     NeoForge.EVENT_BUS.addListener(::livingDamageEventBefore)
     NeoForge.EVENT_BUS.addListener(::livingDamageEventAfter)
@@ -152,6 +164,7 @@ object UnfocusedModEvents {
     NeoForge.EVENT_BUS.addListener(::wanderingTradesRegisterEvent)
     NeoForge.EVENT_BUS.addListener(::commandRegistrationEvent)
     NeoForge.EVENT_BUS.addListener(::itemCraftedEvent)
+    NeoForge.EVENT_BUS.addListener(::entitySpawnedEvent)
 
     BiomeModifiers.featureEvent.register{}
 

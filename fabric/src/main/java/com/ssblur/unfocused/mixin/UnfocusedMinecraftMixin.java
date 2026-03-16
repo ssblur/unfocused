@@ -10,7 +10,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(Minecraft.class)
 public class UnfocusedMinecraftMixin {
     @Inject(method = "disconnect()V", at = @At(value = "HEAD"))
-    private void alchimiae$clearLevel(CallbackInfo ci) {
+    private void unfocused$clearLevel(CallbackInfo ci) {
         ClientDisconnectEvent.INSTANCE.callback(Minecraft.getInstance().player);
     }
 }

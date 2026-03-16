@@ -11,7 +11,8 @@
     "LivingEntityMixin",
     "PlayerListMixin",
     "PlayerMixin",
-    "ResultSlotMixin"
+    "ResultSlotMixin",
+    "ServerLevelMixin"
   ],
   "injectors": {
     "defaultRequire": 1
