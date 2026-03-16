@@ -33,7 +33,7 @@ object Unfocused: ModInitializer("unfocused") {
   fun init() {
     ServerStartEvent.register { server ->
       server.addTickable {
-        if (server.tickCount % 20 == 0) {
+        if (server.tickCount % 20 == 7 ) {
           GameRuleConfig.BOOL_RULES.map {
             GameRuleConfig.BOOL_RULES[it.key] = server.gameRules.getRule(it.key).get()
           }
