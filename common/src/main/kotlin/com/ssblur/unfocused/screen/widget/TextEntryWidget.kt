@@ -152,11 +152,13 @@ class TextEntryWidget(x: Int, y: Int, w: Int, h: Int, scissor: Boolean = true) :
           return true
         }
         259 -> { // Backspace
+          if(text.isEmpty() || safeCursorIndex - 1 < 0) return true
           text = text.substring(0, safeCursorIndex - 1) + text.substring(safeCursorIndex)
           cursorIndex--
           return true
         }
         261 -> { // Delete
+          if(text.isEmpty() || safeCursorIndex + 1 > text.length) return true
           try {
             text = text.substring(0, safeCursorIndex) + text.substring(safeCursorIndex + 1)
             cursorIndex = cursorIndex // Resets cursor screen position
