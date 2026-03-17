@@ -6,11 +6,9 @@ import com.mojang.brigadier.context.CommandContext
 import com.ssblur.unfocused.biome.TemplatePoolInjects
 import com.ssblur.unfocused.command.CommandRegistration.registerCommand
 import com.ssblur.unfocused.config.GameRuleConfig
-import com.ssblur.unfocused.event.client.ClientScreenRegistrationEvent.registerScreen
 import com.ssblur.unfocused.event.common.ServerStartEvent
 import com.ssblur.unfocused.menu.SimpleMenuProvider
 import com.ssblur.unfocused.menu.UnfocusedBookMenu
-import com.ssblur.unfocused.screen.UnfocusedBookScreen
 import com.ssblur.unfocused.test.UnfocusedTestMod
 import net.minecraft.commands.CommandSourceStack
 import net.minecraft.commands.Commands
@@ -26,8 +24,6 @@ object Unfocused: ModInitializer("unfocused") {
 
   val BOOK_MENU = registerMenu("book") {
     MenuType(::UnfocusedBookMenu, FeatureFlagSet.of())
-  }.then {
-    registerScreen(it, ::UnfocusedBookScreen)
   }
 
   fun init() {
