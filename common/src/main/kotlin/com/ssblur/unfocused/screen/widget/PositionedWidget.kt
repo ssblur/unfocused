@@ -21,8 +21,8 @@ abstract class PositionedWidget(
 
   override fun mouseClicked(d: Double, e: Double, i: Int): Boolean {
     if(!isMouseOver(d, e)) return false
-    if(i == 0) return leftClick(d, e)
-    if(i == 1) return rightClick(d, e)
+    if(i == 0) return leftClick(d - x, e - y + scroll)
+    if(i == 1) return rightClick(d - x, e - y + scroll)
     return super.mouseClicked(d, e, i)
   }
 

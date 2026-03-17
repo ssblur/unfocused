@@ -3,6 +3,7 @@ package com.ssblur.unfocused.test.screen
 import com.ssblur.unfocused.screen.UnfocusedScreen
 import com.ssblur.unfocused.screen.widget.ButtonWidget
 import com.ssblur.unfocused.screen.widget.MarkdownWidget
+import com.ssblur.unfocused.screen.widget.TextEntryWidget
 import com.ssblur.unfocused.test.menu.TestMenu
 import net.minecraft.client.Minecraft
 import net.minecraft.network.chat.Component
@@ -24,7 +25,7 @@ class TestScreen(abstractContainerMenu: TestMenu, inventory: Inventory, componen
       15,
       15,
       400,
-      100,
+      70,
       "**test**: true.\n\nI can write a variety of [things](house) and they should be formatted *relatively* well " +
           "here.![unfocused icon](unfocused:icon.png)\n\nI can even include\n\n# Multiple lines\n\n~~you know, if I wanted " +
           "to~~\n\n[External Link](https://blur.gay)"
@@ -34,8 +35,9 @@ class TestScreen(abstractContainerMenu: TestMenu, inventory: Inventory, componen
       Minecraft.getInstance().player!!.closeContainer()
     })
 
-    add(ButtonWidget(140, 100, 120, 24, Component.literal("close 2")) {
-      Minecraft.getInstance().player!!.closeContainer()
-    })
+    val field = add(TextEntryWidget(140, 130, 120, 24))
+    field.color = 0xffffffu
+    field.cursorColor = 0xddddddu
+    field.text = "Test string please ignore"
   }
 }
