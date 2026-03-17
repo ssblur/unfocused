@@ -22,8 +22,8 @@ import net.neoforged.neoforge.event.LootTableLoadEvent
 import net.neoforged.neoforge.event.RegisterCommandsEvent
 import net.neoforged.neoforge.event.ServerChatEvent
 import net.neoforged.neoforge.event.entity.EntityAttributeCreationEvent
+import net.neoforged.neoforge.event.entity.living.FinalizeSpawnEvent
 import net.neoforged.neoforge.event.entity.living.LivingDamageEvent
-import net.neoforged.neoforge.event.entity.living.MobSpawnEvent
 import net.neoforged.neoforge.event.entity.player.PlayerEvent.ItemCraftedEvent
 import net.neoforged.neoforge.event.entity.player.PlayerEvent.PlayerLoggedInEvent
 import net.neoforged.neoforge.event.server.ServerStartedEvent
@@ -141,10 +141,10 @@ object UnfocusedModEvents {
     PlayerCraftEvent.callback(PlayerCraftEvent.PlayerCraftData(event.entity, event.crafting, event.inventory))
   }
 
-  fun entitySpawnedEvent(event: MobSpawnEvent.PositionCheck) {
+  fun entitySpawnedEvent(event: FinalizeSpawnEvent) {
     if(event.level is ServerLevel)
-      com.ssblur.unfocused.event.common.MobSpawnEvent.callback(
-        com.ssblur.unfocused.event.common.MobSpawnEvent.EntitySpawn(
+      MobSpawnEvent.callback(
+        MobSpawnEvent.EntitySpawn(
           event.entity,
           event.level as ServerLevel
         )
