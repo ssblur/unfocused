@@ -40,4 +40,6 @@ object RegistryTypes {
   val MENUS = RegistryType(Registries.MENU)
   val ARMOR = RegistryType(Registries.ARMOR_MATERIAL)
   val SOUNDS = RegistryType(Registries.SOUND_EVENT)
+  val POINT_OF_INTEREST_TYPE = RegistryType(Registries.POINT_OF_INTEREST_TYPE)
+  val VILLAGER_PROFESSION = RegistryType(Registries.VILLAGER_PROFESSION)
 }

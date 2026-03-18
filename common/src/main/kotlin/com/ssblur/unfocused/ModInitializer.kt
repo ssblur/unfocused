@@ -19,6 +19,8 @@ import net.minecraft.tags.TagKey
 import net.minecraft.world.effect.MobEffect
 import net.minecraft.world.entity.Entity
 import net.minecraft.world.entity.EntityType
+import net.minecraft.world.entity.ai.village.poi.PoiType
+import net.minecraft.world.entity.npc.VillagerProfession
 import net.minecraft.world.inventory.AbstractContainerMenu
 import net.minecraft.world.inventory.MenuType
 import net.minecraft.world.item.ArmorMaterial
@@ -61,6 +63,8 @@ open class ModInitializer(val id: String) {
   val MENUS = RegistryTypes.MENUS.create(id)
   val ARMOR = RegistryTypes.ARMOR.create(id)
   val SOUNDS = RegistryTypes.SOUNDS.create(id)
+  val VILLAGER_PROFESSIONS = RegistryTypes.VILLAGER_PROFESSION.create(id)
+  val POINT_OF_INTEREST_TYPES = RegistryTypes.POINT_OF_INTEREST_TYPE.create(id)
 
   fun registerBlock(id: String, supplier: Supplier<Block>): RegistrySupplier<Block> {
     return BLOCKS.register(id, supplier)
@@ -173,6 +177,14 @@ open class ModInitializer(val id: String) {
 
   fun registerSound(id: String, supplier: Supplier<SoundEvent>): RegistrySupplier<SoundEvent> {
     return SOUNDS.register(id, supplier)
+  }
+
+  fun registerProfession(id: String, supplier: Supplier<VillagerProfession>): RegistrySupplier<VillagerProfession> {
+    return VILLAGER_PROFESSIONS.register(id, supplier)
+  }
+
+  fun registerPointOfInterest(id: String, supplier: Supplier<PoiType>): RegistrySupplier<PoiType> {
+    return POINT_OF_INTEREST_TYPES.register(id, supplier)
   }
 
   fun location(path: String): ResourceLocation {

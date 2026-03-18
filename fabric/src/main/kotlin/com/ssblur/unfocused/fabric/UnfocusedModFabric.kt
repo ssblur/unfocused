@@ -18,6 +18,7 @@ import net.fabricmc.fabric.api.loot.v3.LootTableEvents
 import net.fabricmc.fabric.api.message.v1.ServerMessageEvents
 import net.fabricmc.fabric.api.`object`.builder.v1.entity.FabricDefaultAttributeRegistry
 import net.fabricmc.fabric.api.`object`.builder.v1.trade.TradeOfferHelper
+import net.fabricmc.fabric.api.`object`.builder.v1.world.poi.PointOfInterestHelper
 import net.minecraft.core.Registry
 import net.minecraft.core.registries.BuiltInRegistries
 import net.minecraft.core.registries.Registries
@@ -77,8 +78,15 @@ class UnfocusedModFabric: ModInitializer {
     RegistryTypes.SOUNDS.subscribe{ location, supplier ->
       Registry.register(BuiltInRegistries.SOUND_EVENT, location, supplier.get())
     }
+    RegistryTypes.VILLAGER_PROFESSION.subscribe { location, supplier ->
+      Registry.register(BuiltInRegistries.VILLAGER_PROFESSION, location, supplier.get())
+    }
+    RegistryTypes.POINT_OF_INTEREST_TYPE.subscribe { location, supplier ->
+      val v = supplier.get()
+      PointOfInterestHelper.register(location, v.maxTickets, v.validRange, v.matchingStates)
+    }
 
-    ServerMessageEvents.ALLOW_CHAT_MESSAGE.register { message, sender, params ->
+    ServerMessageEvents.ALLOW_CHAT_MESSAGE.register { message, sender, _ ->
       PlayerChatEvent.Before.callback(
         PlayerChatEvent.PlayerChatMessage(
           sender,
@@ -88,7 +96,7 @@ class UnfocusedModFabric: ModInitializer {
       )
       !PlayerChatEvent.Before.isCancelled()
     }
-    ServerMessageEvents.CHAT_MESSAGE.register { message, sender, params ->
+    ServerMessageEvents.CHAT_MESSAGE.register { message, sender, _ ->
       PlayerChatEvent.After.callback(
         PlayerChatEvent.PlayerChatMessage(
           sender,
@@ -101,7 +109,7 @@ class UnfocusedModFabric: ModInitializer {
 
     ServerLifecycleEvents.SERVER_STARTED.register(ServerStartEvent::callback)
 
-    LootTableEvents.MODIFY.register { key, builder, source, provider ->
+    LootTableEvents.MODIFY.register { key, builder, source, _ ->
       val pools = mutableListOf<LootPool.Builder>()
       LootTablePopulateEvent.callback(LootTablePopulateEvent.LootTableContext(key, source.isBuiltin, pools))
       pools.forEach { builder.withPool(it) }

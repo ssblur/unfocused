@@ -34,6 +34,8 @@ class UnfocusedModNeoForge(bus: IEventBus) {
     ProxyRegistry(Registries.MENU, RegistryTypes.MENUS).register(bus)
     ProxyRegistry(Registries.ARMOR_MATERIAL, RegistryTypes.ARMOR).register(bus)
     ProxyRegistry(Registries.SOUND_EVENT, RegistryTypes.SOUNDS).register(bus)
+    ProxyRegistry(Registries.VILLAGER_PROFESSION, RegistryTypes.VILLAGER_PROFESSION).register(bus)
+    ProxyRegistry(Registries.POINT_OF_INTEREST_TYPE, RegistryTypes.POINT_OF_INTEREST_TYPE).register(bus)
 
     Unfocused.init()
   }
