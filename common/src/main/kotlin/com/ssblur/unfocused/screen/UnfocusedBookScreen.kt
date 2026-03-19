@@ -26,7 +26,8 @@ class UnfocusedBookScreen(val bookMenu: UnfocusedBookMenu, inventory: Inventory,
         220,
         145,
         LocalizedMarkdownReader.read(it),
-        false
+        false,
+        commandsAllowed = false
       )).setColor(0, 0, 0)
     } ?: run {
       add(MarkdownWidget(
@@ -35,7 +36,8 @@ class UnfocusedBookScreen(val bookMenu: UnfocusedBookMenu, inventory: Inventory,
         220,
         145,
         LocalizedMarkdownReader.read(Unfocused.location("loading")),
-        false
+        shadow = false,
+        commandsAllowed = false
       )).setColor(0, 0, 0)
     }
 

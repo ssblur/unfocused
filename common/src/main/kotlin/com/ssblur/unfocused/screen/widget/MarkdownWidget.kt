@@ -13,7 +13,15 @@ import net.minecraft.network.chat.Style
 import net.minecraft.world.item.ItemStack
 import kotlin.math.max
 
-class MarkdownWidget(x: Int, y: Int, w: Int, h: Int, text: String = "", var shadow: Boolean = true) : PositionedWidget(x, y, w, h) {
+class MarkdownWidget(
+  x: Int,
+  y: Int,
+  w: Int,
+  h: Int,
+  text: String = "",
+  var shadow: Boolean = false,
+  var commandsAllowed: Boolean = false):
+  PositionedWidget(x, y, w, h) {
   private var markdownTextInternal: String = ""
 
   /**
@@ -24,14 +32,14 @@ class MarkdownWidget(x: Int, y: Int, w: Int, h: Int, text: String = "", var shad
     get() = markdownTextInternal
     set(value) {
       markdownTextInternal = value
-      parsed = MarkdownFormatter.parseMarkdown(markdownText, linkColor = linkColor)
+      parsed = MarkdownFormatter.parseMarkdown(markdownText, linkColor = linkColor, commandsAllowed = commandsAllowed)
     }
 
   init {
     markdownText = text
   }
 
-  var parsed = MarkdownFormatter.parseMarkdown(markdownText)
+  var parsed = MarkdownFormatter.parseMarkdown(markdownText, commandsAllowed = commandsAllowed)
     private set
 
   var color: UInt = 0xff000000u

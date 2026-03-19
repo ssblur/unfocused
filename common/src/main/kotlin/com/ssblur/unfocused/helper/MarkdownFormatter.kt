@@ -44,7 +44,12 @@ object MarkdownFormatter {
     )
   }
 
-  fun parseMarkdown(markdown: String, imagesEnabled: Boolean = true, linkColor: UInt = 0x3333ffu): List<MarkdownPacket> {
+  fun parseMarkdown(
+    markdown: String,
+    imagesEnabled: Boolean = true,
+    linkColor: UInt = 0x3333ffu,
+    commandsAllowed: Boolean = false,
+  ): List<MarkdownPacket> {
     val elements = mutableListOf<MarkdownPacket>()
     var lastComponent = Component.empty()
     val lines = markdown.split("\n").map { it.trimStart() }
@@ -152,6 +157,10 @@ object MarkdownFormatter {
           val link = match.groups[2]!!.value
 
           val isExternal = link.startsWith("http://") || link.startsWith("https://")
+          val command = if(commandsAllowed && link.startsWith("cmd://"))
+              link.substring(5)
+            else
+              "/unfocused open $link"
           val remainder = match.groups[3]!!.value
           lastComponent = append(lastComponent, current, isBold, isItalic, isStrikeThrough, isUnderline, isTitle)
           current = ""
@@ -164,7 +173,7 @@ object MarkdownFormatter {
                 .withColor(linkColor.toInt())
                 .withClickEvent(ClickEvent(
                   if(isExternal) ClickEvent.Action.OPEN_URL else ClickEvent.Action.RUN_COMMAND,
-                  if(isExternal) link else "/unfocused open $link"
+                  if(isExternal) link else command
                 ))
                 .withHoverEvent(
                   if(isExternal)

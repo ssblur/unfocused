@@ -12,6 +12,8 @@ Thanks!
 
 Links to [test mod](unfocusedtest:test_book) [pages](unfocusedtest:test_book_2)
 
+[command test](cmd://summon chicken)
+
 ![uf icon](unfocused:icon.png)
 
 Okay now I'm gonna spam characters to test wrapping, widget bounds, and scrolling.
