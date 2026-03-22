@@ -11,6 +11,7 @@ import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider
 import net.minecraft.client.renderer.entity.EntityRendererProvider
 import net.minecraft.world.entity.Entity
 import net.minecraft.world.level.block.entity.BlockEntity
+import net.neoforged.bus.api.EventPriority
 import net.neoforged.bus.api.IEventBus
 import net.neoforged.neoforge.client.event.*
 import net.neoforged.neoforge.common.NeoForge
@@ -97,7 +98,7 @@ object UnfocusedModClientEvents {
     NeoForge.EVENT_BUS.addListener(::clientScrollEvent)
     NeoForge.EVENT_BUS.addListener(::clientLoreEvent)
     NeoForge.EVENT_BUS.addListener(::logoutEvent)
-    NeoForge.EVENT_BUS.addListener(::hudRenderEvent)
+    NeoForge.EVENT_BUS.addListener(EventPriority.LOW, ::hudRenderEvent)
 
     bus.addListener(::itemColorEvent)
     bus.addListener(::blockColorEvent)
