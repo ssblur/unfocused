@@ -1,6 +1,7 @@
 package com.ssblur.unfocused.fabric
 
 import com.ssblur.unfocused.UnfocusedClient
+import com.ssblur.unfocused.event.client.ClientGuiRenderEvent
 import com.ssblur.unfocused.event.client.ClientLevelTickEvent
 import com.ssblur.unfocused.event.client.ClientLoreEvent
 import com.ssblur.unfocused.event.client.ClientScreenRegistrationEvent
@@ -14,6 +15,7 @@ import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents
 import net.fabricmc.fabric.api.client.item.v1.ItemTooltipCallback
 import net.fabricmc.fabric.api.client.particle.v1.ParticleFactoryRegistry
 import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry
+import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback
 import net.minecraft.client.gui.screens.MenuScreens
 import net.minecraft.client.particle.ParticleProvider
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider
@@ -59,6 +61,11 @@ class UnfocusedModFabricClient: ClientModInitializer {
     }
     ClientScreenRegistrationEvent.register{
       MenuScreens.register(it.menu, it.supplier)
+    }
+    HudRenderCallback.EVENT.register { graphics, delta ->
+      ClientGuiRenderEvent.callback(
+        ClientGuiRenderEvent.GuiRenderEvent(graphics, delta)
+      )
     }
 
     UnfocusedClient.init()

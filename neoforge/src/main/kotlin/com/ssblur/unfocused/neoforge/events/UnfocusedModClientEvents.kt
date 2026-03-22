@@ -6,12 +6,10 @@ import com.ssblur.unfocused.rendering.BlockEntityRendering
 import com.ssblur.unfocused.rendering.EntityRendering
 import com.ssblur.unfocused.rendering.ParticleFactories
 import net.minecraft.client.Minecraft
-import net.minecraft.client.gui.screens.MenuScreens
 import net.minecraft.client.particle.ParticleProvider
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider
 import net.minecraft.client.renderer.entity.EntityRendererProvider
 import net.minecraft.world.entity.Entity
-import net.minecraft.world.inventory.AbstractContainerMenu
 import net.minecraft.world.level.block.entity.BlockEntity
 import net.neoforged.bus.api.IEventBus
 import net.neoforged.neoforge.client.event.*
@@ -79,12 +77,18 @@ object UnfocusedModClientEvents {
 
   fun registerScreenEvent(event: RegisterMenuScreensEvent) {
     ClientScreenRegistrationEvent.register{
-      event.register(it.menu, it.supplier as MenuScreens.ScreenConstructor<AbstractContainerMenu, *>)
+      event.register(it.menu, it.supplier)
     }
   }
 
   fun logoutEvent(event: ClientPlayerNetworkEvent.LoggingOut) {
     ClientDisconnectEvent.callback(event.player)
+  }
+
+  fun hudRenderEvent(event: RenderGuiEvent.Post) {
+    ClientGuiRenderEvent.callback(
+      ClientGuiRenderEvent.GuiRenderEvent(event.guiGraphics, event.partialTick)
+    )
   }
 
   fun register(bus: IEventBus) {
@@ -93,6 +97,7 @@ object UnfocusedModClientEvents {
     NeoForge.EVENT_BUS.addListener(::clientScrollEvent)
     NeoForge.EVENT_BUS.addListener(::clientLoreEvent)
     NeoForge.EVENT_BUS.addListener(::logoutEvent)
+    NeoForge.EVENT_BUS.addListener(::hudRenderEvent)
 
     bus.addListener(::itemColorEvent)
     bus.addListener(::blockColorEvent)
