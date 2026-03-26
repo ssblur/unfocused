@@ -16,32 +16,36 @@ class UnfocusedBookScreen(val bookMenu: UnfocusedBookMenu, inventory: Inventory,
   var initialized = false
 
   override fun init() {
-    add(SinglePageBackground(80, 10, 265, 220))
+    imageWidth = 265
+    imageHeight = 220
+    leftPos = (this.width - imageWidth) / 2
+    topPos = (this.height - imageHeight) / 2
+    add(SinglePageBackground(leftPos, topPos, imageWidth, imageHeight))
 
     bookMenu.location?.also {
       initialized = true
       add(MarkdownWidget(
-        100,
-        30,
+        leftPos + 20,
+        topPos + 15,
         220,
-        145,
+        imageHeight - 62,
         LocalizedMarkdownReader.read(it),
         false,
         commandsAllowed = false
       )).setColor(0, 0, 0)
     } ?: run {
       add(MarkdownWidget(
-        100,
-        30,
+        leftPos + 20,
+        topPos + 15,
         220,
-        145,
+        imageHeight - 62,
         LocalizedMarkdownReader.read(Unfocused.location("loading")),
         shadow = false,
         commandsAllowed = false
       )).setColor(0, 0, 0)
     }
 
-    add(ButtonWidget(260, 180, 65, 24, Component.translatable("extra.unfocused.close")) {
+    add(ButtonWidget(leftPos + imageWidth - 85, topPos + imageHeight - 45, 65, 24, Component.translatable("extra.unfocused.close")) {
       Minecraft.getInstance().player?.closeContainer()
     })
   }

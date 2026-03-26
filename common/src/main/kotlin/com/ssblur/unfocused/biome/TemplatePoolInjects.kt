@@ -9,6 +9,7 @@ import net.minecraft.resources.ResourceKey
 import net.minecraft.resources.ResourceLocation
 import net.minecraft.server.MinecraftServer
 import net.minecraft.world.level.levelgen.structure.pools.SinglePoolElement
+import net.minecraft.world.level.levelgen.structure.pools.StructurePoolElementType
 import net.minecraft.world.level.levelgen.structure.pools.StructureTemplatePool
 
 object TemplatePoolInjects {
@@ -37,6 +38,13 @@ object TemplatePoolInjects {
     injects.forEach { (_, poolInject) ->
       val pool = poolRegistry.get(poolInject.pool)!! as StructureTemplatePoolAccessor
       val templates = pool.templates
+
+      val empty = templates.takeLastWhile {
+        it.type == StructurePoolElementType.EMPTY
+      }
+      templates.dropLastWhile {
+        it.type == StructurePoolElementType.EMPTY
+      }
       val rawTemplates = pool.rawTemplates
 
       poolInject.elements.forEach { element ->
@@ -48,6 +56,7 @@ object TemplatePoolInjects {
             ))
           ).apply(element.element.projection)
         (0..(element.weight ?: 2)).forEach { _ -> templates.add(poolElement) }
+        pool.templates.addAll(empty)
         pool.rawTemplates = rawTemplates + Pair(poolElement, element.weight)
       }
     }

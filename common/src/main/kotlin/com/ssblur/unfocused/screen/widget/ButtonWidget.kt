@@ -1,11 +1,13 @@
 package com.ssblur.unfocused.screen.widget
 
 import com.ssblur.unfocused.Unfocused.location
+import com.ssblur.unfocused.extension.SoundEventExtension.play
 import net.minecraft.client.Minecraft
 import net.minecraft.client.gui.GuiGraphics
 import net.minecraft.client.gui.narration.NarratedElementType
 import net.minecraft.client.gui.narration.NarrationElementOutput
 import net.minecraft.network.chat.Component
+import net.minecraft.sounds.SoundEvents
 
 class ButtonWidget(x: Int, y: Int, w: Int, h: Int, val label: Component, val onClick: () -> Unit) :
   PositionedWidget(x, y, w, h, scissor = false) {
@@ -30,6 +32,7 @@ class ButtonWidget(x: Int, y: Int, w: Int, h: Int, val label: Component, val onC
 
   override fun leftClick(x: Double, y: Double): Boolean {
     if(!disabled) {
+      SoundEvents.UI_BUTTON_CLICK.play()
       onClick()
       return true
     }

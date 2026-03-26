@@ -1,5 +1,6 @@
 package com.ssblur.unfocused.screen.renderable
 
+import com.mojang.blaze3d.systems.RenderSystem
 import net.minecraft.client.gui.GuiGraphics
 import net.minecraft.client.gui.components.Renderable
 import net.minecraft.client.gui.screens.Screen
@@ -43,15 +44,33 @@ abstract class PositionedRenderable(
 
     if(scissor) guiGraphics.disableScissor()
 
+    if(maxScroll > h) {
+      val barSize = h.toDouble() / maxScroll // as a proportion of widget height
+      val barProgress = (scroll / (maxScroll - h))
+      val barPos = barProgress * (1.0 - barSize)
+
+      val barH = (barSize * h).toInt()
+      val barY = (barPos * h).toInt() + scroll.toInt()
+      val barW = 2
+      val barX = w - barW
+
+      RenderSystem.enableBlend()
+      guiGraphics.fill(barX, barY, barX + barW, barY + barH, 0x44000000u.toInt())
+    }
+
     this.drawOverlay(guiGraphics, i - x, j - (y - scroll.roundToInt()), f)
 
     stack.popPose()
   }
 
   fun mouseOver(d: Double, e: Double): Boolean {
-    return d > x && d < x + w && e > y && e < y + h
+    return d.roundToInt() in x..x + w && e.roundToInt() in y..y + h
   }
 
   abstract fun draw(guiGraphics: GuiGraphics, mouseX: Int, mouseY: Int, f: Float)
   open fun drawOverlay(guiGraphics: GuiGraphics, mouseX: Int, mouseY: Int, f: Float) {}
+
+  companion object {
+
+  }
 }
