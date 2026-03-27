@@ -16,7 +16,9 @@ class TextEntryWidget(x: Int, y: Int, w: Int, h: Int, scissor: Boolean = true) :
   private var textInternal: String = ""
   private var textComponent: Component = Component.empty()
   var color: UInt = 0x000000u
+  var placeholderColor: UInt = 0x333333u
   var cursorColor: UInt = 0x333333u
+  var placeholder: String = ""
   var textStyle: Style = Style.EMPTY
   var text: String
     get() = "$textInternal "
@@ -117,6 +119,10 @@ class TextEntryWidget(x: Int, y: Int, w: Int, h: Int, scissor: Boolean = true) :
     } else {
       guiGraphics.drawString(font, textComponent, 0, 0, color.toInt())
     }
+
+    if(textInternal.isEmpty())
+      guiGraphics.drawString(font, Component.translatable(placeholder), 0, 0, placeholderColor.toInt())
+
     if (isFocused && Minecraft.getInstance().gui.guiTicks % blinkDelay > blinkSpeed)
       guiGraphics.drawString(font, "|", cursorRenderPos.x, cursorRenderPos.y, cursorColor.toInt())
   }

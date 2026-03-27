@@ -37,6 +37,8 @@ class TestScreen(abstractContainerMenu: TestMenu, inventory: Inventory, componen
 
     val field = add(TextEntryWidget(140, 130, 120, 24))
     field.color = 0xffffffu
+    field.placeholderColor = 0xaaaaaau
+    field.placeholder = "Placeholder"
     field.cursorColor = 0xddddddu
     field.text = "Test string please ignore"
   }
