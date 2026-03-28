@@ -38,6 +38,7 @@ abstract class UnfocusedScreen<T : AbstractContainerMenu>(abstractContainerMenu:
 
   override fun render(guiGraphics: GuiGraphics, i: Int, j: Int, f: Float) {
     super.render(guiGraphics, i, j, f)
+    renderTooltip(guiGraphics, i, j)
     renderWidgets(guiGraphics, i, j, f)
   }
 
