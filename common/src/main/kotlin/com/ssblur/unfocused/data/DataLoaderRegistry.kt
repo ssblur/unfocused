@@ -6,7 +6,7 @@ import com.ssblur.unfocused.event.SimpleEvent
 import net.minecraft.resources.ResourceLocation
 import kotlin.reflect.KClass
 
-@Suppress("unused")
+@Suppress("unused", "UNCHECKED_CAST")
 object DataLoaderRegistry {
   data class DataLoaderEntry<T: Any>(
     val path: String,

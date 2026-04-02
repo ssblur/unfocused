@@ -1,6 +1,5 @@
 plugins {
-  id 'com.github.johnrengelman.shadow'
-  id 'org.jetbrains.kotlin.jvm'
+  id 'com.gradleup.shadow'
 }
 
 architectury {
@@ -50,8 +49,8 @@ processResources {
 
   filesMatching('META-INF/neoforge.mods.toml') {
     expand(
-            version: project.version,
-            kff_version: rootProject.kff_version
+      version: project.version,
+      kff_version: rootProject.kff_version
     )
   }
 }
