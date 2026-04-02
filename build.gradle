@@ -29,7 +29,7 @@ allprojects {
     matcher.find()
     version = matcher.group(1)
     if (version.endsWith("-")) {
-      def instant = String.valueOf(System.getenv("UNFOCUSED_VERSION_TIMESTAMP") ?: Instant.now().toEpochMilli())
+      def instant = String.valueOf(System.getenv("VERSION_TIMESTAMP") ?: Instant.now().toEpochMilli())
       version += "SNAPSHOT-" + instant
     }
   } catch(Exception e) {

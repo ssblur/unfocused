@@ -62,9 +62,30 @@ class UnfocusedBookScreen(val bookMenu: UnfocusedBookMenu, inventory: Inventory,
       ).setColor(255, 0, 0)
     }
 
-    add(ButtonWidget(leftPos + imageWidth - 85, topPos + imageHeight - 45, 65, 24, Component.translatable("extra.unfocused.close")) {
-      Minecraft.getInstance().player?.closeContainer()
-    })
+    add(
+      ButtonWidget(
+      leftPos + imageWidth - 85,
+      topPos + imageHeight - 45,
+      65,
+      24,
+      Component.translatable("extra.unfocused.close")) {
+        backAction = null
+        Minecraft.getInstance().player?.closeContainer()
+      }
+    )
+
+    backAction?.let {
+      add(
+        ButtonWidget(
+          leftPos + imageWidth - 152,
+          topPos + imageHeight - 45,
+          65,
+          24,
+          Component.translatable("extra.unfocused.back")) {
+          it.run()
+        }
+      )
+    }
   }
 
   override fun render(guiGraphics: GuiGraphics, i: Int, j: Int, f: Float) {
@@ -72,5 +93,9 @@ class UnfocusedBookScreen(val bookMenu: UnfocusedBookMenu, inventory: Inventory,
     if(!initialized && bookMenu.location != null) {
       rebuildWidgets()
     }
+  }
+
+  companion object {
+    var backAction: Runnable? = null
   }
 }

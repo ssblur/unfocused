@@ -75,6 +75,8 @@ object MarkdownFormatter {
         lastComponent = lastComponent.append(Component.literal("\n\n"))
       }
 
+      line = line.trimEnd() + " "
+
       while(line.isNotEmpty()) {
         if(line.startsWith("***")) {
           lastComponent = append(lastComponent, current, isBold, isItalic, isStrikeThrough, isUnderline, isTitle)
