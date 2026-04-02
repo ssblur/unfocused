@@ -10,6 +10,7 @@ import net.minecraft.client.Minecraft
 import net.minecraft.client.gui.GuiGraphics
 import net.minecraft.network.chat.Component
 import net.minecraft.world.entity.player.Inventory
+import java.io.FileNotFoundException
 
 class UnfocusedBookScreen(val bookMenu: UnfocusedBookMenu, inventory: Inventory, component: Component) :
   UnfocusedScreen<UnfocusedBookMenu>(bookMenu, inventory, component) {
@@ -22,27 +23,43 @@ class UnfocusedBookScreen(val bookMenu: UnfocusedBookMenu, inventory: Inventory,
     topPos = (this.height - imageHeight) / 2
     add(SinglePageBackground(leftPos, topPos, imageWidth, imageHeight))
 
-    bookMenu.location?.also {
-      initialized = true
-      add(MarkdownWidget(
-        leftPos + 20,
-        topPos + 15,
-        220,
-        imageHeight - 62,
-        LocalizedMarkdownReader.read(it),
-        false,
-        commandsAllowed = false
-      )).setColor(0, 0, 0)
-    } ?: run {
-      add(MarkdownWidget(
-        leftPos + 20,
-        topPos + 15,
-        220,
-        imageHeight - 62,
-        LocalizedMarkdownReader.read(Unfocused.location("loading")),
-        shadow = false,
-        commandsAllowed = false
-      )).setColor(0, 0, 0)
+    try {
+      bookMenu.location?.also {
+        initialized = true
+        add(MarkdownWidget(
+          leftPos + 20,
+          topPos + 15,
+          220,
+          imageHeight - 62,
+          LocalizedMarkdownReader.read(it),
+          false,
+          commandsAllowed = false
+        )).setColor(0, 0, 0)
+      } ?: run {
+        add(
+          MarkdownWidget(
+            leftPos + 20,
+            topPos + 15,
+            220,
+            imageHeight - 62,
+            LocalizedMarkdownReader.read(Unfocused.location("loading")),
+            shadow = false,
+            commandsAllowed = false
+          )
+        ).setColor(0, 0, 0)
+      }
+    } catch(e: FileNotFoundException) {
+      add(
+        MarkdownWidget(
+          leftPos + 20,
+          topPos + 15,
+          220,
+          imageHeight - 62,
+          "Could not load! \n${e.message}",
+          shadow = false,
+          commandsAllowed = false
+        )
+      ).setColor(255, 0, 0)
     }
 
     add(ButtonWidget(leftPos + imageWidth - 85, topPos + imageHeight - 45, 65, 24, Component.translatable("extra.unfocused.close")) {
