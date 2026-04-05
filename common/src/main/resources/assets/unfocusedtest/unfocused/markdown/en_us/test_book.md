@@ -1,4 +1,5 @@
 # Test Book
+## Title Test 2
 this is a book made to test the localized text loading, linking, UI rendering, and a few other things
 
 like [linking](unfocusedtest:test_book_2) to other pages

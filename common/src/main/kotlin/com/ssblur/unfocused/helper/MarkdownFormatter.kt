@@ -4,24 +4,31 @@ import net.minecraft.network.chat.*
 import net.minecraft.resources.ResourceLocation
 
 object MarkdownFormatter {
-  data class MarkdownRecipe(
-    val resource: ResourceLocation,
-    val altText: String,
-  )
-  data class MarkdownItem(
-    val resource: ResourceLocation,
-    val text: String,
-    val data: String?,
-  )
-  data class MarkdownImage(
-    val resource: ResourceLocation,
-    val altText: String
-  )
+  object Markdown {
+    data class Recipe(
+      val resource: ResourceLocation,
+      val altText: String,
+    )
+    data class Item(
+      val resource: ResourceLocation,
+      val text: String,
+      val data: String?,
+    )
+    data class Image(
+      val resource: ResourceLocation,
+      val altText: String
+    )
+    data class Title(
+      val component: Component,
+      val depth: Int = 1
+    )
+  }
   data class MarkdownPacket(
     val component: Component? = null,
-    val recipe: MarkdownRecipe? = null,
-    val item: MarkdownItem? = null,
-    val image: MarkdownImage? = null,
+    val recipe: Markdown.Recipe? = null,
+    val item: Markdown.Item? = null,
+    val image: Markdown.Image? = null,
+    val title: Markdown.Title? = null,
   )
 
   fun append(
@@ -31,16 +38,15 @@ object MarkdownFormatter {
     italic: Boolean,
     strikethrough: Boolean,
     underline: Boolean,
-    title: Boolean,
   ): MutableComponent {
     return component.append(
       Component.literal(text).withStyle(
         Style.EMPTY
-          .withBold(bold || title)
+          .withBold(bold)
           .withItalic(italic)
           .withStrikethrough(strikethrough)
-          .withUnderlined(underline || title)
-      ).append(Component.literal(if(title) "\n\n" else ""))
+          .withUnderlined(underline)
+      )
     )
   }
 
@@ -63,8 +69,17 @@ object MarkdownFormatter {
       var isItalic = false
       var isStrikeThrough = false
       val isUnderline = false
-      val isTitle = line.trimStart().startsWith('#')
-      if(isTitle) line = line.trimStart().substring(1).trimStart()
+      var titleDepth = 0
+      for(i in line.trimStart()) {
+        if(i == '#') titleDepth++
+        else break
+      }
+      val isTitle = titleDepth > 0
+      if(isTitle) {
+        line = line.trimStart('#', ' ', '\t')
+        elements.add(MarkdownPacket(component = lastComponent))
+        lastComponent = Component.empty()
+      }
       val isList = line.trimStart().startsWith("* ") || line.trimStart().startsWith("- ")
       if(isList) {
         line = line.trimStart().substring(1).trimStart()
@@ -73,32 +88,32 @@ object MarkdownFormatter {
 
       if(line.trim().isEmpty()) {
         lastComponent = lastComponent.append(Component.literal("\n\n"))
+      } else {
+        line += " "
       }
-
-      line = line.trimEnd() + " "
 
       while(line.isNotEmpty()) {
         if(line.startsWith("***")) {
-          lastComponent = append(lastComponent, current, isBold, isItalic, isStrikeThrough, isUnderline, isTitle)
+          lastComponent = append(lastComponent, current, isBold, isItalic, isStrikeThrough, isUnderline)
           current = ""
           isBold = !isBold
           isItalic = !isItalic
           line = line.substring(3)
           continue
         } else if(line.startsWith("**")) {
-          lastComponent = append(lastComponent, current, isBold, isItalic, isStrikeThrough, isUnderline, isTitle)
+          lastComponent = append(lastComponent, current, isBold, isItalic, isStrikeThrough, isUnderline)
           current = ""
           isBold = !isBold
           line = line.substring(2)
           continue
         } else if(line.startsWith("*")) {
-          lastComponent = append(lastComponent, current, isBold, isItalic, isStrikeThrough, isUnderline, isTitle)
+          lastComponent = append(lastComponent, current, isBold, isItalic, isStrikeThrough, isUnderline)
           current = ""
           isItalic = !isItalic
           line = line.substring(1)
           continue
         } else if(line.startsWith("~~")) {
-          lastComponent = append(lastComponent, current, isBold, isItalic, isStrikeThrough, isUnderline, isTitle)
+          lastComponent = append(lastComponent, current, isBold, isItalic, isStrikeThrough, isUnderline)
           current = ""
           isStrikeThrough = !isStrikeThrough
           line = line.substring(2)
@@ -110,7 +125,7 @@ object MarkdownFormatter {
           val remainder = match.groups[3]!!.value
           elements.add(MarkdownPacket(component = lastComponent))
           lastComponent = Component.empty()
-          elements.add(MarkdownPacket(image = MarkdownImage(ResourceLocation.parse(image), altText)))
+          elements.add(MarkdownPacket(image = Markdown.Image(ResourceLocation.parse(image), altText)))
           line = remainder
           continue
         } else if(imagesEnabled && line.matches("^<recipe (.*?)/?>.*".toRegex())) {
@@ -124,7 +139,7 @@ object MarkdownFormatter {
           if(line.matches("^.*?</recipe\\w*>.*".toRegex())) {
             val match = "^(.*?)</recipe\\w*>(.*)".toRegex().matchEntire(remainder)!!
             elements.add(MarkdownPacket(
-              recipe = MarkdownRecipe(ResourceLocation.parse(recipe), match.groups[1]!!.value)
+              recipe = Markdown.Recipe(ResourceLocation.parse(recipe), match.groups[1]!!.value)
             ))
             line = match.groups[2]!!.value
             continue
@@ -147,7 +162,7 @@ object MarkdownFormatter {
           lastComponent = Component.empty()
           if(line.matches("^.*?</item\\w*>.*".toRegex())) {
             val match = "^(.*?)</item\\w*>(.*)".toRegex().matchEntire(remainder)!!
-            elements.add(MarkdownPacket(item = MarkdownItem(ResourceLocation.parse(item), match.groups[1]!!.value, data)))
+            elements.add(MarkdownPacket(item = Markdown.Item(ResourceLocation.parse(item), match.groups[1]!!.value, data)))
             line = match.groups[2]!!.value
             continue
           }
@@ -164,7 +179,7 @@ object MarkdownFormatter {
             else
               "/unfocused open $link"
           val remainder = match.groups[3]!!.value
-          lastComponent = append(lastComponent, current, isBold, isItalic, isStrikeThrough, isUnderline, isTitle)
+          lastComponent = append(lastComponent, current, isBold, isItalic, isStrikeThrough, isUnderline)
           current = ""
           lastComponent = lastComponent.append(Component.literal(text).withStyle(
               Style.EMPTY
@@ -199,7 +214,12 @@ object MarkdownFormatter {
         line = line.substring(1)
       }
       if(current.isNotEmpty())
-        lastComponent = append(lastComponent, current, isBold, isItalic, isStrikeThrough, isUnderline, isTitle)
+        lastComponent = append(lastComponent, current, isBold, isItalic, isStrikeThrough, isUnderline)
+
+      if(isTitle) {
+        elements.add(MarkdownPacket(title = Markdown.Title(lastComponent, titleDepth)))
+        lastComponent = Component.empty()
+      }
     }
     elements.add(MarkdownPacket(component = lastComponent))
     return elements

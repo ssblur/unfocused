@@ -11,6 +11,7 @@ import net.minecraft.core.registries.BuiltInRegistries
 import net.minecraft.network.chat.Component
 import net.minecraft.network.chat.Style
 import net.minecraft.world.item.ItemStack
+import kotlin.math.ceil
 import kotlin.math.max
 
 class MarkdownWidget(
@@ -62,17 +63,18 @@ class MarkdownWidget(
   }
 
   val font: Font = Minecraft.getInstance().font
-  val itemCache: MutableMap<MarkdownFormatter.MarkdownItem, ItemStack> = mutableMapOf()
+  val itemCache: MutableMap<MarkdownFormatter.Markdown.Item, ItemStack> = mutableMapOf()
   private var hoveredStyle: Style? = null
   private var hoveredItem: ItemStack? = null
   override fun draw(guiGraphics: GuiGraphics, mouseX: Int, mouseY: Int, f: Float) {
     hoveredStyle = null
     hoveredItem = null
     var y = 0
+    val ww = w - 3
     val lineHeight = font.lineHeight
     for(packet in parsed) {
       if(packet.component != null) {
-        val lines = font.split(packet.component, w)
+        val lines = font.split(packet.component, ww)
         for(line in lines) {
           guiGraphics.drawString(font, line, 0, y, color.toInt(), shadow)
           if(mouseY >= y && mouseY < (y + lineHeight)) {
@@ -85,23 +87,39 @@ class MarkdownWidget(
           ItemStack(BuiltInRegistries.ITEM.get(packet.item.resource))
         itemCache[packet.item]?.let{
           guiGraphics.renderFakeItem(it, 5, y+5)
-          guiGraphics.drawWordWrap(font, it.hoverName, 26, y + 10, w, color.toInt())
+          guiGraphics.drawWordWrap(font, it.hoverName, 26, y + 10, ww, color.toInt())
           val oy = y
           y += max(font.wordWrapHeight(it.hoverName, w), 26)
           if(mouseY in oy..y) hoveredItem = it
         }
       } else if(packet.recipe != null) {
         // render recipe
-        guiGraphics.drawWordWrap(font, Component.literal("Recipe: ").append(packet.recipe.resource.toString()), 0, y, w, 0xffbbbbbbu.toInt())
-        y += font.wordWrapHeight(Component.literal("Recipe: ").append(packet.recipe.resource.toString()), w)
-        guiGraphics.drawWordWrap(font, Component.translatable("extra.unfocused.unimplemented"), 0, y, w, 0xffbbbbbbu.toInt())
-        y += font.wordWrapHeight(Component.translatable("extra.unfocused.unimplemented"), w)
-        guiGraphics.drawWordWrap(font, Component.translatable("extra.unfocused.unimplemented_2"), 0, y, w, 0xffbbbbbbu.toInt())
-        y += font.wordWrapHeight(Component.translatable("extra.unfocused.unimplemented_2"), w)
+        guiGraphics.drawWordWrap(font, Component.literal("Recipe: ").append(packet.recipe.resource.toString()), 0, y, ww, 0xffbbbbbbu.toInt())
+        y += font.wordWrapHeight(Component.literal("Recipe: ").append(packet.recipe.resource.toString()), ww)
+        guiGraphics.drawWordWrap(font, Component.translatable("extra.unfocused.unimplemented"), 0, y, ww, 0xffbbbbbbu.toInt())
+        y += font.wordWrapHeight(Component.translatable("extra.unfocused.unimplemented"), ww)
+        guiGraphics.drawWordWrap(font, Component.translatable("extra.unfocused.unimplemented_2"), 0, y, ww, 0xffbbbbbbu.toInt())
+        y += font.wordWrapHeight(Component.translatable("extra.unfocused.unimplemented_2"), ww)
       } else if(packet.image != null) {
         val lh = font.lineHeight * 8
         guiGraphics.blit(packet.image.resource, 0, y, 0F, 0F, lh, lh, lh, lh)
         y += lh
+      } else if(packet.title != null) {
+        val lines = font.split(packet.title.component, ww / 2)
+        val scale = 1.0f + (1.0f / packet.title.depth)
+        val pose = guiGraphics.pose()
+        pose.pushPose()
+        pose.scale(scale, scale, scale)
+        for(line in lines) {
+          val ey = (y / scale).toInt()
+          val lh = ceil(lineHeight * scale).toInt()
+          guiGraphics.drawString(font, line, 0, ey, color.toInt(), shadow)
+          if(mouseY >= y && mouseY < (y + lh)) {
+            hoveredStyle = font.splitter.componentStyleAtWidth(line, (mouseX * scale).toInt()) ?: hoveredStyle
+          }
+          y += lh
+        }
+        pose.popPose()
       }
     }
     maxScroll = y + font.lineHeight * 2
