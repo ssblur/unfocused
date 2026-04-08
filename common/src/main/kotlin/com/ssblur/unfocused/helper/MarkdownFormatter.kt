@@ -174,7 +174,8 @@ object MarkdownFormatter {
           val link = match.groups[2]!!.value
 
           val isExternal = link.startsWith("http://") || link.startsWith("https://")
-          val command = if(commandsAllowed && link.startsWith("cmd://"))
+          val isPage = link.startsWith("page://")
+          val command = if((commandsAllowed && link.startsWith("cmd://")) || isPage)
               link.substring(5)
             else
               "/unfocused open $link"
@@ -189,7 +190,9 @@ object MarkdownFormatter {
                 .withUnderlined(true)
                 .withColor(linkColor.toInt())
                 .withClickEvent(ClickEvent(
-                  if(isExternal) ClickEvent.Action.OPEN_URL else ClickEvent.Action.RUN_COMMAND,
+                  if(isExternal) ClickEvent.Action.OPEN_URL
+                    else if(isPage) ClickEvent.Action.CHANGE_PAGE
+                    else ClickEvent.Action.RUN_COMMAND,
                   if(isExternal) link else command
                 ))
                 .withHoverEvent(

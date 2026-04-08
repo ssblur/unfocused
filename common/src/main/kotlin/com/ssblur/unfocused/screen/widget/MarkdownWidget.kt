@@ -8,6 +8,7 @@ import net.minecraft.client.gui.GuiGraphics
 import net.minecraft.client.gui.narration.NarratedElementType
 import net.minecraft.client.gui.narration.NarrationElementOutput
 import net.minecraft.core.registries.BuiltInRegistries
+import net.minecraft.network.chat.ClickEvent.Action
 import net.minecraft.network.chat.Component
 import net.minecraft.network.chat.Style
 import net.minecraft.world.item.ItemStack
@@ -54,10 +55,21 @@ class MarkdownWidget(
     linkColor = (r and 255 shl 16).toUInt() or (g and 255 shl 8).toUInt() or (b and 255).toUInt()
   }
 
+  /**
+   * Allows registering a custom handler for page:// links.
+   * { String -> Boolean }
+   */
+  var handlePageTurned = { page: String -> false }
+
   override fun mouseClicked(d: Double, e: Double, i: Int): Boolean {
     hoveredStyle?.let {
-      parent?.handleComponentClicked(it)
-      return true
+      if(it.clickEvent?.action != Action.CHANGE_PAGE) {
+        parent?.handleComponentClicked(it)
+        return true
+      } else if(it.clickEvent?.action == Action.CHANGE_PAGE) {
+        val page = it.clickEvent!!.value
+        return handlePageTurned(page)
+      }
     }
     return false
   }
