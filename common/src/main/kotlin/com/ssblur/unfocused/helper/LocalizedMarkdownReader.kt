@@ -13,12 +13,12 @@ object LocalizedMarkdownReader {
     val namespace = location.namespace
     val path = location.path
     val langPath = lang ?: Minecraft.getInstance().languageManager.selected.lowercase(getDefault())
-    return javaClass.getResourceAsStream("/assets/$namespace/unfocused/markdown/$langPath/$path.md") ?:
-      javaClass.getResourceAsStream("/assets/$namespace/unfocused/markdown/en_us/$path.md") ?:
+    return javaClass.getResourceAsStream("assets/$namespace/unfocused/markdown/$langPath/$path.md") ?:
+      javaClass.getResourceAsStream("assets/$namespace/unfocused/markdown/en_us/$path.md") ?:
       throw FileNotFoundException("Could not find markdown file at " +
-          "/assets/$namespace/unfocused/markdown/$langPath/$path.md " +
+          "assets/$namespace/unfocused/markdown/$langPath/$path.md " +
           "or " +
-          "/assets/$namespace/unfocused/markdown/en_us/$path.md"
+          "assets/$namespace/unfocused/markdown/en_us/$path.md"
       )
   }
 
