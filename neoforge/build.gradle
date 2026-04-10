@@ -49,7 +49,7 @@ processResources {
 
   filesMatching('META-INF/neoforge.mods.toml') {
     expand(
-      version: project.version,
+      version: project.version.contains("SNAPSHOT") ? project.version.split('-').dropRight(2).join("-") : project.version,
       kff_version: rootProject.kff_version
     )
   }
