@@ -5,7 +5,7 @@ import com.ssblur.unfocused.UtilityExpectPlatform
 import com.ssblur.unfocused.event.SimpleEvent
 import com.ssblur.unfocused.registry.RegistrySupplier
 import net.minecraft.network.chat.Component
-import net.minecraft.resources.ResourceLocation
+import net.minecraft.resources.Identifier
 import net.minecraft.world.item.CreativeModeTab
 import net.minecraft.world.item.Item
 import net.minecraft.world.item.ItemStack
@@ -17,7 +17,7 @@ import java.util.function.Supplier
 object CreativeTabs {
   private val acceptor: SimpleEvent<CreativeTabEntry> = SimpleEvent(retroactive = true, clearAfterRun = false)
 
-  data class CreativeTabEntry(val id: ResourceLocation, val item: ItemLike?, val stack: ItemStack?)
+  data class CreativeTabEntry(val id: Identifier, val item: ItemLike?, val stack: ItemStack?)
 
   fun ModInitializer.registerCreativeTab(
     id: String,
@@ -52,7 +52,7 @@ object CreativeTabs {
     return this
   }
 
-  fun Item.tab(location: ResourceLocation): Item {
+  fun Item.tab(location: Identifier): Item {
     acceptor.callback(CreativeTabEntry(location, this, null))
     return this
   }
@@ -64,7 +64,7 @@ object CreativeTabs {
     return this
   }
 
-  fun RegistrySupplier<Item>.tab(location: ResourceLocation): RegistrySupplier<Item> {
+  fun RegistrySupplier<Item>.tab(location: Identifier): RegistrySupplier<Item> {
     this.then {
       acceptor.callback(CreativeTabEntry(location, this.value, null))
     }
@@ -85,7 +85,7 @@ object CreativeTabs {
     this.second.tab(supplier)
   }
 
-  fun Pair<RegistrySupplier<Block>, RegistrySupplier<Item>>.tab(location: ResourceLocation) {
+  fun Pair<RegistrySupplier<Block>, RegistrySupplier<Item>>.tab(location: Identifier) {
     this.second.tab(location)
   }
 }

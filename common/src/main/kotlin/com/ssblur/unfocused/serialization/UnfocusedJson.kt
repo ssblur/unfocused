@@ -2,7 +2,7 @@ package com.ssblur.unfocused.serialization
 
 import com.google.gson.GsonBuilder
 import com.google.gson.ToNumberPolicy
-import net.minecraft.resources.ResourceLocation
+import net.minecraft.resources.Identifier
 import kotlin.reflect.KClass
 import kotlin.reflect.full.declaredMemberProperties
 
@@ -11,7 +11,7 @@ object UnfocusedJson {
     return GsonBuilder()
       .disableHtmlEscaping()
       .setNumberToNumberStrategy(ToNumberPolicy.LONG_OR_DOUBLE)
-      .registerTypeAdapter(ResourceLocation::class.java, ResourceLocationSerDe)
+      .registerTypeAdapter(Identifier::class.java, IdentifierSerDe)
   }
 
   fun streamBuilder(type: KClass<*>): GsonBuilder {

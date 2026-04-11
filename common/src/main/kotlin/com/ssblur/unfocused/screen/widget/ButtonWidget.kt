@@ -6,6 +6,7 @@ import net.minecraft.client.Minecraft
 import net.minecraft.client.gui.GuiGraphics
 import net.minecraft.client.gui.narration.NarratedElementType
 import net.minecraft.client.gui.narration.NarrationElementOutput
+import net.minecraft.client.renderer.RenderPipelines
 import net.minecraft.network.chat.Component
 import net.minecraft.sounds.SoundEvents
 
@@ -14,11 +15,11 @@ class ButtonWidget(x: Int, y: Int, w: Int, h: Int, val label: Component, val onC
 
   override fun draw(guiGraphics: GuiGraphics, mouseX: Int, mouseY: Int, f: Float) {
     if(disabled)
-      guiGraphics.blitSprite(BUTTON_DISABLED_TEXTURE, 0, 0, w, h)
+      guiGraphics.blitSprite(RenderPipelines.GUI, BUTTON_DISABLED_TEXTURE, 0, 0, w, h)
     else if(hovered)
-      guiGraphics.blitSprite(BUTTON_HIGHLIGHTED_TEXTURE, 0, 0, w, h)
+      guiGraphics.blitSprite(RenderPipelines.GUI, BUTTON_HIGHLIGHTED_TEXTURE, 0, 0, w, h)
     else
-      guiGraphics.blitSprite(BUTTON_TEXTURE, 0, 0, w, h)
+      guiGraphics.blitSprite(RenderPipelines.GUI, BUTTON_TEXTURE, 0, 0, w, h)
 
     val font = Minecraft.getInstance().font
     val lx = w / 2 - font.width(label) / 2

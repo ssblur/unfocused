@@ -3,6 +3,7 @@ package com.ssblur.unfocused.screen.widget
 import com.ssblur.unfocused.screen.renderable.PositionedRenderable
 import net.minecraft.client.gui.components.events.GuiEventListener
 import net.minecraft.client.gui.narration.NarratableEntry
+import net.minecraft.client.input.MouseButtonEvent
 
 abstract class PositionedWidget(
   x: Int,
@@ -19,14 +20,17 @@ abstract class PositionedWidget(
   }
   override fun isFocused(): Boolean = focused
 
-  override fun mouseClicked(d: Double, e: Double, i: Int): Boolean {
-    if(!isMouseOver(d, e)) return false
-    if(i == 0) return leftClick(d - x, e - y + scroll)
-    if(i == 1) return rightClick(d - x, e - y + scroll)
-    return super.mouseClicked(d, e, i)
+  override fun mouseClicked(event: MouseButtonEvent, bl: Boolean): Boolean {
+    val mx = event.x
+    val my = event.y
+    val button = event.button()
+    if(!isMouseOver(mx, my)) return false
+    if(button == 0) return leftClick(mx - x, my - y + scroll)
+    if(button == 1) return rightClick(mx - x, my - y + scroll)
+    return super.mouseClicked(event, bl)
   }
 
-  override fun isMouseOver(d: Double, e: Double) = mouseOver(d, e)
+  override fun isMouseOver(x: Double, y: Double) = mouseOver(x,y)
 
   open fun leftClick(x: Double, y: Double) = false
   open fun rightClick(x: Double, y: Double) = false

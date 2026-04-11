@@ -4,20 +4,21 @@ import com.ssblur.unfocused.ModInitializer
 import com.ssblur.unfocused.event.SimpleEvent
 import com.ssblur.unfocused.registry.RegistrySupplier
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider
+import net.minecraft.client.renderer.blockentity.state.BlockEntityRenderState
 import net.minecraft.world.level.block.entity.BlockEntity
 import net.minecraft.world.level.block.entity.BlockEntityType
 
 @Suppress("unused")
 object BlockEntityRendering:
-  SimpleEvent<BlockEntityRendering.BlockEntityAndRenderer<out BlockEntity>>(retroactive = true) {
-  data class BlockEntityAndRenderer<T: BlockEntity>(
+  SimpleEvent<BlockEntityRendering.BlockEntityAndRenderer<out BlockEntity, out BlockEntityRenderState>>(retroactive = true) {
+  data class BlockEntityAndRenderer<T: BlockEntity, S: BlockEntityRenderState>(
     val type: RegistrySupplier<BlockEntityType<T>>,
-    val renderer: BlockEntityRendererProvider<T>
+    val renderer: BlockEntityRendererProvider<T, S>
   )
 
-  fun <T: BlockEntity> ModInitializer.registerBlockEntityRenderer(
+  fun <T: BlockEntity, S: BlockEntityRenderState> ModInitializer.registerBlockEntityRenderer(
     type: RegistrySupplier<BlockEntityType<T>>,
-    renderer: BlockEntityRendererProvider<T>
+    renderer: BlockEntityRendererProvider<T, S>
   ) {
     BlockEntityRendering.callback(BlockEntityAndRenderer(type, renderer))
   }

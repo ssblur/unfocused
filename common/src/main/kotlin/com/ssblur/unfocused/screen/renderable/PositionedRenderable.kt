@@ -1,6 +1,5 @@
 package com.ssblur.unfocused.screen.renderable
 
-import com.mojang.blaze3d.systems.RenderSystem
 import net.minecraft.client.gui.GuiGraphics
 import net.minecraft.client.gui.components.Renderable
 import net.minecraft.client.gui.screens.Screen
@@ -33,12 +32,12 @@ abstract class PositionedRenderable(
     hovered = mouseOver(i.toDouble(), j.toDouble())
 
     val stack = guiGraphics.pose()
-    stack.pushPose()
+    stack.pushMatrix()
     // Scissor by default so that I don't have to worry about overdraw in widgets.
     if(scissor) guiGraphics.enableScissor(x, y, w+x, h+y)
     // Translate the stack so that any draws can be made relative to the widget's position.
     // (I'm lazy and want to be able to dynamically nest without doing math)
-    stack.translate(x.toFloat(), y.toFloat() - scroll.toFloat(), 0.0f)
+    stack.translate(x.toFloat(), y.toFloat() - scroll.toFloat())
 
     this.draw(guiGraphics, i - x, j - (y - scroll.roundToInt()), f)
 
@@ -54,13 +53,13 @@ abstract class PositionedRenderable(
       val barW = 2
       val barX = w - barW
 
-      RenderSystem.enableBlend()
+//      RenderSystem.enableBlend() TODO
       guiGraphics.fill(barX, barY, barX + barW, barY + barH, 0x44000000u.toInt())
     }
 
     this.drawOverlay(guiGraphics, i - x, j - (y - scroll.roundToInt()), f)
 
-    stack.popPose()
+    stack.popMatrix()
   }
 
   fun mouseOver(d: Double, e: Double): Boolean {

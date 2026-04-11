@@ -10,6 +10,7 @@ import com.ssblur.unfocused.test.menu.TestMenu
 import com.ssblur.unfocused.test.screen.TestScreen
 import net.minecraft.commands.CommandSourceStack
 import net.minecraft.commands.Commands
+import net.minecraft.server.permissions.Permissions
 import net.minecraft.world.flag.FeatureFlagSet
 import net.minecraft.world.inventory.MenuType
 import org.apache.logging.log4j.LogManager
@@ -30,7 +31,7 @@ object UnfocusedTestMod: ModInitializer("unfocusedtest") {
       dispatcher.register(
         Commands.literal("unfocused_test").then(
           Commands.literal("menu")
-            .requires { s: CommandSourceStack -> s.hasPermission(4) }
+            .requires { s: CommandSourceStack -> s.permissions().hasPermission(Permissions.COMMANDS_ADMIN) }
             .executes { testMenuCommand(it) }
         )
       )

@@ -5,19 +5,18 @@ import net.minecraft.core.Holder
 import net.minecraft.core.HolderOwner
 import net.minecraft.core.Registry
 import net.minecraft.core.registries.BuiltInRegistries
+import net.minecraft.resources.Identifier
 import net.minecraft.resources.ResourceKey
-import net.minecraft.resources.ResourceLocation
 import net.minecraft.tags.TagKey
 import java.util.*
 import java.util.function.Consumer
 import java.util.function.Predicate
 import java.util.function.Supplier
-import kotlin.jvm.optionals.getOrNull
 
 @Suppress("unused", "unchecked_cast")
-class RegistrySupplier<T>(
+class RegistrySupplier<T: Any>(
   val supplier: Supplier<T>,
-  val location: ResourceLocation? = null,
+  val location: Identifier? = null,
   val registryKey: ResourceKey<out Registry<T>>? = null,
 ): Supplier<T>, Holder<T> {
   var value: T? = null
@@ -48,7 +47,7 @@ class RegistrySupplier<T>(
   }
 
   fun ref() = location?.let {
-    BuiltInRegistries.REGISTRY.get(registryKey!!.location())?.getHolder(it)?.getOrNull()
+    BuiltInRegistries.REGISTRY.get(registryKey!!.identifier()).get()
   } as Holder.Reference<T>
 
   override fun value() = get()!!
@@ -61,7 +60,7 @@ class RegistrySupplier<T>(
   override fun `is`(tagKey: TagKey<T>) = tags().anyMatch { it == tagKey }
   override fun `is`(predicate: Predicate<ResourceKey<T>>) = key?.let { predicate.test(it) } ?: false
   override fun `is`(resourceKey: ResourceKey<T>) = resourceKey == key
-  override fun `is`(resourceLocation: ResourceLocation) = resourceLocation == location
+  override fun `is`(Identifier: Identifier) = Identifier == location
 
   @Deprecated("Deprecated in Java", ReplaceWith("equals"))
   override fun `is`(holder: Holder<T>) =

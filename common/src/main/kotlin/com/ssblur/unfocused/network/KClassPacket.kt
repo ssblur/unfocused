@@ -4,11 +4,11 @@ import com.ssblur.unfocused.serialization.UnfocusedJson
 import net.minecraft.network.RegistryFriendlyByteBuf
 import net.minecraft.network.codec.StreamCodec
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload
-import net.minecraft.resources.ResourceLocation
+import net.minecraft.resources.Identifier
 import kotlin.reflect.KClass
 
 @Suppress("unused")
-class KClassPacket<T: Any>(val location: ResourceLocation, type: KClass<T>, val value: Any): CustomPacketPayload {
+class KClassPacket<T: Any>(val location: Identifier, type: KClass<T>, val value: Any): CustomPacketPayload {
   init {
     types[location] = type
   }
@@ -18,10 +18,10 @@ class KClassPacket<T: Any>(val location: ResourceLocation, type: KClass<T>, val 
   }
 
   companion object {
-    val types: HashMap<ResourceLocation, KClass<*>> = hashMapOf()
+    val types: HashMap<Identifier, KClass<*>> = hashMapOf()
 
     fun <T: Any> codec(
-      location: ResourceLocation,
+      location: Identifier,
       type: KClass<T>
     ): StreamCodec<RegistryFriendlyByteBuf, KClassPacket<*>> {
       val gson = UnfocusedJson.streamBuilder(type).create()
@@ -37,7 +37,7 @@ class KClassPacket<T: Any>(val location: ResourceLocation, type: KClass<T>, val 
       )
     }
 
-    fun type(location: ResourceLocation): CustomPacketPayload.Type<out CustomPacketPayload> {
+    fun type(location: Identifier): CustomPacketPayload.Type<out CustomPacketPayload> {
       return CustomPacketPayload.Type(location)
     }
   }

@@ -1,5 +1,6 @@
 package com.ssblur.unfocused.constructors
 
+import net.minecraft.server.level.ServerLevel
 import net.minecraft.world.effect.MobEffect
 import net.minecraft.world.effect.MobEffectCategory
 import net.minecraft.world.entity.LivingEntity
@@ -20,7 +21,7 @@ class Effect(mobEffectCategory: MobEffectCategory, color: Int): MobEffect(mobEff
     this.function = function
   }
 
-  override fun applyEffectTick(livingEntity: LivingEntity, i: Int): Boolean {
+  override fun applyEffectTick(serverLevel: ServerLevel, livingEntity: LivingEntity, i: Int): Boolean {
     function?.apply(livingEntity)
     return true
   }

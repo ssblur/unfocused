@@ -5,6 +5,8 @@ import net.minecraft.client.gui.Font
 import net.minecraft.client.gui.GuiGraphics
 import net.minecraft.client.gui.narration.NarratedElementType
 import net.minecraft.client.gui.narration.NarrationElementOutput
+import net.minecraft.client.input.CharacterEvent
+import net.minecraft.client.input.KeyEvent
 import net.minecraft.network.chat.Component
 import net.minecraft.network.chat.Style
 import org.joml.Vector2i
@@ -127,7 +129,9 @@ class TextEntryWidget(x: Int, y: Int, w: Int, h: Int, scissor: Boolean = true) :
       guiGraphics.drawString(font, "|", cursorRenderPos.x, cursorRenderPos.y, cursorColor.toInt())
   }
 
-  override fun keyPressed(key: Int, j: Int, modifier: Int): Boolean {
+  override fun keyPressed(event: KeyEvent): Boolean {
+    val key = event.key
+    val modifier = event.modifiers()
     if(isFocused) {
       when(key) {
         69 -> return true // e
@@ -179,20 +183,23 @@ class TextEntryWidget(x: Int, y: Int, w: Int, h: Int, scissor: Boolean = true) :
             paste()
       }
     }
-    return super.keyPressed(key, j, modifier)
+    return super.keyPressed(event)
   }
 
-  override fun keyReleased(i: Int, j: Int, k: Int): Boolean {
-    return super.keyReleased(i, j, k)
+  override fun keyReleased(event: KeyEvent): Boolean {
+    return super.keyReleased(event)
   }
 
-  override fun charTyped(c: Char, i: Int): Boolean {
+
+  override fun charTyped(event: CharacterEvent): Boolean {
+    val c = event.codepoint
+
     if(isFocused) {
       text = text.substring(0, safeCursorIndex) + c + text.substring(safeCursorIndex)
       cursorIndex++
       return true
     }
-    return super.charTyped(c, i)
+    return super.charTyped(event)
   }
 
   override fun leftClick(x: Double, y: Double): Boolean {

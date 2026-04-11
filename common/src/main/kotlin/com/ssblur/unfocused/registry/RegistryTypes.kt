@@ -5,7 +5,7 @@ import net.minecraft.core.registries.Registries
 import net.minecraft.resources.ResourceKey
 
 object RegistryTypes {
-  open class RegistryType<T>(val key: ResourceKey<net.minecraft.core.Registry<T>>) {
+  open class RegistryType<T: Any>(val key: ResourceKey<net.minecraft.core.Registry<T>>) {
     private val registries: ArrayList<Registry<T>> = arrayListOf()
     private val subscribers: ArrayList<Subscriber<T>> = arrayListOf()
 
@@ -38,7 +38,7 @@ object RegistryTypes {
   val CREATIVE_TABS = RegistryType(Registries.CREATIVE_MODE_TAB)
   val PARTICLE_TYPES = RegistryType(Registries.PARTICLE_TYPE)
   val MENUS = RegistryType(Registries.MENU)
-  val ARMOR = RegistryType(Registries.ARMOR_MATERIAL)
+//  val ARMOR = RegistryType(Registries.ARMOR_MATERIAL) TODO
   val SOUNDS = RegistryType(Registries.SOUND_EVENT)
   val POINT_OF_INTEREST_TYPE = RegistryType(Registries.POINT_OF_INTEREST_TYPE)
   val VILLAGER_PROFESSION = RegistryType(Registries.VILLAGER_PROFESSION)

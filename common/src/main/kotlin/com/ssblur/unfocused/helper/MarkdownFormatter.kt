@@ -1,21 +1,23 @@
 package com.ssblur.unfocused.helper
 
-import net.minecraft.network.chat.*
-import net.minecraft.resources.ResourceLocation
+import net.minecraft.network.chat.Component
+import net.minecraft.network.chat.MutableComponent
+import net.minecraft.network.chat.Style
+import net.minecraft.resources.Identifier
 
 object MarkdownFormatter {
   object Markdown {
     data class Recipe(
-      val resource: ResourceLocation,
+      val resource: Identifier,
       val altText: String,
     )
     data class Item(
-      val resource: ResourceLocation,
+      val resource: Identifier,
       val text: String,
       val data: String?,
     )
     data class Image(
-      val resource: ResourceLocation,
+      val resource: Identifier,
       val altText: String
     )
     data class Title(
@@ -125,7 +127,7 @@ object MarkdownFormatter {
           val remainder = match.groups[3]!!.value
           elements.add(MarkdownPacket(component = lastComponent))
           lastComponent = Component.empty()
-          elements.add(MarkdownPacket(image = Markdown.Image(ResourceLocation.parse(image), altText)))
+          elements.add(MarkdownPacket(image = Markdown.Image(Identifier.parse(image), altText)))
           line = remainder
           continue
         } else if(imagesEnabled && line.matches("^<recipe (.*?)/?>.*".toRegex())) {
@@ -139,7 +141,7 @@ object MarkdownFormatter {
           if(line.matches("^.*?</recipe\\w*>.*".toRegex())) {
             val match = "^(.*?)</recipe\\w*>(.*)".toRegex().matchEntire(remainder)!!
             elements.add(MarkdownPacket(
-              recipe = Markdown.Recipe(ResourceLocation.parse(recipe), match.groups[1]!!.value)
+              recipe = Markdown.Recipe(Identifier.parse(recipe), match.groups[1]!!.value)
             ))
             line = match.groups[2]!!.value
             continue
@@ -162,7 +164,7 @@ object MarkdownFormatter {
           lastComponent = Component.empty()
           if(line.matches("^.*?</item\\w*>.*".toRegex())) {
             val match = "^(.*?)</item\\w*>(.*)".toRegex().matchEntire(remainder)!!
-            elements.add(MarkdownPacket(item = Markdown.Item(ResourceLocation.parse(item), match.groups[1]!!.value, data)))
+            elements.add(MarkdownPacket(item = Markdown.Item(Identifier.parse(item), match.groups[1]!!.value, data)))
             line = match.groups[2]!!.value
             continue
           }
@@ -189,24 +191,24 @@ object MarkdownFormatter {
                 .withStrikethrough(isStrikeThrough)
                 .withUnderlined(true)
                 .withColor(linkColor.toInt())
-                .withClickEvent(ClickEvent(
-                  if(isExternal) ClickEvent.Action.OPEN_URL
-                    else if(isPage) ClickEvent.Action.CHANGE_PAGE
-                    else ClickEvent.Action.RUN_COMMAND,
-                  if(isExternal) link else command
-                ))
-                .withHoverEvent(
-                  if(isExternal)
-                    HoverEvent(
-                      HoverEvent.Action.SHOW_TEXT,
-                      Component.translatable("extra.unfocused.go_to_external", link)
-                    )
-                  else
-                    HoverEvent(
-                      HoverEvent.Action.SHOW_TEXT,
-                      Component.translatable("extra.unfocused.go_to")
-                    )
-                )
+//                .withClickEvent(ClickEvent( TODO
+//                  if(isExternal) ClickEvent.Action.OPEN_URL
+//                    else if(isPage) ClickEvent.Action.CHANGE_PAGE
+//                    else ClickEvent.Action.RUN_COMMAND,
+//                  if(isExternal) link else command
+//                ))
+//                .withHoverEvent(
+//                  if(isExternal)
+//                    HoverEvent(
+//                      HoverEvent.Action.SHOW_TEXT,
+//                      Component.translatable("extra.unfocused.go_to_external", link)
+//                    )
+//                  else
+//                    HoverEvent(
+//                      HoverEvent.Action.SHOW_TEXT,
+//                      Component.translatable("extra.unfocused.go_to")
+//                    )
+//                )
             )
           )
           line = remainder

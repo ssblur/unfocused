@@ -72,9 +72,9 @@ class UnfocusedModFabric: ModInitializer {
     RegistryTypes.MENUS.subscribe{ location, supplier ->
       Registry.register(BuiltInRegistries.MENU, location, supplier.get())
     }
-    RegistryTypes.ARMOR.subscribe{ location, supplier ->
-      Registry.register(BuiltInRegistries.ARMOR_MATERIAL, location, supplier.get())
-    }
+//    RegistryTypes.ARMOR.subscribe{ location, supplier ->
+//      Registry.register(BuiltInRegistries.ARMOR_MATERIAL, location, supplier.get())
+//    }
     RegistryTypes.SOUNDS.subscribe{ location, supplier ->
       Registry.register(BuiltInRegistries.SOUND_EVENT, location, supplier.get())
     }
@@ -126,19 +126,19 @@ class UnfocusedModFabric: ModInitializer {
         ResourceKey.create(Registries.PLACED_FEATURE, modification.feature)
       )
     }
-    BiomeModifiers.carverEvent.register{ (_, modification) ->
-      BiomeModifications.addCarver(
-        { modification.isValid(it.biomeRegistryEntry) },
-        modification.step,
-        ResourceKey.create(Registries.CONFIGURED_CARVER, modification.carver)
-      )
-    }
+//    BiomeModifiers.carverEvent.register{ (_, modification) ->
+//      BiomeModifications.addCarver(
+//        { modification.isValid(it.biomeRegistryEntry) },
+//        modification.step,
+//        ResourceKey.create(Registries.CONFIGURED_CARVER, modification.carver)
+//      )
+//    }
     BiomeModifiers.spawnEvent.register{ (_, modification) ->
       for (entity in modification.spawners)
         BiomeModifications.addSpawn(
           { modification.isValid(it.biomeRegistryEntry) },
-          BuiltInRegistries.ENTITY_TYPE.get(entity.type).category,
-          BuiltInRegistries.ENTITY_TYPE.get(entity.type),
+          BuiltInRegistries.ENTITY_TYPE.get(entity.type).get().value().category,
+          BuiltInRegistries.ENTITY_TYPE.get(entity.type).get().value(),
           entity.weight,
           entity.minCount,
           entity.maxCount
@@ -147,9 +147,11 @@ class UnfocusedModFabric: ModInitializer {
 
     Trades.register { trade ->
       if (trade.profession != null)
-        TradeOfferHelper.registerVillagerOffers(trade.profession, trade.rarity) { list -> list.add(trade.trade) }
+        TradeOfferHelper.registerVillagerOffers(trade.profession!!, trade.rarity) { list -> list.add(trade.trade) }
       else
-        TradeOfferHelper.registerWanderingTraderOffers(trade.rarity) { list -> list.add(trade.trade) }
+        TradeOfferHelper.registerWanderingTraderOffers { builder ->
+          builder.addOffersToPool(Unfocused.location("wandering_trader"), trade.trade) // TODO
+        }
     }
 
     CommandRegistration.register {

@@ -4,7 +4,7 @@ import com.ssblur.unfocused.event.SimpleEvent
 import net.minecraft.network.PacketListener
 import net.minecraft.network.protocol.Packet
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload
-import net.minecraft.resources.ResourceLocation
+import net.minecraft.resources.Identifier
 import net.minecraft.server.level.ServerPlayer
 import net.minecraft.world.entity.player.Player
 import org.jetbrains.annotations.ApiStatus.Internal
@@ -21,11 +21,11 @@ object NetworkManager {
   }
 
   fun interface S2CMessenger {
-    fun send(location: ResourceLocation, type: KClass<*>, payload: Any, players: List<Player>)
+    fun send(location: Identifier, type: KClass<*>, payload: Any, players: List<Player>)
   }
 
   data class S2CType(
-    val location: ResourceLocation,
+    val location: Identifier,
     val type: KClass<out Any>,
     val receiver: S2CReceiver<out Any>
   )
@@ -41,13 +41,13 @@ object NetworkManager {
 
   /**
    * Register a new Client-to-Server message type.
-   * @param location A unique ResourceLocation for this message
+   * @param location A unique Identifier for this message
    * @param type Any KClass representing this message.
    * @param receiver A callback which is run when the client receives a message.
    * @return A callback which can be used to send this Network message
    */
   fun <T: Any> registerS2C(
-    location: ResourceLocation,
+    location: Identifier,
     type: KClass<T>,
     receiver: S2CReceiver<T>
   ): (T, List<Player>) -> Unit {
@@ -76,11 +76,11 @@ object NetworkManager {
   }
 
   fun interface C2SMessenger {
-    fun send(location: ResourceLocation, type: KClass<*>, payload: Any)
+    fun send(location: Identifier, type: KClass<*>, payload: Any)
   }
 
   data class C2SType(
-    val location: ResourceLocation,
+    val location: Identifier,
     val type: KClass<out Any>,
     val receiver: C2SReceiver<out Any>,
   )
@@ -91,12 +91,12 @@ object NetworkManager {
 
   /**
    * Register a new Client-to-Server message type.
-   * @param location A unique ResourceLocation for this message
+   * @param location A unique Identifier for this message
    * @param type Any KClass representing this message.
    * @param receiver A callback which is run when the server receives a message.
    * @return A callback which can be used to send this Network message
    */
-  fun <T: Any> registerC2S(location: ResourceLocation, type: KClass<T>, receiver: C2SReceiver<T>): (T) -> Unit {
+  fun <T: Any> registerC2S(location: Identifier, type: KClass<T>, receiver: C2SReceiver<T>): (T) -> Unit {
     val message = C2SType(location, type, receiver)
     c2sTypes += message
     c2sSubscribers.forEach { it.post(message) }

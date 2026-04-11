@@ -7,6 +7,7 @@ import net.minecraft.client.gui.components.Renderable
 import net.minecraft.client.gui.components.events.GuiEventListener
 import net.minecraft.client.gui.narration.NarratableEntry
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen
+import net.minecraft.client.input.MouseButtonEvent
 import net.minecraft.network.chat.Component
 import net.minecraft.world.entity.player.Inventory
 import net.minecraft.world.inventory.AbstractContainerMenu
@@ -42,8 +43,8 @@ abstract class UnfocusedScreen<T : AbstractContainerMenu>(abstractContainerMenu:
     renderTooltip(guiGraphics, i, j)
   }
 
-  override fun mouseClicked(d: Double, e: Double, i: Int): Boolean {
-    return super.mouseClicked(d, e, i)
+  override fun mouseClicked(event: MouseButtonEvent, bl: Boolean): Boolean {
+    return super.mouseClicked(event, bl)
   }
 
   override fun renderBg(

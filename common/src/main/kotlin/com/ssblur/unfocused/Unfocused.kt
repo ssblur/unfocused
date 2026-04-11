@@ -5,14 +5,15 @@ import com.mojang.brigadier.arguments.StringArgumentType
 import com.mojang.brigadier.context.CommandContext
 import com.ssblur.unfocused.biome.TemplatePoolInjects
 import com.ssblur.unfocused.command.CommandRegistration.registerCommand
-import com.ssblur.unfocused.config.GameRuleConfig
 import com.ssblur.unfocused.event.common.ServerStartEvent
+import com.ssblur.unfocused.helper.UnfocusedNotificationService
 import com.ssblur.unfocused.menu.SimpleMenuProvider
 import com.ssblur.unfocused.menu.UnfocusedBookMenu
 import com.ssblur.unfocused.test.UnfocusedTestMod
 import net.minecraft.commands.CommandSourceStack
 import net.minecraft.commands.Commands
 import net.minecraft.network.chat.Component
+import net.minecraft.server.permissions.Permissions
 import net.minecraft.world.flag.FeatureFlagSet
 import net.minecraft.world.inventory.MenuType
 import org.apache.logging.log4j.LogManager
@@ -28,16 +29,7 @@ object Unfocused: ModInitializer("unfocused") {
 
   fun init() {
     ServerStartEvent.register { server ->
-      server.addTickable {
-        if (server.tickCount % 20 == 7 ) {
-          GameRuleConfig.BOOL_RULES.map {
-            GameRuleConfig.BOOL_RULES[it.key] = server.gameRules.getRule(it.key).get()
-          }
-          GameRuleConfig.INT_RULES.map {
-            GameRuleConfig.INT_RULES[it.key] = server.gameRules.getRule(it.key).get()
-          }
-        }
-      }
+      server.notificationManager().registerService(UnfocusedNotificationService)
     }
 
     TemplatePoolInjects.init()
@@ -58,7 +50,7 @@ object Unfocused: ModInitializer("unfocused") {
             .executes { openCommandEmpty(it) }
         ).then(
           Commands.literal("config")
-            .requires { s: CommandSourceStack -> s.hasPermission(4) }
+            .requires { s: CommandSourceStack -> s.permissions().hasPermission(Permissions.COMMANDS_ADMIN) }
             .executes { configCommand(it) }
         )
       )

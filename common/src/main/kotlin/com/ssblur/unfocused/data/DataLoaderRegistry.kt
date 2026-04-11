@@ -3,7 +3,7 @@ package com.ssblur.unfocused.data
 import com.ssblur.unfocused.ModInitializer
 import com.ssblur.unfocused.event.Event
 import com.ssblur.unfocused.event.SimpleEvent
-import net.minecraft.resources.ResourceLocation
+import net.minecraft.resources.Identifier
 import kotlin.reflect.KClass
 
 @Suppress("unused", "UNCHECKED_CAST")
@@ -26,8 +26,8 @@ object DataLoaderRegistry {
     event.callback(entry as DataLoaderEntry<in Any>)
   }
 
-  fun <T: Any> ModInitializer.registerSimpleDataLoader(path: String, type: KClass<T>): MutableMap<ResourceLocation, T> {
-    val map: MutableMap<ResourceLocation, T> = mutableMapOf()
+  fun <T: Any> ModInitializer.registerSimpleDataLoader(path: String, type: KClass<T>): MutableMap<Identifier, T> {
+    val map: MutableMap<Identifier, T> = mutableMapOf()
     registerDataLoader(path, type as KClass<Any>) { resource, location ->
       map[location] = resource as T
     }

@@ -12,18 +12,17 @@ import net.minecraft.core.component.DataComponentType
 import net.minecraft.core.particles.ParticleOptions
 import net.minecraft.core.particles.ParticleType
 import net.minecraft.core.registries.Registries
+import net.minecraft.resources.Identifier
 import net.minecraft.resources.ResourceKey
-import net.minecraft.resources.ResourceLocation
 import net.minecraft.sounds.SoundEvent
 import net.minecraft.tags.TagKey
 import net.minecraft.world.effect.MobEffect
 import net.minecraft.world.entity.Entity
 import net.minecraft.world.entity.EntityType
 import net.minecraft.world.entity.ai.village.poi.PoiType
-import net.minecraft.world.entity.npc.VillagerProfession
+import net.minecraft.world.entity.npc.villager.VillagerProfession
 import net.minecraft.world.inventory.AbstractContainerMenu
 import net.minecraft.world.inventory.MenuType
-import net.minecraft.world.item.ArmorMaterial
 import net.minecraft.world.item.BlockItem
 import net.minecraft.world.item.Item
 import net.minecraft.world.item.crafting.Recipe
@@ -61,7 +60,7 @@ open class ModInitializer(val id: String) {
   val CREATIVE_TABS = RegistryTypes.CREATIVE_TABS.create(id)
   val PARTICLE_TYPES = RegistryTypes.PARTICLE_TYPES.create(id)
   val MENUS = RegistryTypes.MENUS.create(id)
-  val ARMOR = RegistryTypes.ARMOR.create(id)
+//  val ARMOR = RegistryTypes.ARMOR.create(id)
   val SOUNDS = RegistryTypes.SOUNDS.create(id)
   val VILLAGER_PROFESSIONS = RegistryTypes.VILLAGER_PROFESSION.create(id)
   val POINT_OF_INTEREST_TYPES = RegistryTypes.POINT_OF_INTEREST_TYPE.create(id)
@@ -83,9 +82,9 @@ open class ModInitializer(val id: String) {
     return ITEMS.register(id, supplier)
   }
 
-  fun registerArmorMaterial(id: String, supplier: Supplier<ArmorMaterial>): RegistrySupplier<ArmorMaterial> {
-    return ARMOR.register(id, supplier)
-  }
+//  fun registerArmorMaterial(id: String, supplier: Supplier<ArmorMaterial>): RegistrySupplier<ArmorMaterial> {
+//    return ARMOR.register(id, supplier)
+//  }
 
   fun registerEffect(id: String, supplier: Supplier<MobEffect>): RegistrySupplier<MobEffect> {
     return EFFECTS.register(id, supplier)
@@ -98,7 +97,7 @@ open class ModInitializer(val id: String) {
     return BLOCK_ENTITIES.register(id, supplier as Supplier<BlockEntityType<*>>) as RegistrySupplier<BlockEntityType<T>>
   }
 
-  fun <T> registerDataComponent(id: String, consumer: Consumer<DataComponentType.Builder<T>>): DataComponentType<T> {
+  fun <T: Any> registerDataComponent(id: String, consumer: Consumer<DataComponentType.Builder<T>>): DataComponentType<T> {
     val builder = DataComponentType.builder<T>()
     consumer.accept(builder)
     val componentType = builder.build()
@@ -113,7 +112,7 @@ open class ModInitializer(val id: String) {
     return componentType
   }
 
-  fun <T: Entity> registerEntity(id: String, supplier: Supplier<EntityType<T?>>): RegistrySupplier<EntityType<T>> {
+  fun <T: Entity> registerEntity(id: String, supplier: Supplier<EntityType<T>>): RegistrySupplier<EntityType<T>> {
     return ENTITIES.register(id, supplier as Supplier<EntityType<*>>) as RegistrySupplier<EntityType<T>>
   }
 
@@ -187,15 +186,15 @@ open class ModInitializer(val id: String) {
     return POINT_OF_INTEREST_TYPES.register(id, supplier)
   }
 
-  fun location(path: String): ResourceLocation {
-    return if(path.contains(':')) ResourceLocation.parse(path)
-      else ResourceLocation.fromNamespaceAndPath(id, path)
+  fun location(path: String): Identifier {
+    return if(path.contains(':')) Identifier.parse(path)
+      else Identifier.fromNamespaceAndPath(id, path)
   }
 
-  fun <T> registerTag(registry: ResourceKey<Registry<T>>, path: ResourceLocation) = TagKey.create(registry, path)
-  fun <T> registerTag(registry: ResourceKey<Registry<T>>, path: String) = registerTag(registry, location(path))
-  fun registerItemTag(path: ResourceLocation) = registerTag(Registries.ITEM, path)
+  fun <T: Any> registerTag(registry: ResourceKey<Registry<T>>, path: Identifier) = TagKey.create(registry, path)
+  fun <T: Any> registerTag(registry: ResourceKey<Registry<T>>, path: String) = registerTag(registry, location(path))
+  fun registerItemTag(path: Identifier) = registerTag(Registries.ITEM, path)
   fun registerItemTag(path: String) = registerItemTag(location(path))
-  fun registerBlockTag(path: ResourceLocation) = registerTag(Registries.BLOCK, path)
+  fun registerBlockTag(path: Identifier) = registerTag(Registries.BLOCK, path)
   fun registerBlockTag(path: String) = registerBlockTag(location(path))
 }

@@ -2,6 +2,7 @@ package com.ssblur.unfocused.screen.renderable
 
 import com.ssblur.unfocused.Unfocused
 import net.minecraft.client.gui.GuiGraphics
+import net.minecraft.client.renderer.RenderPipelines
 
 @Suppress("unused")
 class BlackBox(x: Int, y: Int, w: Int, h: Int,) :
@@ -12,7 +13,7 @@ class BlackBox(x: Int, y: Int, w: Int, h: Int,) :
     mouseY: Int,
     f: Float
   ) {
-    guiGraphics.blitSprite(TEXTURE, 0, 0, w, h)
+    guiGraphics.blitSprite(RenderPipelines.GUI, TEXTURE, 0, 0, w, h)
   }
 
   companion object {

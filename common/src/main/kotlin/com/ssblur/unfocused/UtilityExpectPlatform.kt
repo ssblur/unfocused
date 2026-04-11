@@ -6,9 +6,7 @@ import dev.architectury.injectables.annotations.ExpectPlatform
 import net.fabricmc.api.EnvType
 import net.fabricmc.api.Environment
 import net.minecraft.client.color.block.BlockColor
-import net.minecraft.client.color.item.ItemColor
 import net.minecraft.world.item.CreativeModeTab
-import net.minecraft.world.level.ItemLike
 import net.minecraft.world.level.block.Block
 import java.nio.file.Path
 import java.util.function.Supplier
@@ -27,12 +25,12 @@ object UtilityExpectPlatform {
   @JvmStatic
   fun isServer(): Boolean = throw AssertionError()
 
-  @Environment(EnvType.CLIENT)
-  @ExpectPlatform
-  @JvmStatic
-  fun registerColor(color: ItemColor, vararg items: Supplier<ItemLike>) {
-    throw AssertionError()
-  }
+//  @Environment(EnvType.CLIENT)
+//  @ExpectPlatform
+//  @JvmStatic
+//  fun registerColor(color: DyedItemColor, vararg items: Supplier<ItemLike>) {
+//    throw AssertionError()
+//  }
 
   @Environment(EnvType.CLIENT)
   @ExpectPlatform

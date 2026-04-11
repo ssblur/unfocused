@@ -2,6 +2,7 @@ package com.ssblur.unfocused.screen.renderable
 
 import com.ssblur.unfocused.Unfocused
 import net.minecraft.client.gui.GuiGraphics
+import net.minecraft.client.renderer.RenderPipelines
 
 class SinglePageBackground(x: Int, y: Int, w: Int, h: Int,) :
   PositionedRenderable(x, y, w, h, true) {
@@ -11,7 +12,7 @@ class SinglePageBackground(x: Int, y: Int, w: Int, h: Int,) :
     mouseY: Int,
     f: Float
   ) {
-    guiGraphics.blitSprite(TEXTURE, 0, 0, w, h)
+    guiGraphics.blitSprite(RenderPipelines.GUI, TEXTURE, 0, 0, w, h)
   }
 
   companion object {
