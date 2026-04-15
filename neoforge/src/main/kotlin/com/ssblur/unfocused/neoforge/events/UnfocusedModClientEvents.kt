@@ -8,6 +8,7 @@ import com.ssblur.unfocused.rendering.ParticleFactories
 import net.minecraft.client.Minecraft
 import net.minecraft.client.particle.ParticleProvider
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider
+import net.minecraft.client.renderer.blockentity.state.BlockEntityRenderState
 import net.minecraft.client.renderer.entity.EntityRendererProvider
 import net.minecraft.world.entity.Entity
 import net.minecraft.world.level.block.entity.BlockEntity
@@ -39,7 +40,10 @@ object UnfocusedModClientEvents {
 
   fun registerEntityRendererEvent(event: EntityRenderersEvent.RegisterRenderers) {
     BlockEntityRendering.register { pair ->
-      event.registerBlockEntityRenderer(pair.type.get(), pair.renderer as BlockEntityRendererProvider<BlockEntity>)
+      event.registerBlockEntityRenderer(
+        pair.type.get(),
+        pair.renderer as BlockEntityRendererProvider<BlockEntity, BlockEntityRenderState>
+      )
     }
     EntityRendering.register { pair ->
       event.registerEntityRenderer(pair.type.get(), pair.renderer as EntityRendererProvider<Entity>)
@@ -52,8 +56,8 @@ object UnfocusedModClientEvents {
         event.registerSpecial(it.particle, it.provider)
       }.ifRight {
         event.registerSpriteSet(it.particle) { sprite ->
-          ParticleProvider { options, clientLevel, d, e, f, g, h, i ->
-            it.provider(sprite).createParticle(options, clientLevel, d, e, f, g, h, i)
+          ParticleProvider { options, clientLevel, d, e, f, g, h, i, random ->
+            it.provider(sprite).createParticle(options, clientLevel, d, e, f, g, h, i, random)
           }
         }
       }
@@ -70,11 +74,11 @@ object UnfocusedModClientEvents {
     }
   }
 
-  fun itemColorEvent(event: RegisterColorHandlersEvent.Item) {
-    UtilityExpectPlatformImpl.ITEM_COLORS.forEach { (color, supplier) ->
-      event.register(color, supplier.get())
-    }
-  }
+//  fun itemColorEvent(event: RegisterColorHandlersEvent.Item) {
+//    UtilityExpectPlatformImpl.ITEM_COLORS.forEach { (color, supplier) ->
+//      event.register(color, supplier.get())
+//    }
+//  }
 
   fun registerScreenEvent(event: RegisterMenuScreensEvent) {
     ClientScreenRegistrationEvent.register{
@@ -100,7 +104,7 @@ object UnfocusedModClientEvents {
     NeoForge.EVENT_BUS.addListener(::logoutEvent)
     NeoForge.EVENT_BUS.addListener(EventPriority.LOW, ::hudRenderEvent)
 
-    bus.addListener(::itemColorEvent)
+//    bus.addListener(::itemColorEvent)
     bus.addListener(::blockColorEvent)
     bus.addListener(::registerEntityRendererEvent)
     bus.addListener(::registerScreenEvent)

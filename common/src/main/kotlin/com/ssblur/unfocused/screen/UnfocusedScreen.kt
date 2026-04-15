@@ -1,6 +1,5 @@
 package com.ssblur.unfocused.screen
 
-import com.ssblur.unfocused.extension.WidgetExtension.renderAll
 import com.ssblur.unfocused.screen.widget.PositionedWidget
 import net.minecraft.client.gui.GuiGraphics
 import net.minecraft.client.gui.components.Renderable
@@ -11,7 +10,6 @@ import net.minecraft.client.input.MouseButtonEvent
 import net.minecraft.network.chat.Component
 import net.minecraft.world.entity.player.Inventory
 import net.minecraft.world.inventory.AbstractContainerMenu
-import net.minecraft.world.inventory.Slot
 
 abstract class UnfocusedScreen<T : AbstractContainerMenu>(abstractContainerMenu: T, inventory: Inventory, component: Component) :
   AbstractContainerScreen<T>(abstractContainerMenu, inventory, component) {
@@ -33,18 +31,22 @@ abstract class UnfocusedScreen<T : AbstractContainerMenu>(abstractContainerMenu:
     widgets = mutableListOf()
   }
 
-  fun renderWidgets(guiGraphics: GuiGraphics, i: Int, j: Int, f: Float) {
-    widgets.renderAll(guiGraphics, i, j, f)
-  }
-
   override fun render(guiGraphics: GuiGraphics, i: Int, j: Int, f: Float) {
     super.render(guiGraphics, i, j, f)
-//    renderWidgets(guiGraphics, i, j, f)
     renderTooltip(guiGraphics, i, j)
+  }
+
+  override fun renderContents(guiGraphics: GuiGraphics, i: Int, j: Int, f: Float) {
+    super.renderContents(guiGraphics, i, j, f)
   }
 
   override fun mouseClicked(event: MouseButtonEvent, bl: Boolean): Boolean {
     return super.mouseClicked(event, bl)
+  }
+
+  override fun mouseScrolled(d: Double, e: Double, f: Double, g: Double): Boolean {
+    widgets.forEach { if(it.mouseScrolled(d, e, f, g)) return true }
+    return super.mouseScrolled(d, e, f, g)
   }
 
   override fun renderBg(
@@ -52,10 +54,14 @@ abstract class UnfocusedScreen<T : AbstractContainerMenu>(abstractContainerMenu:
     f: Float,
     i: Int,
     j: Int
-  ) {}
+  ) {
+    renderBlurredBackground(guiGraphics)
+  }
+
+  override fun isInGameUi(): Boolean = true
+  override fun isPauseScreen(): Boolean = false
+  override fun canInterruptWithAnotherScreen(): Boolean = true
+  override fun isAllowedInPortal(): Boolean = false
 
   override fun renderLabels(guiGraphics: GuiGraphics, i: Int, j: Int) {}
-
-  fun renderSlotBackground(slot: Slot) { TODO() }
-  fun renderAllSlotBackgrounds() { TODO() }
 }

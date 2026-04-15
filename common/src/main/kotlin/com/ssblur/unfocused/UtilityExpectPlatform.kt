@@ -3,8 +3,6 @@
 package com.ssblur.unfocused
 
 import dev.architectury.injectables.annotations.ExpectPlatform
-import net.fabricmc.api.EnvType
-import net.fabricmc.api.Environment
 import net.minecraft.client.color.block.BlockColor
 import net.minecraft.world.item.CreativeModeTab
 import net.minecraft.world.level.block.Block
@@ -32,7 +30,7 @@ object UtilityExpectPlatform {
 //    throw AssertionError()
 //  }
 
-  @Environment(EnvType.CLIENT)
+//  @Environment(EnvType.CLIENT)
   @ExpectPlatform
   @JvmStatic
   fun registerColor(color: BlockColor, vararg blocks: Supplier<Block>) {

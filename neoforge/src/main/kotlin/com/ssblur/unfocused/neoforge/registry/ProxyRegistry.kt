@@ -6,7 +6,7 @@ import net.minecraft.resources.ResourceKey
 import net.neoforged.bus.api.IEventBus
 import net.neoforged.neoforge.registries.DeferredRegister
 
-class ProxyRegistry<T>(val registry: ResourceKey<Registry<T>>, val registryType: RegistryTypes.RegistryType<T>) {
+class ProxyRegistry<T : Any>(val registry: ResourceKey<Registry<T>>, val registryType: RegistryTypes.RegistryType<T>) {
   private val registries: HashMap<String, DeferredRegister<T>> = hashMapOf()
   private var bus: IEventBus? = null
   fun get(id: String): DeferredRegister<T> {

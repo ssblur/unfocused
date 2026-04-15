@@ -10,6 +10,7 @@ import net.minecraft.server.MinecraftServer
 import net.minecraft.world.level.levelgen.structure.pools.SinglePoolElement
 import net.minecraft.world.level.levelgen.structure.pools.StructurePoolElementType
 import net.minecraft.world.level.levelgen.structure.pools.StructureTemplatePool
+import kotlin.jvm.optionals.getOrNull
 
 object TemplatePoolInjects {
   data class PoolInject(
@@ -31,8 +32,8 @@ object TemplatePoolInjects {
   val injects = Unfocused.registerSimpleDataLoader("unfocused/template_pool_injects", PoolInject::class)
 
   fun inject(server: MinecraftServer) {
-    val poolRegistry = server.registryAccess().get(Registries.TEMPLATE_POOL).orElseThrow().value()
-    val processorLists = server.registryAccess().get(Registries.PROCESSOR_LIST).orElseThrow().value()
+    val poolRegistry = server.registryAccess().get(Registries.TEMPLATE_POOL).getOrNull()?.value() ?: return
+    val processorLists = server.registryAccess().get(Registries.PROCESSOR_LIST).getOrNull()?.value() ?: return
 
     injects.forEach { (_, poolInject) ->
       val pool = poolRegistry.get(poolInject.pool).get().value()

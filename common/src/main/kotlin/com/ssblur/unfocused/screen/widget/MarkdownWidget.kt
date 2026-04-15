@@ -2,6 +2,7 @@ package com.ssblur.unfocused.screen.widget
 
 import com.ssblur.unfocused.helper.MarkdownFormatter
 import com.ssblur.unfocused.helper.MarkdownFormatter.asComponent
+import com.ssblur.unfocused.mixin.ScreenAccessor
 import net.minecraft.client.Minecraft
 import net.minecraft.client.gui.Font
 import net.minecraft.client.gui.GuiGraphics
@@ -61,17 +62,19 @@ class MarkdownWidget(
    * Allows registering a custom handler for page:// links.
    * { String -> Boolean }
    */
+  @Suppress("unused")
   var handlePageTurned = { page: Int -> false }
 
   override fun mouseClicked(event: MouseButtonEvent, bl: Boolean): Boolean {
     hoveredStyle?.let {
-      if(it.clickEvent?.action() != Action.CHANGE_PAGE) {
-//        parent?.mouseClicked(event, bl) TODO
-        return true
-      } else if(it.clickEvent?.action() == Action.CHANGE_PAGE) {
-        val page = (it.clickEvent as ClickEvent.ChangePage).page()
-        return handlePageTurned(page)
-      }
+      if(it.clickEvent != null)
+        if(it.clickEvent?.action() != Action.CHANGE_PAGE) {
+          ScreenAccessor.callDefaultHandleGameClickEvent(it.clickEvent!!, Minecraft.getInstance(), parent)
+          return true
+        } else if(it.clickEvent?.action() == Action.CHANGE_PAGE) {
+          val page = (it.clickEvent as ClickEvent.ChangePage).page()
+          return handlePageTurned(page)
+        }
     }
     return false
   }
@@ -92,7 +95,7 @@ class MarkdownWidget(
         for(line in lines) {
           guiGraphics.drawString(font, line, 0, y, color.toInt(), shadow)
           if(mouseY >= y && mouseY < (y + lineHeight)) {
-//            hoveredStyle = font.splitter.componentStyleAtWidth(line, mouseX) ?: hoveredStyle TODO
+            hoveredStyle = MarkdownFormatter.getStyleAtWidth(line, mouseX, font) ?: hoveredStyle
           }
           y += lineHeight
         }
@@ -101,7 +104,7 @@ class MarkdownWidget(
           ItemStack(BuiltInRegistries.ITEM.get(packet.item.resource).get())
         itemCache[packet.item]?.let{
           guiGraphics.renderFakeItem(it, 5, y+5)
-          guiGraphics.drawWordWrap(font, it.hoverName, 26, y + 10, ww, color.toInt())
+          guiGraphics.drawWordWrap(font, it.hoverName, 26, y + 10, ww, color.toInt(), false)
           val oy = y
           y += max(font.wordWrapHeight(it.hoverName, w), 26)
           if(mouseY in oy..y) hoveredItem = it
@@ -116,7 +119,17 @@ class MarkdownWidget(
         y += font.wordWrapHeight(Component.translatable("extra.unfocused.unimplemented_2"), ww)
       } else if(packet.image != null) {
         val lh = font.lineHeight * 8
-        guiGraphics.blit(packet.image.resource, 0, y, 0, 0, lh.toFloat(), lh.toFloat(), lh.toFloat(), lh.toFloat())
+        guiGraphics.blit(
+          packet.image.resource,
+          0,
+          y,
+          lh,
+          y + lh,
+          0f,
+          1f,
+          0f,
+          1f
+        )
         y += lh
       } else if(packet.title != null) {
         val lines = font.split(packet.title.component, ww / 2)
@@ -129,7 +142,7 @@ class MarkdownWidget(
           val lh = ceil(lineHeight * scale).toInt()
           guiGraphics.drawString(font, line, 0, ey, color.toInt(), shadow)
           if(mouseY >= y && mouseY < (y + lh)) {
-//            hoveredStyle = font.splitter.componentStyleAtWidth(line, (mouseX * scale).toInt()) ?: hoveredStyle TODO
+            hoveredStyle = MarkdownFormatter.getStyleAtWidth(line, (mouseX * scale).toInt(), font) ?: hoveredStyle
           }
           y += lh
         }
@@ -141,8 +154,9 @@ class MarkdownWidget(
 
   override fun drawOverlay(guiGraphics: GuiGraphics, mouseX: Int, mouseY: Int, f: Float) {
     super.drawOverlay(guiGraphics, mouseX, mouseY, f)
-    if(hoveredStyle != null) guiGraphics.renderComponentHoverEffect(font, hoveredStyle, mouseX, mouseY)
-//    if(hoveredItem != null) guiGraphics.renderTooltip(font, hoveredItem!!, mouseX, mouseY) TODO
+    if(hoveredStyle != null) guiGraphics.renderComponentHoverEffect(font, hoveredStyle, mouseX + x, mouseY - scroll.toInt() + 24)
+
+    // TODO add hovered item tooltip
   }
 
   override fun updateNarration(narrationElementOutput: NarrationElementOutput) {

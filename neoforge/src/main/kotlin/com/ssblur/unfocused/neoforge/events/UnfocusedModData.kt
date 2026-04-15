@@ -1,15 +1,17 @@
 package com.ssblur.unfocused.neoforge.events
 
+import com.ssblur.unfocused.Unfocused
 import com.ssblur.unfocused.data.DataLoaderListener
 import com.ssblur.unfocused.data.DataLoaderRegistry
 import net.minecraft.resources.Identifier
-import net.neoforged.neoforge.event.AddReloadListenerEvent
+import net.neoforged.neoforge.event.AddServerReloadListenersEvent
 
 
 object UnfocusedModData {
-  fun event(event: AddReloadListenerEvent) {
+  fun event(event: AddServerReloadListenersEvent) {
     DataLoaderRegistry.register {
-      event.addListener(DataLoaderListener(it.path, it.type, it.failEasy) { value, location: Identifier ->
+      event.addListener(Unfocused.location("unfocused_reload"),
+        DataLoaderListener(it.path, it.type, it.failEasy) { value, location: Identifier ->
         it.loader.load(value, location)
       })
     }

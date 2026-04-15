@@ -13,7 +13,7 @@ import net.minecraft.core.registries.Registries
 import net.minecraft.resources.ResourceKey
 import net.minecraft.server.level.ServerLevel
 import net.minecraft.server.level.ServerPlayer
-import net.minecraft.world.entity.npc.VillagerTrades
+import net.minecraft.world.entity.npc.villager.VillagerTrades
 import net.minecraft.world.level.storage.loot.LootPool
 import net.neoforged.bus.api.EventPriority
 import net.neoforged.bus.api.IEventBus

@@ -53,7 +53,6 @@ abstract class PositionedRenderable(
       val barW = 2
       val barX = w - barW
 
-//      RenderSystem.enableBlend() TODO
       guiGraphics.fill(barX, barY, barX + barW, barY + barH, 0x44000000u.toInt())
     }
 

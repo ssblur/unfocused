@@ -1,9 +1,10 @@
 package com.ssblur.unfocused.helper
 
-import net.minecraft.network.chat.Component
-import net.minecraft.network.chat.MutableComponent
-import net.minecraft.network.chat.Style
+import net.minecraft.client.gui.Font
+import net.minecraft.network.chat.*
 import net.minecraft.resources.Identifier
+import net.minecraft.util.FormattedCharSequence
+import java.net.URI
 
 object MarkdownFormatter {
   object Markdown {
@@ -176,14 +177,17 @@ object MarkdownFormatter {
           val link = match.groups[2]!!.value
 
           val isExternal = link.startsWith("http://") || link.startsWith("https://")
-          val isPage = link.startsWith("page://")
-          val command = if((commandsAllowed && link.startsWith("cmd://")) || isPage)
-              link.substring(5)
-            else
-              "/unfocused open $link"
           val remainder = match.groups[3]!!.value
           lastComponent = append(lastComponent, current, isBold, isItalic, isStrikeThrough, isUnderline)
           current = ""
+          val clickEvent = if(isExternal)
+            ClickEvent.OpenUrl(URI.create(link))
+          else
+            ClickEvent.RunCommand("unfocused open $link")
+          val hoverEvent = if(isExternal)
+            HoverEvent.ShowText(Component.translatable("extra.unfocused.go_to_external", link))
+          else
+            HoverEvent.ShowText(Component.translatable("extra.unfocused.go_to"))
           lastComponent = lastComponent.append(Component.literal(text).withStyle(
               Style.EMPTY
                 .withBold(isBold)
@@ -191,24 +195,8 @@ object MarkdownFormatter {
                 .withStrikethrough(isStrikeThrough)
                 .withUnderlined(true)
                 .withColor(linkColor.toInt())
-//                .withClickEvent(ClickEvent( TODO
-//                  if(isExternal) ClickEvent.Action.OPEN_URL
-//                    else if(isPage) ClickEvent.Action.CHANGE_PAGE
-//                    else ClickEvent.Action.RUN_COMMAND,
-//                  if(isExternal) link else command
-//                ))
-//                .withHoverEvent(
-//                  if(isExternal)
-//                    HoverEvent(
-//                      HoverEvent.Action.SHOW_TEXT,
-//                      Component.translatable("extra.unfocused.go_to_external", link)
-//                    )
-//                  else
-//                    HoverEvent(
-//                      HoverEvent.Action.SHOW_TEXT,
-//                      Component.translatable("extra.unfocused.go_to")
-//                    )
-//                )
+                .withClickEvent(clickEvent)
+                .withHoverEvent(hoverEvent)
             )
           )
           line = remainder
@@ -228,6 +216,17 @@ object MarkdownFormatter {
     }
     elements.add(MarkdownPacket(component = lastComponent))
     return elements
+  }
+
+  fun getStyleAtWidth(text: FormattedCharSequence, width: Int, font: Font): Style? {
+    var w = 0
+    var out: Style? = null
+    text.accept { i, style, char ->
+      w += font.width(FormattedText.of(char.toChar().toString(), style))
+      if(w >= width && out == null) out = style
+      w < width
+    }
+    return out
   }
 
   @Suppress("unused")

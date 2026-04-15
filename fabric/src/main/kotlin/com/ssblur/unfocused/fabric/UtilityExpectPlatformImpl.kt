@@ -3,7 +3,6 @@
 package com.ssblur.unfocused.fabric
 
 import net.fabricmc.api.EnvType
-import net.fabricmc.api.Environment
 import net.fabricmc.fabric.api.client.rendering.v1.ColorProviderRegistry
 import net.fabricmc.fabric.api.itemgroup.v1.FabricItemGroup
 import net.fabricmc.loader.api.FabricLoader
@@ -31,7 +30,7 @@ object UtilityExpectPlatformImpl {
 //    ColorProviderRegistry.register(color, *items.map { it.get() }.toTypedArray())
 //  }
 
-  @Environment(EnvType.CLIENT)
+//  @Environment(EnvType.CLIENT)
   @JvmStatic
   fun registerColor(color: BlockColor, vararg blocks: Supplier<Block>) {
     ColorProviderRegistry.BLOCK.register(color, *blocks.map { it.get() }.toTypedArray())

@@ -12,7 +12,7 @@ class SinglePageBackground(x: Int, y: Int, w: Int, h: Int,) :
     mouseY: Int,
     f: Float
   ) {
-    guiGraphics.blitSprite(RenderPipelines.GUI, TEXTURE, 0, 0, w, h)
+    guiGraphics.blitSprite(RenderPipelines.GUI_TEXTURED, TEXTURE, 0, 0, w, h)
   }
 
   companion object {
