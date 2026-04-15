@@ -15,7 +15,6 @@ import java.io.FileNotFoundException
 class UnfocusedBookScreen(val bookMenu: UnfocusedBookMenu, inventory: Inventory, component: Component) :
   UnfocusedScreen<UnfocusedBookMenu>(bookMenu, inventory, component) {
   var initialized = false
-
   override fun init() {
     imageWidth = 265
     imageHeight = 220

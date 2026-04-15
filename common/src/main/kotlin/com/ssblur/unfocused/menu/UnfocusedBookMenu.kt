@@ -26,7 +26,7 @@ class UnfocusedBookMenu(i: Int, val inventory: Inventory? = null): AbstractConta
       slot.set(item)
     }
   private val container = SimpleContainer(1)
-  private val slot: Slot = addSlot(Slot(container, 0, Integer.MAX_VALUE, Integer.MAX_VALUE))
+  private val slot: Slot = addSlot(Slot(container, 0, Integer.MAX_VALUE - 40, Integer.MAX_VALUE - 40))
   override fun quickMoveStack(player: Player, i: Int): ItemStack = ItemStack.EMPTY
   override fun stillValid(player: Player) = true
 }
