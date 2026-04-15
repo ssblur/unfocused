@@ -60,10 +60,10 @@ open class ModInitializer(val id: String) {
   val CREATIVE_TABS = RegistryTypes.CREATIVE_TABS.create(id)
   val PARTICLE_TYPES = RegistryTypes.PARTICLE_TYPES.create(id)
   val MENUS = RegistryTypes.MENUS.create(id)
-//  val ARMOR = RegistryTypes.ARMOR.create(id)
   val SOUNDS = RegistryTypes.SOUNDS.create(id)
   val VILLAGER_PROFESSIONS = RegistryTypes.VILLAGER_PROFESSION.create(id)
   val POINT_OF_INTEREST_TYPES = RegistryTypes.POINT_OF_INTEREST_TYPE.create(id)
+  val GAMERULES = RegistryTypes.GAMERULE.create(id)
 
   fun registerBlock(id: String, supplier: Supplier<Block>): RegistrySupplier<Block> {
     return BLOCKS.register(id, supplier)
@@ -81,10 +81,6 @@ open class ModInitializer(val id: String) {
   fun registerItem(id: String, supplier: Supplier<Item>): RegistrySupplier<Item> {
     return ITEMS.register(id, supplier)
   }
-
-//  fun registerArmorMaterial(id: String, supplier: Supplier<ArmorMaterial>): RegistrySupplier<ArmorMaterial> {
-//    return ARMOR.register(id, supplier)
-//  }
 
   fun registerEffect(id: String, supplier: Supplier<MobEffect>): RegistrySupplier<MobEffect> {
     return EFFECTS.register(id, supplier)

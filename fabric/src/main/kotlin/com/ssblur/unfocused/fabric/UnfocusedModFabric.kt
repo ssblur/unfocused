@@ -72,9 +72,6 @@ class UnfocusedModFabric: ModInitializer {
     RegistryTypes.MENUS.subscribe{ location, supplier ->
       Registry.register(BuiltInRegistries.MENU, location, supplier.get())
     }
-//    RegistryTypes.ARMOR.subscribe{ location, supplier ->
-//      Registry.register(BuiltInRegistries.ARMOR_MATERIAL, location, supplier.get())
-//    }
     RegistryTypes.SOUNDS.subscribe{ location, supplier ->
       Registry.register(BuiltInRegistries.SOUND_EVENT, location, supplier.get())
     }
@@ -84,6 +81,9 @@ class UnfocusedModFabric: ModInitializer {
     RegistryTypes.POINT_OF_INTEREST_TYPE.subscribe { location, supplier ->
       val v = supplier.get()
       PointOfInterestHelper.register(location, v.maxTickets, v.validRange, v.matchingStates)
+    }
+    RegistryTypes.GAMERULE.subscribe { location, supplier ->
+      Registry.register(BuiltInRegistries.GAME_RULE, location, supplier.get())
     }
 
     ServerMessageEvents.ALLOW_CHAT_MESSAGE.register { message, sender, _ ->
@@ -126,13 +126,6 @@ class UnfocusedModFabric: ModInitializer {
         ResourceKey.create(Registries.PLACED_FEATURE, modification.feature)
       )
     }
-//    BiomeModifiers.carverEvent.register{ (_, modification) ->
-//      BiomeModifications.addCarver(
-//        { modification.isValid(it.biomeRegistryEntry) },
-//        modification.step,
-//        ResourceKey.create(Registries.CONFIGURED_CARVER, modification.carver)
-//      )
-//    }
     BiomeModifiers.spawnEvent.register{ (_, modification) ->
       for (entity in modification.spawners)
         BiomeModifications.addSpawn(

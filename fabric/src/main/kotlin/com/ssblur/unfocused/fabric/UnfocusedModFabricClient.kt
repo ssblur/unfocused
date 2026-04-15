@@ -1,5 +1,6 @@
 package com.ssblur.unfocused.fabric
 
+import com.ssblur.unfocused.Unfocused
 import com.ssblur.unfocused.UnfocusedClient
 import com.ssblur.unfocused.event.client.ClientGuiRenderEvent
 import com.ssblur.unfocused.event.client.ClientLevelTickEvent
@@ -14,14 +15,14 @@ import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents
 import net.fabricmc.fabric.api.client.item.v1.ItemTooltipCallback
 import net.fabricmc.fabric.api.client.particle.v1.ParticleFactoryRegistry
 import net.fabricmc.fabric.api.client.rendering.v1.BlockRenderLayerMap
-import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry
-import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback
+import net.fabricmc.fabric.api.client.rendering.v1.hud.HudElementRegistry
 import net.minecraft.client.gui.screens.MenuScreens
 import net.minecraft.client.particle.ParticleProvider
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderers
 import net.minecraft.client.renderer.blockentity.state.BlockEntityRenderState
 import net.minecraft.client.renderer.entity.EntityRendererProvider
+import net.minecraft.client.renderer.entity.EntityRenderers
 import net.minecraft.world.entity.Entity
 import net.minecraft.world.level.block.entity.BlockEntity
 
@@ -35,8 +36,8 @@ class UnfocusedModFabricClient: ClientModInitializer {
         pair.renderer as BlockEntityRendererProvider<BlockEntity, BlockEntityRenderState>
       )
     }
-    EntityRendering.register { pair ->
-      EntityRendererRegistry.register(pair.type.get(), pair.renderer as EntityRendererProvider<Entity>)
+    EntityRendering.register { (type, renderer) ->
+      EntityRenderers.register(type.get(), renderer as EntityRendererProvider<Entity>)
     }
     ParticleFactories.register { pair ->
       pair.ifLeft {
@@ -66,7 +67,7 @@ class UnfocusedModFabricClient: ClientModInitializer {
     ClientScreenRegistrationEvent.register{
       MenuScreens.register(it.menu, it.supplier)
     }
-    HudRenderCallback.EVENT.register { graphics, delta ->
+    HudElementRegistry.addLast(Unfocused.location("hud")) { graphics, delta ->
       ClientGuiRenderEvent.callback(
         ClientGuiRenderEvent.GuiRenderEvent(graphics, delta)
       )

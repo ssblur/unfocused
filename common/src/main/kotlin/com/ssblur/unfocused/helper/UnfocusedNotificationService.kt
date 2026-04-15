@@ -40,6 +40,7 @@ object UnfocusedNotificationService: NotificationService {
 
   override fun playerUnbanned(nameAndId: NameAndId) {}
 
+  @Suppress("UNCHECKED_CAST")
   override fun <T : Any> onGameRuleChanged(
     gameRule: GameRule<T>,
     value: T

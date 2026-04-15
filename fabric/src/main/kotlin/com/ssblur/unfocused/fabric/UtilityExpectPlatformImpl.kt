@@ -24,13 +24,6 @@ object UtilityExpectPlatformImpl {
   @JvmStatic
   fun isServer(): Boolean = FabricLoaderImpl.INSTANCE.environmentType == EnvType.SERVER
 
-//  @Environment(EnvType.CLIENT)
-//  @JvmStatic
-//  fun registerColor(color: DyedItemColor, vararg items: Supplier<ItemLike>) {
-//    ColorProviderRegistry.register(color, *items.map { it.get() }.toTypedArray())
-//  }
-
-//  @Environment(EnvType.CLIENT)
   @JvmStatic
   fun registerColor(color: BlockColor, vararg blocks: Supplier<Block>) {
     ColorProviderRegistry.BLOCK.register(color, *blocks.map { it.get() }.toTypedArray())
