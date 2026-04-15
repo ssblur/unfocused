@@ -6,7 +6,6 @@
   "client": [
   ],
   "mixins": [
-    "MenuTypeAccessor",
     "StructureTemplatePoolAccessor"
   ],
   "injectors": {
