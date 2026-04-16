@@ -18,12 +18,6 @@ object BiomeModifiers {
     val feature: Identifier,
   ): BiomeModifier()
 
-//  class BiomeCarver(
-//    override val biome: String,
-//    val step: GenerationStep.Carving,
-//    val carver: Identifier
-//  ): BiomeModifier()
-
   class BiomeSpawner(
     override val biome: String,
     val spawners: List<Spawner>,
@@ -41,16 +35,12 @@ object BiomeModifiers {
   data class Spawner(val type: Identifier, val weight: Int, val minCount: Int, val maxCount: Int, val category: MobCategory)
 
   val featureEvent = LoadEvent<Pair<Identifier, BiomeFeature>>()
-//  val carverEvent = LoadEvent<Pair<Identifier, BiomeCarver>>()
   val spawnEvent = LoadEvent<Pair<Identifier, BiomeSpawner>>()
 
   init {
     Unfocused.registerDataLoader("unfocused/features", BiomeFeature::class) { modification, location ->
       featureEvent.callback(Pair(location, modification))
     }
-//    Unfocused.registerDataLoader("unfocused/carvers", BiomeCarver::class) { modification, location ->
-//      carverEvent.callback(Pair(location, modification))
-//    }
     Unfocused.registerDataLoader("unfocused/spawns", BiomeSpawner::class) { modification, location ->
       spawnEvent.callback(Pair(location, modification))
     }

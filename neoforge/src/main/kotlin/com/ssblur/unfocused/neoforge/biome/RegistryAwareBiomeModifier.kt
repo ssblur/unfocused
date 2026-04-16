@@ -1,6 +1,5 @@
 package com.ssblur.unfocused.neoforge.biome
 
-import com.google.gson.JsonElement
 import com.mojang.serialization.*
 import com.ssblur.unfocused.Unfocused
 import com.ssblur.unfocused.biome.BiomeModifiers
@@ -14,26 +13,13 @@ import net.neoforged.neoforge.common.world.BiomeModifier
 import net.neoforged.neoforge.common.world.ModifiableBiomeInfo
 import java.util.stream.Stream
 
-class RegistryAwareBiomeModifier(val registryOps: RegistryOps<JsonElement>): BiomeModifier {
+class RegistryAwareBiomeModifier(val registryOps: RegistryOps<*>): BiomeModifier {
   override fun modify(arg: Holder<Biome>, phase: BiomeModifier.Phase, builder: ModifiableBiomeInfo.BiomeInfo.Builder) {
     try {
       val featureGetter = registryOps.getter(Registries.PLACED_FEATURE).get()
-//      val carverGetter = registryOps.getter(Registries.CONFIGURED_CARVER).get()
       val entityGetter = registryOps.getter(Registries.ENTITY_TYPE).get()
 
       if(phase == BiomeModifier.Phase.ADD) {
-        BiomeModifiers.featureEvent.register { (_, value) ->
-          val feature = featureGetter.getOrThrow(ResourceKey.create(Registries.PLACED_FEATURE, value.feature))
-          if(value.isValid(arg))
-            builder.generationSettings.addFeature(value.step, feature)
-        }
-
-//        BiomeModifiers.carverEvent.register { (key, value) ->
-//          val carver = carverGetter.getOrThrow(ResourceKey.create(Registries.CONFIGURED_CARVER, value.carver))
-//          if(value.isValid(arg))
-//            builder.generationSettings.addCarver(value.step, carver)
-//        }
-
         BiomeModifiers.spawnEvent.register { (_, value) ->
           for(spawn in value.spawners) {
             val entity = entityGetter.getOrThrow(ResourceKey.create(Registries.ENTITY_TYPE, spawn.type))
@@ -45,9 +31,15 @@ class RegistryAwareBiomeModifier(val registryOps: RegistryOps<JsonElement>): Bio
               ))
           }
         }
+      } else if(phase == BiomeModifier.Phase.AFTER_EVERYTHING) {
+        BiomeModifiers.featureEvent.register { (_, value) ->
+          val feature = featureGetter.getOrThrow(ResourceKey.create(Registries.PLACED_FEATURE, value.feature))
+          if(value.isValid(arg))
+            builder.generationSettings.addFeature(value.step, feature)
+        }
       }
     } catch (e: Exception) {
-      Unfocused.LOGGER.warn("RegistryAwareBiomeModifier serialized or deserialized in a non-json context!")
+      Unfocused.LOGGER.warn("RegistryAwareBiomeModifier serialized or deserialized in a context with no RegistryOps!")
       Unfocused.LOGGER.warn("This should not happen!")
       Unfocused.LOGGER.warn(e)
     }
@@ -61,7 +53,7 @@ class RegistryAwareBiomeModifier(val registryOps: RegistryOps<JsonElement>): Bio
 
       @Suppress("UNCHECKED_CAST")
       override fun <T : Any?> decode(p0: DynamicOps<T>?, p1: MapLike<T>?): DataResult<RegistryAwareBiomeModifier> {
-        return if(p0 is RegistryOps) DataResult.success(RegistryAwareBiomeModifier(p0 as RegistryOps<JsonElement>))
+        return if(p0 is RegistryOps) DataResult.success(RegistryAwareBiomeModifier(p0 as RegistryOps<*>))
           else DataResult.error { "RegistryAwareBiomeModifiers can only be decoded via RegistryOps" }
       }
 

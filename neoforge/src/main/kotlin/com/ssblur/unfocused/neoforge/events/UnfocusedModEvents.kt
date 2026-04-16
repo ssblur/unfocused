@@ -1,12 +1,10 @@
 package com.ssblur.unfocused.neoforge.events
 
-import com.ssblur.unfocused.Unfocused
 import com.ssblur.unfocused.biome.BiomeModifiers
 import com.ssblur.unfocused.command.CommandRegistration
 import com.ssblur.unfocused.entity.EntityAttributes
 import com.ssblur.unfocused.entity.Trades
 import com.ssblur.unfocused.event.common.*
-import com.ssblur.unfocused.neoforge.biome.RegistryAwareBiomeModifier
 import it.unimi.dsi.fastutil.ints.Int2ObjectFunction
 import net.minecraft.core.NonNullList
 import net.minecraft.core.registries.Registries
@@ -15,7 +13,6 @@ import net.minecraft.server.level.ServerLevel
 import net.minecraft.server.level.ServerPlayer
 import net.minecraft.world.entity.npc.villager.VillagerTrades
 import net.minecraft.world.level.storage.loot.LootPool
-import net.neoforged.bus.api.EventPriority
 import net.neoforged.bus.api.IEventBus
 import net.neoforged.neoforge.common.NeoForge
 import net.neoforged.neoforge.event.LootTableLoadEvent
@@ -29,8 +26,6 @@ import net.neoforged.neoforge.event.entity.player.PlayerEvent.PlayerLoggedInEven
 import net.neoforged.neoforge.event.server.ServerStartedEvent
 import net.neoforged.neoforge.event.village.VillagerTradesEvent
 import net.neoforged.neoforge.event.village.WandererTradesEvent
-import net.neoforged.neoforge.registries.NeoForgeRegistries
-import net.neoforged.neoforge.registries.RegisterEvent
 
 object UnfocusedModEvents {
   fun livingDamageEventBefore(event: LivingDamageEvent.Pre) {
@@ -105,12 +100,6 @@ object UnfocusedModEvents {
     pools.forEach { event.table.addPool(it.build()) }
   }
 
-  fun registerEvent(event: RegisterEvent) {
-    event.register(NeoForgeRegistries.Keys.BIOME_MODIFIER_SERIALIZERS) { register ->
-      register.register(Unfocused.location("features"), RegistryAwareBiomeModifier.CODEC)
-    }
-  }
-
   fun tradeRegisterEvent(event: VillagerTradesEvent) {
     Trades.register { trade ->
       if (trade.profession == event.type) {
@@ -168,7 +157,7 @@ object UnfocusedModEvents {
 
     BiomeModifiers.featureEvent.register{}
 
-    bus.addListener(EventPriority.LOWEST, ::registerEvent)
+//    bus.addListener(::registerEvent)
     bus.addListener(::attributeEvent)
     bus.register(UnfocusedModNetworking)
   }

@@ -1,10 +1,11 @@
 modLoader = "kotlinforforge"
-loaderVersion = "[5.8,)"
+loaderVersion = "[6.2,)"
 #issueTrackerURL = ""
 license = "CC0-1.0"
 
 [[mods]]
 modId = "unfocused"
+namespace = "unfocused"
 version = "${version}"
 displayName = "Unfocused"
 authors = "SSBlur"

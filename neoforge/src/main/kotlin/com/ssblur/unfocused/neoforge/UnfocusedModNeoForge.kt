@@ -1,6 +1,7 @@
 package com.ssblur.unfocused.neoforge
 
 import com.ssblur.unfocused.Unfocused
+import com.ssblur.unfocused.neoforge.events.UnfocusedAdditionalRegistration
 import com.ssblur.unfocused.neoforge.events.UnfocusedModData
 import com.ssblur.unfocused.neoforge.events.UnfocusedModEvents
 import com.ssblur.unfocused.neoforge.registry.ProxyRegistry
@@ -17,6 +18,7 @@ class UnfocusedModNeoForge(bus: IEventBus) {
 
     NeoForge.EVENT_BUS.addListener(UnfocusedModData::event)
     UnfocusedModEvents.register(bus)
+    UnfocusedAdditionalRegistration.register(bus)
 
     ProxyRegistry(Registries.BLOCK, RegistryTypes.BLOCK).register(bus)
     ProxyRegistry(Registries.ITEM, RegistryTypes.ITEM).register(bus)
