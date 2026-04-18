@@ -9,6 +9,7 @@ buildscript {
     classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
   }
 }
+
 plugins {
   id 'dev.architectury.loom' version '1.13-SNAPSHOT' apply false
   id "com.palantir.git-version" version "0.15.0"
@@ -45,17 +46,10 @@ subprojects {
   apply plugin: 'org.jetbrains.kotlin.jvm'
 
   base {
-    // Set up a suffixed format for the mod jar names, e.g. `example-fabric`.
     archivesName = "$rootProject.archives_name-$project.name"
   }
 
-  repositories {
-    // Add repositories to retrieve artifacts from in here.
-    // You should only use this when depending on other mods because
-    // Loom adds the essential maven repositories to download Minecraft and libraries from automatically.
-    // See https://docs.gradle.org/current/userguide/declaring_repositories.html
-    // for more information about repositories.
-  }
+  repositories {}
 
   loom {
     silentMojangMappingsLicense()
@@ -69,14 +63,12 @@ subprojects {
 
   java {
     withSourcesJar()
-
   }
 
   tasks.withType(JavaCompile).configureEach {
     it.options.release = 21
   }
 
-  // Configure Maven publishing.
   publishing {
     publications {
       mavenJava(MavenPublication) {
@@ -85,7 +77,6 @@ subprojects {
       }
     }
 
-    // See https://docs.gradle.org/current/userguide/publishing_maven.html for information on how to set up publishing.
     repositories {
       maven {
         name = "ssblur-maven"
@@ -96,7 +87,6 @@ subprojects {
           password = System.getenv("SSBLURMVNPASSWORD")
         }
       }
-
     }
   }
 }
