@@ -28,7 +28,7 @@ object DataLoaderRegistry {
 
   fun <T: Any> ModInitializer.registerSimpleDataLoader(path: String, type: KClass<T>): MutableMap<Identifier, T> {
     val map: MutableMap<Identifier, T> = mutableMapOf()
-    registerDataLoader(path, type as KClass<Any>) { resource, location ->
+    registerDataLoader(path, type as KClass<Any>, failEasy = true) { resource, location ->
       map[location] = resource as T
     }
     return map
