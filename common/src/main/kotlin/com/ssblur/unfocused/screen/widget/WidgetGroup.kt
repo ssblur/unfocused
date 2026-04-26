@@ -1,6 +1,6 @@
 package com.ssblur.unfocused.screen.widget
 
-import net.minecraft.client.gui.GuiGraphics
+import net.minecraft.client.gui.GuiGraphicsExtractor
 import net.minecraft.client.gui.narration.NarrationElementOutput
 
 class WidgetGroup(x: Int, y: Int, w: Int, h: Int, scissor: Boolean = true) : PositionedWidget(x, y, w, h, scissor) {
@@ -9,7 +9,7 @@ class WidgetGroup(x: Int, y: Int, w: Int, h: Int, scissor: Boolean = true) : Pos
   }
 
   override fun draw(
-    guiGraphics: GuiGraphics,
+    guiGraphics: GuiGraphicsExtractor,
     mouseX: Int,
     mouseY: Int,
     f: Float

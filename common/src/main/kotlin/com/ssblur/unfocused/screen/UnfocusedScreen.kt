@@ -1,7 +1,7 @@
 package com.ssblur.unfocused.screen
 
 import com.ssblur.unfocused.screen.widget.PositionedWidget
-import net.minecraft.client.gui.GuiGraphics
+import net.minecraft.client.gui.GuiGraphicsExtractor
 import net.minecraft.client.gui.components.Renderable
 import net.minecraft.client.gui.components.events.GuiEventListener
 import net.minecraft.client.gui.narration.NarratableEntry
@@ -11,8 +11,14 @@ import net.minecraft.network.chat.Component
 import net.minecraft.world.entity.player.Inventory
 import net.minecraft.world.inventory.AbstractContainerMenu
 
-abstract class UnfocusedScreen<T : AbstractContainerMenu>(abstractContainerMenu: T, inventory: Inventory, component: Component) :
-  AbstractContainerScreen<T>(abstractContainerMenu, inventory, component) {
+abstract class UnfocusedScreen<T : AbstractContainerMenu>(
+  abstractContainerMenu: T,
+  inventory: Inventory,
+  component: Component,
+  width: Int = 0,
+  height: Int = 0,
+) :
+  AbstractContainerScreen<T>(abstractContainerMenu, inventory, component, width, height) {
   var widgets: MutableList<PositionedWidget> = mutableListOf()
   fun <T: Renderable> add(guiEventListener: T): T {
     if(guiEventListener is NarratableEntry && guiEventListener is GuiEventListener) {
@@ -31,13 +37,13 @@ abstract class UnfocusedScreen<T : AbstractContainerMenu>(abstractContainerMenu:
     widgets = mutableListOf()
   }
 
-  override fun render(guiGraphics: GuiGraphics, i: Int, j: Int, f: Float) {
-    super.render(guiGraphics, i, j, f)
-    renderTooltip(guiGraphics, i, j)
+  override fun extractRenderState(guiGraphics: GuiGraphicsExtractor, i: Int, j: Int, f: Float) {
+    super.extractRenderState(guiGraphics, i, j, f)
+    extractTooltip(guiGraphics, i, j)
   }
 
-  override fun renderContents(guiGraphics: GuiGraphics, i: Int, j: Int, f: Float) {
-    super.renderContents(guiGraphics, i, j, f)
+  override fun extractContents(guiGraphics: GuiGraphicsExtractor, i: Int, j: Int, f: Float) {
+    super.extractContents(guiGraphics, i, j, f)
   }
 
   override fun mouseClicked(event: MouseButtonEvent, bl: Boolean): Boolean {
@@ -49,13 +55,8 @@ abstract class UnfocusedScreen<T : AbstractContainerMenu>(abstractContainerMenu:
     return super.mouseScrolled(d, e, f, g)
   }
 
-  override fun renderBg(
-    guiGraphics: GuiGraphics,
-    f: Float,
-    i: Int,
-    j: Int
-  ) {
-    renderBlurredBackground(guiGraphics)
+  override fun extractBackground(guiGraphics: GuiGraphicsExtractor, j: Int, mouseY: Int, f: Float) {
+    extractBlurredBackground(guiGraphics)
   }
 
   override fun isInGameUi(): Boolean = true
@@ -63,5 +64,5 @@ abstract class UnfocusedScreen<T : AbstractContainerMenu>(abstractContainerMenu:
   override fun canInterruptWithAnotherScreen(): Boolean = true
   override fun isAllowedInPortal(): Boolean = false
 
-  override fun renderLabels(guiGraphics: GuiGraphics, i: Int, j: Int) {}
+  override fun extractLabels(guiGraphics: GuiGraphicsExtractor, i: Int, j: Int) {}
 }

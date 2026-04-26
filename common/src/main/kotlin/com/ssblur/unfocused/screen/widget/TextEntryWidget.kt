@@ -2,7 +2,7 @@ package com.ssblur.unfocused.screen.widget
 
 import net.minecraft.client.Minecraft
 import net.minecraft.client.gui.Font
-import net.minecraft.client.gui.GuiGraphics
+import net.minecraft.client.gui.GuiGraphicsExtractor
 import net.minecraft.client.gui.narration.NarratedElementType
 import net.minecraft.client.gui.narration.NarrationElementOutput
 import net.minecraft.client.input.CharacterEvent
@@ -111,22 +111,22 @@ class TextEntryWidget(x: Int, y: Int, w: Int, h: Int, scissor: Boolean = true) :
   private val blinkSpeed = 12
   private val blinkDelay = blinkSpeed * 2
   override fun draw(
-    guiGraphics: GuiGraphics,
+    guiGraphics: GuiGraphicsExtractor,
     mouseX: Int,
     mouseY: Int,
     f: Float
   ) {
     if(canScroll) {
-      guiGraphics.drawWordWrap(font, textComponent, 0, 0, w, color.toInt())
+      guiGraphics.textWithWordWrap(font, textComponent, 0, 0, w, color.toInt())
     } else {
-      guiGraphics.drawString(font, textComponent, 0, 0, color.toInt())
+      guiGraphics.text(font, textComponent, 0, 0, color.toInt())
     }
 
     if(textInternal.isEmpty())
-      guiGraphics.drawString(font, Component.translatable(placeholder), 0, 0, placeholderColor.toInt())
+      guiGraphics.text(font, Component.translatable(placeholder), 0, 0, placeholderColor.toInt())
 
     if (isFocused && Minecraft.getInstance().gui.guiTicks % blinkDelay > blinkSpeed)
-      guiGraphics.drawString(font, "|", cursorRenderPos.x, cursorRenderPos.y, cursorColor.toInt())
+      guiGraphics.text(font, "|", cursorRenderPos.x, cursorRenderPos.y, cursorColor.toInt())
   }
 
   override fun keyPressed(event: KeyEvent): Boolean {

@@ -1,5 +1,6 @@
 package com.ssblur.unfocused
 
+import com.mojang.serialization.MapCodec
 import com.ssblur.unfocused.advancement.GenericTrigger
 import com.ssblur.unfocused.config.Config
 import com.ssblur.unfocused.config.GameRuleConfig
@@ -25,6 +26,7 @@ import net.minecraft.world.inventory.AbstractContainerMenu
 import net.minecraft.world.inventory.MenuType
 import net.minecraft.world.item.BlockItem
 import net.minecraft.world.item.Item
+import net.minecraft.world.item.ItemStack
 import net.minecraft.world.item.crafting.Recipe
 import net.minecraft.world.item.crafting.RecipeSerializer
 import net.minecraft.world.item.crafting.RecipeType
@@ -33,8 +35,7 @@ import net.minecraft.world.level.block.entity.BlockEntity
 import net.minecraft.world.level.block.entity.BlockEntityType
 import net.minecraft.world.level.levelgen.feature.Feature
 import net.minecraft.world.level.storage.loot.functions.LootItemFunction
-import net.minecraft.world.level.storage.loot.functions.LootItemFunctionType
-import net.minecraft.world.level.storage.loot.predicates.LootItemConditionType
+import net.minecraft.world.level.storage.loot.predicates.LootItemCondition
 import java.util.function.Consumer
 import java.util.function.Supplier
 import kotlin.reflect.KClass
@@ -126,19 +127,22 @@ open class ModInitializer(val id: String) {
 
   fun <T: LootItemFunction> registerLootFunction(
     id: String,
-    supplier: Supplier<LootItemFunctionType<T>>
-  ): RegistrySupplier<LootItemFunctionType<T>> {
+    supplier: Supplier<MapCodec<T>>
+  ): RegistrySupplier<MapCodec<T>> {
     return LOOT_FUNCTION_TYPES.register(
       id,
-      supplier as Supplier<LootItemFunctionType<*>>
-    ) as RegistrySupplier<LootItemFunctionType<T>>
+      supplier as Supplier<MapCodec<out LootItemFunction>>
+    ) as RegistrySupplier<MapCodec<T>>
   }
 
-  fun registerLootCondition(
+  fun <T: LootItemCondition> registerLootCondition(
     id: String,
-    supplier: Supplier<LootItemConditionType>
-  ): RegistrySupplier<LootItemConditionType> {
-    return LOOT_CONDITION_TYPES.register(id, supplier)
+    supplier: Supplier<MapCodec<T>>
+  ): RegistrySupplier<MapCodec<T>> {
+    return LOOT_CONDITION_TYPES.register(
+      id,
+      supplier as Supplier<MapCodec<out LootItemCondition>>
+    ) as RegistrySupplier<MapCodec<T>>
   }
 
   fun <T: CriterionTrigger<*>> registerTrigger(id: String, supplier: Supplier<T>): RegistrySupplier<T> {

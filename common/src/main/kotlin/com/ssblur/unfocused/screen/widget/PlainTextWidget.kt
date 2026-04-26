@@ -1,7 +1,7 @@
 package com.ssblur.unfocused.screen.widget
 
 import net.minecraft.client.Minecraft
-import net.minecraft.client.gui.GuiGraphics
+import net.minecraft.client.gui.GuiGraphicsExtractor
 import net.minecraft.client.gui.narration.NarratedElementType
 import net.minecraft.client.gui.narration.NarrationElementOutput
 import net.minecraft.network.chat.Component
@@ -13,11 +13,11 @@ class PlainTextWidget(val text: Component, x: Int, y: Int, w: Int, h: Int, sciss
   }
 
   override fun draw(
-    guiGraphics: GuiGraphics,
+    guiGraphics: GuiGraphicsExtractor,
     mouseX: Int,
     mouseY: Int,
     f: Float
   ) {
-    guiGraphics.drawWordWrap(Minecraft.getInstance().font, text, 0, 0, w, color.toInt())
+    guiGraphics.textWithWordWrap(Minecraft.getInstance().font, text, 0, 0, w, color.toInt())
   }
 }

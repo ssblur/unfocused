@@ -5,7 +5,7 @@ import com.ssblur.unfocused.helper.MarkdownFormatter.asComponent
 import com.ssblur.unfocused.mixin.ScreenAccessor
 import net.minecraft.client.Minecraft
 import net.minecraft.client.gui.Font
-import net.minecraft.client.gui.GuiGraphics
+import net.minecraft.client.gui.GuiGraphicsExtractor
 import net.minecraft.client.gui.narration.NarratedElementType
 import net.minecraft.client.gui.narration.NarrationElementOutput
 import net.minecraft.client.input.MouseButtonEvent
@@ -83,7 +83,7 @@ class MarkdownWidget(
   val itemCache: MutableMap<MarkdownFormatter.Markdown.Item, ItemStack> = mutableMapOf()
   private var hoveredStyle: Style? = null
   private var hoveredItem: ItemStack? = null
-  override fun draw(guiGraphics: GuiGraphics, mouseX: Int, mouseY: Int, f: Float) {
+  override fun draw(guiGraphics: GuiGraphicsExtractor, mouseX: Int, mouseY: Int, f: Float) {
     hoveredStyle = null
     hoveredItem = null
     var y = 0
@@ -93,7 +93,7 @@ class MarkdownWidget(
       if(packet.component != null) {
         val lines = font.split(packet.component, ww)
         for(line in lines) {
-          guiGraphics.drawString(font, line, 0, y, color.toInt(), shadow)
+          guiGraphics.text(font, line, 0, y, color.toInt(), shadow)
           if(mouseY >= y && mouseY < (y + lineHeight)) {
             hoveredStyle = MarkdownFormatter.getStyleAtWidth(line, mouseX, font) ?: hoveredStyle
           }
@@ -103,19 +103,19 @@ class MarkdownWidget(
         itemCache[packet.item] = itemCache[packet.item] ?:
           ItemStack(BuiltInRegistries.ITEM.get(packet.item.resource).get())
         itemCache[packet.item]?.let{
-          guiGraphics.renderFakeItem(it, 5, y+5)
-          guiGraphics.drawWordWrap(font, it.hoverName, 26, y + 10, ww, color.toInt(), false)
+          guiGraphics.item(it, 5, y+5)
+          guiGraphics.textWithWordWrap(font, it.hoverName, 26, y + 10, ww, color.toInt(), false)
           val oy = y
           y += max(font.wordWrapHeight(it.hoverName, w), 26)
           if(mouseY in oy..y) hoveredItem = it
         }
       } else if(packet.recipe != null) {
         // render recipe
-        guiGraphics.drawWordWrap(font, Component.literal("Recipe: ").append(packet.recipe.resource.toString()), 0, y, ww, 0xffbbbbbbu.toInt())
+        guiGraphics.textWithWordWrap(font, Component.literal("Recipe: ").append(packet.recipe.resource.toString()), 0, y, ww, 0xffbbbbbbu.toInt())
         y += font.wordWrapHeight(Component.literal("Recipe: ").append(packet.recipe.resource.toString()), ww)
-        guiGraphics.drawWordWrap(font, Component.translatable("extra.unfocused.unimplemented"), 0, y, ww, 0xffbbbbbbu.toInt())
+        guiGraphics.textWithWordWrap(font, Component.translatable("extra.unfocused.unimplemented"), 0, y, ww, 0xffbbbbbbu.toInt())
         y += font.wordWrapHeight(Component.translatable("extra.unfocused.unimplemented"), ww)
-        guiGraphics.drawWordWrap(font, Component.translatable("extra.unfocused.unimplemented_2"), 0, y, ww, 0xffbbbbbbu.toInt())
+        guiGraphics.textWithWordWrap(font, Component.translatable("extra.unfocused.unimplemented_2"), 0, y, ww, 0xffbbbbbbu.toInt())
         y += font.wordWrapHeight(Component.translatable("extra.unfocused.unimplemented_2"), ww)
       } else if(packet.image != null) {
         val lh = font.lineHeight * 8
@@ -140,7 +140,7 @@ class MarkdownWidget(
         for(line in lines) {
           val ey = (y / scale).toInt()
           val lh = ceil(lineHeight * scale).toInt()
-          guiGraphics.drawString(font, line, 0, ey, color.toInt(), shadow)
+          guiGraphics.text(font, line, 0, ey, color.toInt(), shadow)
           if(mouseY >= y && mouseY < (y + lh)) {
             hoveredStyle = MarkdownFormatter.getStyleAtWidth(line, (mouseX * scale).toInt(), font) ?: hoveredStyle
           }
@@ -152,9 +152,11 @@ class MarkdownWidget(
     maxScroll = y + font.lineHeight * 2
   }
 
-  override fun drawOverlay(guiGraphics: GuiGraphics, mouseX: Int, mouseY: Int, f: Float) {
+  override fun drawOverlay(guiGraphics: GuiGraphicsExtractor, mouseX: Int, mouseY: Int, f: Float) {
     super.drawOverlay(guiGraphics, mouseX, mouseY, f)
-    if(hoveredStyle != null) guiGraphics.renderComponentHoverEffect(font, hoveredStyle, mouseX + x, mouseY - scroll.toInt() + 24)
+//    if(hoveredStyle != null)
+//      guiGraphics.renderComponentHoverEffect(font, hoveredStyle, mouseX + x, mouseY - scroll.toInt() + 24)
+    // TODO fix hovered component rendering
 
     // TODO add hovered item tooltip
   }

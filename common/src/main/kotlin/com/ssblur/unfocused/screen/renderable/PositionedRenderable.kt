@@ -1,6 +1,6 @@
 package com.ssblur.unfocused.screen.renderable
 
-import net.minecraft.client.gui.GuiGraphics
+import net.minecraft.client.gui.GuiGraphicsExtractor
 import net.minecraft.client.gui.components.Renderable
 import net.minecraft.client.gui.screens.Screen
 import kotlin.math.roundToInt
@@ -23,8 +23,8 @@ abstract class PositionedRenderable(
   var hovered: Boolean = false
     private set
 
-  override fun render(
-    guiGraphics: GuiGraphics,
+  override fun extractRenderState(
+    guiGraphics: GuiGraphicsExtractor,
     i: Int,
     j: Int,
     f: Float
@@ -65,8 +65,8 @@ abstract class PositionedRenderable(
     return d.roundToInt() in x..x + w && e.roundToInt() in y..y + h
   }
 
-  abstract fun draw(guiGraphics: GuiGraphics, mouseX: Int, mouseY: Int, f: Float)
-  open fun drawOverlay(guiGraphics: GuiGraphics, mouseX: Int, mouseY: Int, f: Float) {}
+  abstract fun draw(guiGraphics: GuiGraphicsExtractor, mouseX: Int, mouseY: Int, f: Float)
+  open fun drawOverlay(guiGraphics: GuiGraphicsExtractor, mouseX: Int, mouseY: Int, f: Float) {}
 
   companion object {
 

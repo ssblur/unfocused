@@ -39,7 +39,8 @@ object CreativeTabs {
           acceptor.register {
             if (it.id == location(id)) {
               assert((it.stack != null) xor (it.item != null))
-              output.accept(it.stack ?: ItemStack(it.item!!))
+//              output.accept(it.stack ?: ItemStack(it.item!!))
+                // TODO figure out how to add stuff to the tabs, refactor/aw if necessary
             }
           }
         }

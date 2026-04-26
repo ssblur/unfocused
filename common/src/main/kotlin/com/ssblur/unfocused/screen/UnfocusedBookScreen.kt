@@ -7,17 +7,15 @@ import com.ssblur.unfocused.screen.renderable.SinglePageBackground
 import com.ssblur.unfocused.screen.widget.ButtonWidget
 import com.ssblur.unfocused.screen.widget.MarkdownWidget
 import net.minecraft.client.Minecraft
-import net.minecraft.client.gui.GuiGraphics
+import net.minecraft.client.gui.GuiGraphicsExtractor
 import net.minecraft.network.chat.Component
 import net.minecraft.world.entity.player.Inventory
 import java.io.FileNotFoundException
 
 class UnfocusedBookScreen(val bookMenu: UnfocusedBookMenu, inventory: Inventory, component: Component) :
-  UnfocusedScreen<UnfocusedBookMenu>(bookMenu, inventory, component) {
+  UnfocusedScreen<UnfocusedBookMenu>(bookMenu, inventory, component, 265, 220) {
   var initialized = false
   override fun init() {
-    imageWidth = 265
-    imageHeight = 220
     leftPos = (this.width - imageWidth) / 2
     topPos = (this.height - imageHeight) / 2
     add(SinglePageBackground(leftPos, topPos, imageWidth, imageHeight))
@@ -87,8 +85,8 @@ class UnfocusedBookScreen(val bookMenu: UnfocusedBookMenu, inventory: Inventory,
     }
   }
 
-  override fun render(guiGraphics: GuiGraphics, i: Int, j: Int, f: Float) {
-    super.render(guiGraphics, i, j, f)
+  override fun extractRenderState(guiGraphics: GuiGraphicsExtractor, i: Int, j: Int, f: Float) {
+    super.extractRenderState(guiGraphics, i, j, f)
     if(!initialized && bookMenu.location != null) {
       rebuildWidgets()
     }

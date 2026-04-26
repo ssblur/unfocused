@@ -4,6 +4,7 @@ import com.mojang.datafixers.util.Either
 import net.minecraft.core.Holder
 import net.minecraft.core.HolderOwner
 import net.minecraft.core.Registry
+import net.minecraft.core.component.DataComponentMap
 import net.minecraft.core.registries.BuiltInRegistries
 import net.minecraft.resources.Identifier
 import net.minecraft.resources.ResourceKey
@@ -50,9 +51,13 @@ class RegistrySupplier<T: Any>(
     BuiltInRegistries.REGISTRY.get(registryKey!!.identifier()).get()
   } as Holder.Reference<T>
 
-  override fun value() = get()!!
+  override fun value() = get()
   override fun isBound() = true
+  override fun areComponentsBound(): Boolean = true
+
   override fun tags() = tags.stream()
+  override fun components(): DataComponentMap = DataComponentMap.EMPTY
+
   override fun unwrap(): Either<ResourceKey<T>, T> = Either.right(value)
   override fun unwrapKey() = Optional.ofNullable(key)
   override fun kind() = Holder.Kind.DIRECT

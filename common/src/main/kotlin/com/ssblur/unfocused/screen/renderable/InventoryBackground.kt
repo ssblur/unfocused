@@ -1,14 +1,14 @@
 package com.ssblur.unfocused.screen.renderable
 
 import com.ssblur.unfocused.Unfocused
-import net.minecraft.client.gui.GuiGraphics
+import net.minecraft.client.gui.GuiGraphicsExtractor
 import net.minecraft.client.renderer.RenderPipelines
 
 @Suppress("unused")
 class InventoryBackground(x: Int, y: Int, w: Int, h: Int,) :
   PositionedRenderable(x, y, w, h, true) {
   override fun draw(
-    guiGraphics: GuiGraphics,
+    guiGraphics: GuiGraphicsExtractor,
     mouseX: Int,
     mouseY: Int,
     f: Float
