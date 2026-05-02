@@ -26,7 +26,6 @@ import net.minecraft.world.inventory.AbstractContainerMenu
 import net.minecraft.world.inventory.MenuType
 import net.minecraft.world.item.BlockItem
 import net.minecraft.world.item.Item
-import net.minecraft.world.item.ItemStack
 import net.minecraft.world.item.crafting.Recipe
 import net.minecraft.world.item.crafting.RecipeSerializer
 import net.minecraft.world.item.crafting.RecipeType
@@ -75,12 +74,16 @@ open class ModInitializer(val id: String) {
     supplier: Supplier<Block>
   ): Pair<RegistrySupplier<Block>, RegistrySupplier<Item>> {
     val block = BLOCKS.register(id, supplier)
-    val item = ITEMS.register(id) { BlockItem(block.get(), Item.Properties()) }
+    val item = registerItem(id) { BlockItem(block.get(), it) }
     return Pair(block, item)
   }
 
-  fun registerItem(id: String, supplier: Supplier<Item>): RegistrySupplier<Item> {
-    return ITEMS.register(id, supplier)
+  fun registerItem(id: String, supplier: (Item.Properties) -> Item): RegistrySupplier<Item> {
+    return ITEMS.register(id) {
+      supplier(
+        Item.Properties().setId(ResourceKey.create(Registries.ITEM, location(id)))
+      )
+    }
   }
 
   fun registerEffect(id: String, supplier: Supplier<MobEffect>): RegistrySupplier<MobEffect> {
