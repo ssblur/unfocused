@@ -51,9 +51,7 @@ subprojects {
 
   repositories {}
 
-  loom {
-    silentMojangMappingsLicense()
-  }
+  loom {}
 
   dependencies {
     minecraft "net.minecraft:minecraft:$rootProject.minecraft_version"
@@ -65,7 +63,7 @@ subprojects {
   }
 
   tasks.withType(JavaCompile).configureEach {
-    it.options.release = 21
+    it.options.release = 25
   }
 
   publishing {
@@ -99,5 +97,5 @@ dependencies {
 }
 
 kotlin {
-  jvmToolchain(21)
+  jvmToolchain(25)
 }

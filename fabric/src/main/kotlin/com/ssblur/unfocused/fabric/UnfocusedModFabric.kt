@@ -4,7 +4,6 @@ import com.ssblur.unfocused.Unfocused
 import com.ssblur.unfocused.biome.BiomeModifiers
 import com.ssblur.unfocused.command.CommandRegistration
 import com.ssblur.unfocused.entity.EntityAttributes
-import com.ssblur.unfocused.entity.Trades
 import com.ssblur.unfocused.event.common.LootTablePopulateEvent
 import com.ssblur.unfocused.event.common.PlayerChatEvent
 import com.ssblur.unfocused.event.common.ServerStartEvent
@@ -17,8 +16,6 @@ import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents
 import net.fabricmc.fabric.api.loot.v3.LootTableEvents
 import net.fabricmc.fabric.api.message.v1.ServerMessageEvents
 import net.fabricmc.fabric.api.`object`.builder.v1.entity.FabricDefaultAttributeRegistry
-import net.fabricmc.fabric.api.`object`.builder.v1.trade.TradeOfferHelper
-import net.fabricmc.fabric.api.`object`.builder.v1.world.poi.PointOfInterestHelper
 import net.minecraft.core.Registry
 import net.minecraft.core.registries.BuiltInRegistries
 import net.minecraft.core.registries.Registries
@@ -79,8 +76,7 @@ class UnfocusedModFabric: ModInitializer {
       Registry.register(BuiltInRegistries.VILLAGER_PROFESSION, location, supplier.get())
     }
     RegistryTypes.POINT_OF_INTEREST_TYPE.subscribe { location, supplier ->
-      val v = supplier.get()
-      PointOfInterestHelper.register(location, v.maxTickets, v.validRange, v.matchingStates)
+      Registry.register(BuiltInRegistries.POINT_OF_INTEREST_TYPE, location, supplier.get())
     }
     RegistryTypes.GAMERULE.subscribe { location, supplier ->
       Registry.register(BuiltInRegistries.GAME_RULE, location, supplier.get())
@@ -121,7 +117,7 @@ class UnfocusedModFabric: ModInitializer {
 
     BiomeModifiers.featureEvent.register{ (_, modification) ->
       BiomeModifications.addFeature(
-        { modification.isValid(it.biomeRegistryEntry) },
+        { modification.isValid(it.biomeHolder) },
         modification.step,
         ResourceKey.create(Registries.PLACED_FEATURE, modification.feature)
       )
@@ -129,22 +125,13 @@ class UnfocusedModFabric: ModInitializer {
     BiomeModifiers.spawnEvent.register{ (_, modification) ->
       for (entity in modification.spawners)
         BiomeModifications.addSpawn(
-          { modification.isValid(it.biomeRegistryEntry) },
+          { modification.isValid(it.biomeHolder) },
           BuiltInRegistries.ENTITY_TYPE.get(entity.type).get().value().category,
           BuiltInRegistries.ENTITY_TYPE.get(entity.type).get().value(),
           entity.weight,
           entity.minCount,
           entity.maxCount
         )
-    }
-
-    Trades.register { trade ->
-      if (trade.profession != null)
-        TradeOfferHelper.registerVillagerOffers(trade.profession!!, trade.rarity) { list -> list.add(trade.trade) }
-      else
-        TradeOfferHelper.registerWanderingTraderOffers { builder ->
-          builder.addOffersToPool(Unfocused.location("wandering_trader"), trade.trade) // TODO
-        }
     }
 
     CommandRegistration.register {

@@ -13,7 +13,7 @@ object UnfocusedModNetworking {
     NetworkManager.subscribeToC2SRegistration(
       { type ->
         val id: CustomPacketPayload.Type<KClassPacket<*>> = CustomPacketPayload.Type(type.location)
-        PayloadTypeRegistry.playC2S().register(id, KClassPacket.codec(type.location, type.type))
+        PayloadTypeRegistry.serverboundPlay().register(id, KClassPacket.codec(type.location, type.type))
         ServerPlayNetworking.registerGlobalReceiver(id) { payload, context ->
           NetworkManager.c2sTypes.forEach {
             if (it.location == type.location)
@@ -26,7 +26,7 @@ object UnfocusedModNetworking {
     NetworkManager.subscribeToS2CRegistration(
       { type ->
         val id: CustomPacketPayload.Type<KClassPacket<*>> = CustomPacketPayload.Type(type.location)
-        PayloadTypeRegistry.playS2C().register(id, KClassPacket.codec(type.location, type.type))
+        PayloadTypeRegistry.clientboundPlay().register(id, KClassPacket.codec(type.location, type.type))
       },
       { location, type, payload, players ->
         players.forEach { ServerPlayNetworking.send(it as ServerPlayer, KClassPacket(location, type, payload)) }

@@ -19,7 +19,7 @@ jobs:
       - uses: actions/setup-java@v3
         with:
           distribution: 'adopt'
-          java-version: '21'
+          java-version: '25'
       - name: Build Fabric
         run: bash ./gradlew fabric:build
         env:
@@ -36,7 +36,7 @@ jobs:
         with:
           mod-file: fabric/build/libs/unfocused-fabric-${{ steps.tag.outputs.version }}.jar
           version-name: "${{ steps.tag.outputs.version }}-fabric"
-          minecraft-version: 1.21.11
+          minecraft-version: 26.1.1
           mod-loader: fabric
           changelog: ${{ steps.changelog.outputs.changelog }}
           dependencies: |

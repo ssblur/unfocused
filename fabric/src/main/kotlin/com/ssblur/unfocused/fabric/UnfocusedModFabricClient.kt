@@ -6,15 +6,13 @@ import com.ssblur.unfocused.event.client.ClientGuiRenderEvent
 import com.ssblur.unfocused.event.client.ClientLevelTickEvent
 import com.ssblur.unfocused.event.client.ClientLoreEvent
 import com.ssblur.unfocused.event.client.ClientScreenRegistrationEvent
-import com.ssblur.unfocused.extension.BlockExtension
 import com.ssblur.unfocused.rendering.BlockEntityRendering
 import com.ssblur.unfocused.rendering.EntityRendering
 import com.ssblur.unfocused.rendering.ParticleFactories
 import net.fabricmc.api.ClientModInitializer
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents
 import net.fabricmc.fabric.api.client.item.v1.ItemTooltipCallback
-import net.fabricmc.fabric.api.client.particle.v1.ParticleFactoryRegistry
-import net.fabricmc.fabric.api.client.rendering.v1.BlockRenderLayerMap
+import net.fabricmc.fabric.api.client.particle.v1.ParticleProviderRegistry
 import net.fabricmc.fabric.api.client.rendering.v1.hud.HudElementRegistry
 import net.minecraft.client.gui.screens.MenuScreens
 import net.minecraft.client.particle.ParticleProvider
@@ -29,7 +27,6 @@ import net.minecraft.world.level.block.entity.BlockEntity
 @Suppress("unchecked_cast")
 class UnfocusedModFabricClient: ClientModInitializer {
   override fun onInitializeClient() {
-    BlockExtension.register { pair -> BlockRenderLayerMap.putBlock(pair.first, pair.second) }
     BlockEntityRendering.register { pair ->
       BlockEntityRenderers.register(
         pair.type.get(),
@@ -41,9 +38,9 @@ class UnfocusedModFabricClient: ClientModInitializer {
     }
     ParticleFactories.register { pair ->
       pair.ifLeft {
-        ParticleFactoryRegistry.getInstance().register(it.particle, it.provider)
+        ParticleProviderRegistry.getInstance().register(it.particle, it.provider)
       }.ifRight {
-        ParticleFactoryRegistry.getInstance().register(it.particle) { sprite ->
+        ParticleProviderRegistry.getInstance().register(it.particle) { sprite ->
           ParticleProvider { options, clientLevel, d, e, f, g, h, i, random ->
             it.provider(sprite).createParticle(options, clientLevel, d, e, f, g, h, i, random)
           }
