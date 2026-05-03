@@ -9,11 +9,15 @@ import net.minecraft.nbt.CompoundTag
 import net.minecraft.nbt.NbtOps
 import net.minecraft.network.RegistryFriendlyByteBuf
 import net.minecraft.network.codec.StreamCodec
+import net.minecraft.resources.Identifier
 import kotlin.jvm.optionals.getOrNull
 import kotlin.reflect.KClass
 import kotlin.reflect.KType
-import kotlin.reflect.full.createInstance
+import kotlin.reflect.KTypeParameter
+import kotlin.reflect.KTypeProjection
 import kotlin.reflect.full.createType
+import kotlin.reflect.full.primaryConstructor
+import kotlin.reflect.full.starProjectedType
 import kotlin.reflect.jvm.jvmErasure
 
 @Suppress("unused")
@@ -25,22 +29,15 @@ class KClassCodec<T: Any>(val type: KClass<T>): Codec<T> {
   ): DataResult<I> {
     try {
       var output = prefix
-      type.members.sortedBy { it.name }.forEach {
-        val value = it.call(input)
-        if(value != null) {
-          val codec = primitiveCodec(value)
-          if(codec != null) {
-            val o = codec.encode(value, ops, output)
-            if(o.result().isPresent) output = o.result().get()
-          } else {
-            val valueType = value::class
-
-            @Suppress("UNCHECKED_CAST")
-            val o = (codec(valueType) as KClassCodec<Any>).encode(value, ops, output)
-            if (o.result().isPresent) output = o.result().get()
+      type.members.forEach {
+        if(type.primaryConstructor?.parameters?.any{ t -> it.name == t.name } == true) {
+          val codec = codec(it.returnType)
+          val value = it.call(input)
+          codec.encode(value, ops, output).ifSuccess { result ->
+            output = ops.set(output, it.name, result)
+          }.ifError { error ->
+            output = ops.set(output, it.name, null)
           }
-        } else {
-          ops.set(output, it.name, null)
         }
       }
       return DataResult.success(output)
@@ -54,32 +51,26 @@ class KClassCodec<T: Any>(val type: KClass<T>): Codec<T> {
     input: I
   ): DataResult<Pair<T, I>> {
     try {
-      val data = type.createInstance()
-      type.members.sortedBy { it.name }.forEach {
-        val codec = primitiveTypeCodec(it.returnType)
-        if(codec != null) {
-          val o = ops.get(input, it.name).result().getOrNull()?.let { d -> codec.decode(ops, d) }
-          if(o?.result()?.isPresent == true) it.call(data, o.result().get())
-        } else {
-          val valueType = it.returnType.jvmErasure
-
-          @Suppress("UNCHECKED_CAST")
-          val o = ops.get(input, it.name).result().getOrNull()?.let { d ->
-            (codec(valueType) as KClassCodec<Any>).decode(ops, d)
-          }
-          if (o?.result()?.isPresent == true) it.call(data, o.result().get())
-        }
+      val args = type.primaryConstructor?.parameters?.map {
+        val codec = codec(it.type)
+        val o = ops.get(input, it.name).result().getOrNull()?.let { d -> codec.decode(ops, d) }
+        o?.ifError { println("Error decoding: $it") }
+        o?.result()?.getOrNull()?.first
       }
-      return DataResult.success(Pair(data, input))
+      return DataResult.success(Pair(
+        type.primaryConstructor?.call(*args!!.toTypedArray()),
+        input
+      ))
     } catch (e: Exception) {
+      e.printStackTrace()
       return DataResult.error{ e.message }
     }
   }
 
   companion object {
-    private val CODECS: MutableMap<KClass<Any>, KClassCodec<Any>> = mutableMapOf()
+    private val CODECS: MutableMap<KType, Codec<*>> = mutableMapOf()
 
-    fun <T: Any> streamCodec(type: KClass<T>): StreamCodec<RegistryFriendlyByteBuf, T> {
+    fun <T: Any> streamCodec(type: KType): StreamCodec<RegistryFriendlyByteBuf, T> {
       val codec = codec(type)
       return StreamCodec.of(
         { buffer, payload ->
@@ -96,11 +87,41 @@ class KClassCodec<T: Any>(val type: KClass<T>): Codec<T> {
       )
     }
 
+    fun <T: Any> streamCodec(type: KClass<T>): StreamCodec<RegistryFriendlyByteBuf, T> {
+      return streamCodec(type.createType(
+        type.typeParameters.map(::projection)
+      ))
+    }
+
     @Suppress("UNCHECKED_CAST")
-    fun <T: Any> codec(type: KClass<T>): KClassCodec<T> {
-      if(CODECS[type as KClass<Any>] != null)  return CODECS[type] as KClassCodec<T>
-      CODECS[type] = KClassCodec(type)
-      return CODECS[type] as KClassCodec<T>
+    fun codec(type: KType): Codec<Any> {
+      if(type.jvmErasure == List::class)
+        return codec(type.arguments.first().type!!).listOf() as Codec<Any>
+      if(type.jvmErasure == Map::class)
+        return Codec.unboundedMap(
+          codec(type.arguments[0].type!!),
+          codec(type.arguments[1].type!!)
+        ) as Codec<Any>
+      if(type.jvmErasure == Identifier::class) return Identifier.CODEC as Codec<Any>
+      if(type.jvmErasure == String::class) return Codec.STRING as Codec<Any>
+      if(type.jvmErasure == Int::class) return Codec.INT as Codec<Any>
+      if(type.jvmErasure == Long::class) return Codec.LONG as Codec<Any>
+      if(type.jvmErasure == Byte::class) return Codec.BYTE as Codec<Any>
+      if(type.jvmErasure == Boolean::class) return Codec.BOOL as Codec<Any>
+      if(CODECS[type] != null) return CODECS[type]!! as Codec<Any>
+      CODECS[type] = KClassCodec(type.jvmErasure)
+      return CODECS[type]!! as Codec<Any>
+    }
+
+    @Suppress("UNCHECKED_CAST")
+    fun <T: Any> codec(type: KClass<T>): Codec<T> {
+      return codec(type.createType(
+        type.typeParameters.map(::projection)
+      )) as Codec<T>
+    }
+
+    private fun projection(type: KTypeParameter): KTypeProjection {
+      return KTypeProjection(type.variance, type.starProjectedType)
     }
 
     @Suppress("UNCHECKED_CAST")
@@ -109,15 +130,6 @@ class KClassCodec<T: Any>(val type: KClass<T>): Codec<T> {
       if(value is String) return Codec.STRING as PrimitiveCodec<T>
       if(value is Long) return Codec.LONG as PrimitiveCodec<T>
       if(value is Boolean) return Codec.BOOL as PrimitiveCodec<T>
-      return null
-    }
-
-    @Suppress("UNCHECKED_CAST")
-    fun primitiveTypeCodec(value: KType): PrimitiveCodec<Any>? {
-      if(value.classifier == Int::class.createType()) return Codec.INT as PrimitiveCodec<Any>
-      if(value.classifier == String::class.createType()) return Codec.STRING as PrimitiveCodec<Any>
-      if(value.classifier == Long::class.createType()) return Codec.LONG as PrimitiveCodec<Any>
-      if(value.classifier == Boolean::class.createType()) return Codec.BOOL as PrimitiveCodec<Any>
       return null
     }
   }

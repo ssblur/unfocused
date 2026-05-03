@@ -22,4 +22,4 @@ rootProject.name = 'unfocused'
 
 include 'common'
 include 'fabric'
-include 'neoforge'
+//include 'neoforge'
