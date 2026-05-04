@@ -37,6 +37,7 @@ allprojects {
     e.printStackTrace()
     version = "1"
   }
+  println(version)
 }
 
 subprojects {

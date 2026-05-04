@@ -95,8 +95,10 @@ class KClassCodec<T: Any>(val type: KClass<T>): Codec<T> {
 
     @Suppress("UNCHECKED_CAST")
     fun codec(type: KType): Codec<Any> {
-      if(type.jvmErasure == List::class)
+      if(type.jvmErasure == List::class) {
+        println(codec(type.arguments.first().type!!))
         return codec(type.arguments.first().type!!).listOf() as Codec<Any>
+      }
       if(type.jvmErasure == Map::class)
         return Codec.unboundedMap(
           codec(type.arguments[0].type!!),
