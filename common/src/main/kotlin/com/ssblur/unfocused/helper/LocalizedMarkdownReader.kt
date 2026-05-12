@@ -3,23 +3,19 @@ package com.ssblur.unfocused.helper
 import net.minecraft.client.Minecraft
 import net.minecraft.resources.Identifier
 import java.io.BufferedReader
-import java.io.FileNotFoundException
 import java.io.InputStream
 import java.io.InputStreamReader
-import java.util.Locale.getDefault
+import kotlin.jvm.optionals.getOrNull
 
 object LocalizedMarkdownReader {
   fun getStream(location: Identifier, lang: String? = null): InputStream {
-    val namespace = location.namespace
-    val path = location.path
-    val langPath = lang ?: Minecraft.getInstance().languageManager.selected.lowercase(getDefault())
-    return javaClass.classLoader.getResourceAsStream("assets/$namespace/unfocused/markdown/$langPath/$path.md") ?:
-      javaClass.classLoader.getResourceAsStream("assets/$namespace/unfocused/markdown/en_us/$path.md") ?:
-      throw FileNotFoundException("Could not find markdown file at " +
-          "assets/$namespace/unfocused/markdown/$langPath/$path.md " +
-          "or " +
-          "assets/$namespace/unfocused/markdown/en_us/$path.md"
-      )
+    val l = lang ?: Minecraft.getInstance().languageManager.selected
+    val manager = Minecraft.getInstance().resourceManager
+    return manager.getResource(
+      location.withPrefix("unfocused/markdown/$l/").withSuffix(".md")
+    ).getOrNull()?.open() ?: manager.getResource(
+      location.withPrefix("unfocused/markdown/en_us/").withSuffix(".md")
+    ).getOrNull()?.open() ?: InputStream.nullInputStream()
   }
 
   fun read(location: Identifier, lang: String? = null): String {
