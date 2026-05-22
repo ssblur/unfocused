@@ -58,7 +58,7 @@ class KClassCodec<T: Any>(val type: KClass<T>): Codec<T> {
         o?.result()?.getOrNull()?.first
       }
       return DataResult.success(Pair(
-        type.primaryConstructor?.call(*args!!.toTypedArray()),
+        type.primaryConstructor?.call(*(args?.toTypedArray() ?: arrayOf())),
         input
       ))
     } catch (e: Exception) {
