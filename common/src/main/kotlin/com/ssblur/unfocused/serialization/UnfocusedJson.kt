@@ -12,6 +12,7 @@ object UnfocusedJson {
       .disableHtmlEscaping()
       .setNumberToNumberStrategy(ToNumberPolicy.LONG_OR_DOUBLE)
       .registerTypeAdapter(ResourceLocation::class.java, ResourceLocationSerDe)
+      .registerTypeAdapterFactory(OptionalTypeAdapter)
   }
 
   fun streamBuilder(type: KClass<*>): GsonBuilder {
