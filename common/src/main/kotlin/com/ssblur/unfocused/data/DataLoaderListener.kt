@@ -13,7 +13,7 @@ import net.minecraft.server.packs.resources.SimpleJsonResourceReloadListener
 import net.minecraft.util.profiling.ProfilerFiller
 import kotlin.reflect.KClass
 
-open class DataLoaderListener<T: Any>(path: String, val type: KClass<T>, val failEasy: Boolean = false, val callback: DataLoader<T>):
+open class DataLoaderListener<T: Any>(val path: String, val type: KClass<T>, val failEasy: Boolean = false, val callback: DataLoader<T>):
   SimpleJsonResourceReloadListener(GSON, path) {
   companion object {
     var GSON: Gson = UnfocusedJson.builder()
@@ -37,7 +37,7 @@ open class DataLoaderListener<T: Any>(path: String, val type: KClass<T>, val fai
         } catch (e: JsonSyntaxException) {
           if (!failEasy) throw e
         } catch (e: JsonIOException) {
-          Unfocused.LOGGER.warn("Issue during dataloader serde:")
+          Unfocused.LOGGER.warn("Issue during dataloader serde for $path:")
           Unfocused.LOGGER.warn(e)
         }
       }
