@@ -43,6 +43,4 @@ open class DataLoaderListener<T: Any>(val path: String, val type: KClass<T>, val
       }
     }
   }
-
-
 }
