@@ -8,6 +8,7 @@ import net.minecraft.core.Holder
 import net.minecraft.core.registries.Registries
 import net.minecraft.resources.RegistryOps
 import net.minecraft.resources.ResourceKey
+import net.minecraft.resources.ResourceLocation
 import net.minecraft.world.level.biome.Biome
 import net.minecraft.world.level.biome.MobSpawnSettings
 import net.neoforged.neoforge.common.world.BiomeModifier
@@ -15,6 +16,10 @@ import net.neoforged.neoforge.common.world.ModifiableBiomeInfo
 import java.util.stream.Stream
 
 class RegistryAwareBiomeModifier(val registryOps: RegistryOps<JsonElement>): BiomeModifier {
+  val registrationTrackerFeatures = hashMapOf<ResourceLocation, Boolean>()
+  val registrationTrackerCarvers = hashMapOf<ResourceLocation, Boolean>()
+  val registrationTrackerSpawns = hashMapOf<ResourceLocation, Boolean>()
+
   override fun modify(arg: Holder<Biome>, phase: BiomeModifier.Phase, builder: ModifiableBiomeInfo.BiomeInfo.Builder) {
     try {
       val featureGetter = registryOps.getter(Registries.PLACED_FEATURE).get()
@@ -23,18 +28,24 @@ class RegistryAwareBiomeModifier(val registryOps: RegistryOps<JsonElement>): Bio
 
       if(phase == BiomeModifier.Phase.ADD) {
         BiomeModifiers.featureEvent.register { (key, value) ->
+          if(registrationTrackerFeatures[key] == true) return@register
+          registrationTrackerFeatures[key] = true
           val feature = featureGetter.getOrThrow(ResourceKey.create(Registries.PLACED_FEATURE, value.feature))
           if(value.isValid(arg))
             builder.generationSettings.addFeature(value.step, feature)
         }
 
         BiomeModifiers.carverEvent.register { (key, value) ->
+          if(registrationTrackerCarvers[key] == true) return@register
+          registrationTrackerCarvers[key] = true
           val carver = carverGetter.getOrThrow(ResourceKey.create(Registries.CONFIGURED_CARVER, value.carver))
           if(value.isValid(arg))
             builder.generationSettings.addCarver(value.step, carver)
         }
 
         BiomeModifiers.spawnEvent.register { (key, value) ->
+          if(registrationTrackerSpawns[key] == true) return@register
+          registrationTrackerSpawns[key] = true
           for(spawn in value.spawners) {
             val entity = entityGetter.getOrThrow(ResourceKey.create(Registries.ENTITY_TYPE, spawn.type))
             if(value.isValid(arg))

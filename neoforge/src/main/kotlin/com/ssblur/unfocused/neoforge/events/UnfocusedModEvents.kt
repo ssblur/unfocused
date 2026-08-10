@@ -168,7 +168,7 @@ object UnfocusedModEvents {
 
     BiomeModifiers.featureEvent.register{}
 
-    bus.addListener(EventPriority.LOWEST, ::registerEvent)
+    bus.addListener(EventPriority.NORMAL, ::registerEvent)
     bus.addListener(::attributeEvent)
     bus.register(UnfocusedModNetworking)
   }
