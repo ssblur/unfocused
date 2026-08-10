@@ -1,6 +1,6 @@
 modLoader = "kotlinforforge"
 loaderVersion = "[5.8,)"
-#issueTrackerURL = ""
+issueTrackerURL = "https://github.com/ssblur/unfocused/issues"
 license = "CC0-1.0"
 
 [[mods]]
