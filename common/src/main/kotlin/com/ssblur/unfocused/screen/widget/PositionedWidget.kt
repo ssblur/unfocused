@@ -47,6 +47,8 @@ abstract class PositionedWidget(
     get() = scroll.roundToInt()/h + 1
   val pages: Int
     get() = maxScroll/h + 1
+  override val scissorH: Int
+    get() = if(pageButtons) h - (pageButtonsH + (2 * pageButtonsMargin)) else h
 
   open fun nextPage() {
     scroll(h.toDouble())

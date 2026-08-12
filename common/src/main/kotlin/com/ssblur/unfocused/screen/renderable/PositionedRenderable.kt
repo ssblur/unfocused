@@ -16,6 +16,8 @@ abstract class PositionedRenderable(
   var parent: Screen? = null
   var scroll = 0.0
   var maxScroll = h
+  open val scissorW = w
+  open val scissorH = h
   open val shouldScroll = maxScroll > h
   fun scroll(difference: Double) {
     scroll += difference
@@ -36,7 +38,7 @@ abstract class PositionedRenderable(
     val stack = guiGraphics.pose()
     stack.pushPose()
     // Scissor by default so that I don't have to worry about overdraw in widgets.
-    if(scissor) guiGraphics.enableScissor(x, y, w+x, h+y)
+    if(scissor) guiGraphics.enableScissor(x, y, scissorW+x, scissorH+y)
     // Translate the stack so that any draws can be made relative to the widget's position.
     // (I'm lazy and want to be able to dynamically nest without doing math)
     stack.translate(x.toFloat(), y.toFloat() - scroll.toFloat(), 0.0f)
