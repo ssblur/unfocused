@@ -89,7 +89,7 @@ subprojects {
     repositories {
       maven {
         name = "ssblur-maven"
-        url = version.contains("SNAPSHOT") ? uri("https://mvn.blur.lol/snapshots") : uri("https://mvn.blur.lol/releases")
+        url = version.contains("SNAPSHOT") ? uri("https://mvn.blur.gay/snapshots") : uri("https://mvn.blur.gay/releases")
 
         credentials {
           username = System.getenv("SSBLURMVNUSERNAME")
