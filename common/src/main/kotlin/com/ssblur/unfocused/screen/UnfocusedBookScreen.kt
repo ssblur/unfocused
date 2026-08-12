@@ -34,7 +34,10 @@ class UnfocusedBookScreen(val bookMenu: UnfocusedBookMenu, inventory: Inventory,
           LocalizedMarkdownReader.read(it),
           false,
           commandsAllowed = false
-        )).setColor(0, 0, 0)
+        )).let {
+          it.setColor(0, 0, 0)
+          it.pageButtons = true
+        }
       } ?: run {
         add(
           MarkdownWidget(
@@ -46,7 +49,10 @@ class UnfocusedBookScreen(val bookMenu: UnfocusedBookMenu, inventory: Inventory,
             shadow = false,
             commandsAllowed = false
           )
-        ).setColor(0, 0, 0)
+        ).let {
+          it.setColor(0, 0, 0)
+          it.pageButtons = true
+        }
       }
     } catch(e: FileNotFoundException) {
       add(
