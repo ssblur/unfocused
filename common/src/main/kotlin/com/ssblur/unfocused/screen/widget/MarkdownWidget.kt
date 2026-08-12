@@ -59,7 +59,7 @@ class MarkdownWidget(
    * Allows registering a custom handler for page:// links.
    * { String -> Boolean }
    */
-  var handlePageTurned = { page: String -> false }
+  var handlePageTurned = @Suppress("unused") { page: String -> false }
 
   override fun mouseClicked(d: Double, e: Double, i: Int): Boolean {
     hoveredStyle?.let {
@@ -71,7 +71,7 @@ class MarkdownWidget(
         return handlePageTurned(page)
       }
     }
-    return false
+    return super.mouseClicked(d, e, i)
   }
 
   val font: Font = Minecraft.getInstance().font
@@ -139,7 +139,7 @@ class MarkdownWidget(
 
   override fun drawOverlay(guiGraphics: GuiGraphics, mouseX: Int, mouseY: Int, f: Float) {
     super.drawOverlay(guiGraphics, mouseX, mouseY, f)
-    if(hoveredStyle != null) guiGraphics.renderComponentHoverEffect(font, hoveredStyle, mouseX, mouseY)
+    if(hoveredStyle != null) guiGraphics.renderComponentHoverEffect(font, hoveredStyle, mouseX, mouseY + scroll.toInt())
     if(hoveredItem != null) guiGraphics.renderTooltip(font, hoveredItem!!, mouseX, mouseY)
   }
 

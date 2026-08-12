@@ -2,12 +2,12 @@ package com.ssblur.unfocused.screen.widget
 
 import com.ssblur.unfocused.Unfocused
 import com.ssblur.unfocused.extension.SoundEventExtension.play
-import com.ssblur.unfocused.screen.renderable.InventoryBackground.Companion.TEXTURE
 import com.ssblur.unfocused.screen.renderable.PositionedRenderable
 import net.minecraft.client.gui.GuiGraphics
 import net.minecraft.client.gui.components.events.GuiEventListener
 import net.minecraft.client.gui.narration.NarratableEntry
 import net.minecraft.sounds.SoundEvents
+import kotlin.math.floor
 import kotlin.math.roundToInt
 
 abstract class PositionedWidget(
@@ -26,15 +26,22 @@ abstract class PositionedWidget(
   override fun isFocused(): Boolean = focused
 
   var pageButtons = false
-  var pageButtonsSize = 16
+  var pageButtonsW = 23
+  var pageButtonsH = 13
   var pageButtonsMargin = 6
+  val nextPageButtonX: Int
+    get() = w - (pageButtonsW + pageButtonsMargin)
+  val prevPageButtonX: Int
+    get() = pageButtonsMargin
+  val pageButtonsY: Int
+    get() = h-(pageButtonsH + pageButtonsMargin) + scroll.toInt()
   fun overNextPage(mouseX: Double, mouseY: Double) = (pageButtons && pageNumber < pages
-      && mouseX.toInt() in (w-(pageButtonsSize+pageButtonsMargin))..(w-pageButtonsMargin)
-      && mouseY.toInt() in (h-(pageButtonsSize+pageButtonsMargin))..(h-pageButtonsMargin))
+      && mouseX.toInt() in nextPageButtonX..(w-pageButtonsMargin)
+      && mouseY.toInt() in pageButtonsY..(pageButtonsY + pageButtonsH))
   fun overPrevPage(mouseX: Double, mouseY: Double) = (pageButtons && pageNumber > 1
-      && mouseX.toInt() in pageButtonsMargin..(pageButtonsMargin+pageButtonsSize)
-      && mouseY.toInt() in (h-(pageButtonsSize+pageButtonsMargin))..(h-pageButtonsMargin))
-  val shouldScroll: Boolean
+      && mouseX.toInt() in prevPageButtonX..(pageButtonsMargin+pageButtonsW)
+      && mouseY.toInt() in pageButtonsY..(pageButtonsY + pageButtonsH))
+  override val shouldScroll: Boolean
     get() = !pageButtons && maxScroll > h
   val pageNumber: Int
     get() = scroll.roundToInt()/h + 1
@@ -46,6 +53,14 @@ abstract class PositionedWidget(
   }
   open fun prevPage() {
     scroll(-h.toDouble())
+    scroll = scroll.lastFullPage()
+  }
+
+  /**
+   * Gets the y value at the top of the last full page, aligned to the top of the widget.
+   */
+  fun Double.lastFullPage(): Double {
+    return floor(this / h) * h
   }
 
 
@@ -56,18 +71,18 @@ abstract class PositionedWidget(
       if(overNextPage(mouseX.toDouble(), mouseY.toDouble())) {
         guiGraphics.blitSprite(
           NEXT_BUTTON_HIGHLIGHT,
-          w-(pageButtonsSize+pageButtonsMargin),
-          h-(pageButtonsSize+pageButtonsMargin),
-          16,
-          16
+          nextPageButtonX,
+          pageButtonsY,
+          pageButtonsW,
+          pageButtonsH
         )
       } else {
         guiGraphics.blitSprite(
           NEXT_BUTTON,
-          w-(pageButtonsSize+pageButtonsMargin),
-          h-(pageButtonsSize+pageButtonsMargin),
-          16,
-          16
+          nextPageButtonX,
+          pageButtonsY,
+          pageButtonsW,
+          pageButtonsH
         )
       }
     }
@@ -75,18 +90,18 @@ abstract class PositionedWidget(
       if(overPrevPage(mouseX.toDouble(), mouseY.toDouble())) {
         guiGraphics.blitSprite(
           PREV_BUTTON_HIGHLIGHT,
-          pageButtonsMargin,
-          h-(pageButtonsSize+pageButtonsMargin),
-          16,
-          16
+          prevPageButtonX,
+          pageButtonsY,
+          pageButtonsW,
+          pageButtonsH
         )
       } else {
         guiGraphics.blitSprite(
           PREV_BUTTON,
-          pageButtonsMargin,
-          h-(pageButtonsSize+pageButtonsMargin),
-          16,
-          16
+          prevPageButtonX,
+          pageButtonsY,
+          pageButtonsW,
+          pageButtonsH
         )
       }
     }
@@ -95,11 +110,11 @@ abstract class PositionedWidget(
   override fun mouseClicked(d: Double, e: Double, i: Int): Boolean {
     if(!isMouseOver(d, e)) return false
 
-    if(overNextPage(d, e)) {
+    if(overNextPage(d - x, e - y + scroll)) {
       SoundEvents.UI_BUTTON_CLICK.play()
       nextPage()
       return true
-    } else if(overPrevPage(d, e)) {
+    } else if(overPrevPage(d - x, e - y + scroll)) {
       SoundEvents.UI_BUTTON_CLICK.play()
       prevPage()
       return true

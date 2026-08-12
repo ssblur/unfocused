@@ -16,6 +16,7 @@ abstract class PositionedRenderable(
   var parent: Screen? = null
   var scroll = 0.0
   var maxScroll = h
+  open val shouldScroll = maxScroll > h
   fun scroll(difference: Double) {
     scroll += difference
     scroll = scroll.coerceIn(0.0..(maxScroll - h).toDouble())
@@ -44,7 +45,7 @@ abstract class PositionedRenderable(
 
     if(scissor) guiGraphics.disableScissor()
 
-    if(maxScroll > h) {
+    if(shouldScroll) {
       val barSize = h.toDouble() / maxScroll // as a proportion of widget height
       val barProgress = (scroll / (maxScroll - h))
       val barPos = barProgress * (1.0 - barSize)
