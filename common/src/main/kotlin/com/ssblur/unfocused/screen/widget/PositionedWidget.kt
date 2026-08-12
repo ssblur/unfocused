@@ -67,7 +67,7 @@ abstract class PositionedWidget(
   override fun drawOverlay(guiGraphics: GuiGraphics, mouseX: Int, mouseY: Int, f: Float) {
     super.drawOverlay(guiGraphics, mouseX, mouseY, f)
 
-    if(pageNumber < pages) {
+    if(pageButtons && pageNumber < pages) {
       if(overNextPage(mouseX.toDouble(), mouseY.toDouble())) {
         guiGraphics.blitSprite(
           NEXT_BUTTON_HIGHLIGHT,
@@ -86,7 +86,7 @@ abstract class PositionedWidget(
         )
       }
     }
-    if(pageNumber > 1) {
+    if(pageButtons && pageNumber > 1) {
       if(overPrevPage(mouseX.toDouble(), mouseY.toDouble())) {
         guiGraphics.blitSprite(
           PREV_BUTTON_HIGHLIGHT,
