@@ -1,6 +1,7 @@
 package com.ssblur.unfocused.screen
 
 import com.ssblur.unfocused.extension.WidgetExtension.renderAll
+import com.ssblur.unfocused.screen.renderable.SlotBackground.Companion.TEXTURE
 import com.ssblur.unfocused.screen.widget.PositionedWidget
 import net.minecraft.client.gui.GuiGraphics
 import net.minecraft.client.gui.components.Renderable
@@ -55,6 +56,15 @@ abstract class UnfocusedScreen<T : AbstractContainerMenu>(abstractContainerMenu:
 
   override fun renderLabels(guiGraphics: GuiGraphics, i: Int, j: Int) {}
 
-  fun renderSlotBackground(slot: Slot) { TODO() }
-  fun renderAllSlotBackgrounds() { TODO() }
+  fun renderSlotBackground(guiGraphics: GuiGraphics, slot: Slot) {
+    val x = slot.x - 1
+    val y = slot.y - 1
+    guiGraphics.blitSprite(TEXTURE, x, y, 18, 18)
+  }
+
+  fun renderSlotBackgrounds(guiGraphics: GuiGraphics, vararg slots: Slot) {
+    slots.forEach {
+      renderSlotBackground(guiGraphics, it)
+    }
+  }
 }
