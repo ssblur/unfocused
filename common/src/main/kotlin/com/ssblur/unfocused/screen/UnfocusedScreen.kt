@@ -59,7 +59,7 @@ abstract class UnfocusedScreen<T : AbstractContainerMenu>(abstractContainerMenu:
   fun renderSlotBackground(guiGraphics: GuiGraphics, slot: Slot) {
     val x = slot.x - 1
     val y = slot.y - 1
-    guiGraphics.blitSprite(TEXTURE, x, y, 18, 18)
+    guiGraphics.blitSprite(TEXTURE, x + leftPos, y + topPos, 18, 18)
   }
 
   fun renderSlotBackgrounds(guiGraphics: GuiGraphics, vararg slots: Slot) {
