@@ -16,12 +16,14 @@ abstract class PositionedRenderable(
   var parent: Screen? = null
   var scroll = 0.0
   var maxScroll = h
+  var scrollResolution = 1.0
   open val scissorW = w
   open val scissorH = h
   open val shouldScroll = maxScroll > h
   fun scroll(difference: Double) {
     scroll += difference
     scroll = scroll.coerceIn(0.0..(maxScroll - h).toDouble())
+    scroll = (scroll / scrollResolution).toInt() * scrollResolution
   }
 
   var hovered: Boolean = false
@@ -67,7 +69,7 @@ abstract class PositionedRenderable(
   }
 
   fun mouseOver(d: Double, e: Double): Boolean {
-    return d.roundToInt() in x..x + w && e.roundToInt() in y..y + h
+    return d.toInt() in x..x + w && e.toInt() in y..y + h
   }
 
   abstract fun draw(guiGraphics: GuiGraphics, mouseX: Int, mouseY: Int, f: Float)

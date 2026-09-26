@@ -7,7 +7,6 @@ import net.minecraft.client.gui.GuiGraphics
 import net.minecraft.client.gui.components.events.GuiEventListener
 import net.minecraft.client.gui.narration.NarratableEntry
 import net.minecraft.sounds.SoundEvents
-import kotlin.math.floor
 import kotlin.math.roundToInt
 
 abstract class PositionedWidget(
@@ -55,15 +54,14 @@ abstract class PositionedWidget(
   }
   open fun prevPage() {
     scroll(-h.toDouble())
-    scroll = scroll.lastFullPage()
   }
 
   /**
    * Gets the y value at the top of the last full page, aligned to the top of the widget.
    */
-  fun Double.lastFullPage(): Double {
-    return floor(this / h) * h
-  }
+//  fun Double.lastFullPage(): Double {
+//    return floor(this / h) * h
+//  }
 
 
   override fun drawOverlay(guiGraphics: GuiGraphics, mouseX: Int, mouseY: Int, f: Float) {

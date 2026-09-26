@@ -14,6 +14,7 @@ import net.minecraft.network.chat.Style
 import net.minecraft.world.item.ItemStack
 import kotlin.math.ceil
 import kotlin.math.max
+import kotlin.math.roundToInt
 
 class MarkdownWidget(
   x: Int,
@@ -39,6 +40,7 @@ class MarkdownWidget(
 
   init {
     markdownText = text
+    scrollResolution = Minecraft.getInstance().font.lineHeight * 2.0
   }
 
   var parsed = MarkdownFormatter.parseMarkdown(markdownText, commandsAllowed = commandsAllowed)
@@ -63,7 +65,7 @@ class MarkdownWidget(
 
   override fun mouseClicked(d: Double, e: Double, i: Int): Boolean {
     hoveredStyle?.let {
-      if(it.clickEvent?.action != Action.CHANGE_PAGE) {
+      if(it.clickEvent?.action != null && it.clickEvent?.action != Action.CHANGE_PAGE) {
         parent?.handleComponentClicked(it)
         return true
       } else if(it.clickEvent?.action == Action.CHANGE_PAGE) {
@@ -134,7 +136,9 @@ class MarkdownWidget(
         pose.popPose()
       }
     }
+    val pageSize = (this.h / scrollResolution).roundToInt() * scrollResolution
     maxScroll = y + font.lineHeight * 2
+    maxScroll = (ceil(maxScroll / pageSize) * pageSize).roundToInt()
   }
 
   override fun drawOverlay(guiGraphics: GuiGraphics, mouseX: Int, mouseY: Int, f: Float) {
