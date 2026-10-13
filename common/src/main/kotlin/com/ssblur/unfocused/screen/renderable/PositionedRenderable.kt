@@ -4,7 +4,10 @@ import com.mojang.blaze3d.systems.RenderSystem
 import net.minecraft.client.gui.GuiGraphics
 import net.minecraft.client.gui.components.Renderable
 import net.minecraft.client.gui.screens.Screen
+import kotlin.math.absoluteValue
+import kotlin.math.ceil
 import kotlin.math.roundToInt
+import kotlin.math.sign
 
 abstract class PositionedRenderable(
   var x: Int,
@@ -22,9 +25,9 @@ abstract class PositionedRenderable(
   open val shouldScroll: Boolean
     get() = maxScroll > h
   fun scroll(difference: Double) {
-    scroll += difference
+    val unit = ceil(difference.absoluteValue / scrollResolution) * difference.sign * scrollResolution
+    scroll += unit
     scroll = scroll.coerceIn(0.0..(maxScroll - h).toDouble())
-    scroll = (scroll / scrollResolution).toInt() * scrollResolution
   }
 
   var hovered: Boolean = false
