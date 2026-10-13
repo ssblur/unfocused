@@ -19,7 +19,8 @@ abstract class PositionedRenderable(
   var scrollResolution = 1.0
   open val scissorW = w
   open val scissorH = h
-  open val shouldScroll = maxScroll > h
+  open val shouldScroll: Boolean
+    get() = maxScroll > h
   fun scroll(difference: Double) {
     scroll += difference
     scroll = scroll.coerceIn(0.0..(maxScroll - h).toDouble())
