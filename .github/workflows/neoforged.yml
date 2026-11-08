@@ -40,6 +40,7 @@ jobs:
           mod-loader: neoforge
           changelog: ${{ steps.changelog.outputs.changelog }}
           dependencies: |
+            kotlin-for-forge
 
           github-token: ${{ secrets.GITHUB_TOKEN }}
 
