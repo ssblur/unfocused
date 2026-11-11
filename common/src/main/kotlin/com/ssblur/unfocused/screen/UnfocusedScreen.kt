@@ -66,10 +66,12 @@ abstract class UnfocusedScreen<T : AbstractContainerMenu>(abstractContainerMenu:
     f: Float,
     i: Int,
     j: Int
-  ) {
+  ) {}
+
+  override fun renderBackground(guiGraphics: GuiGraphics, i: Int, j: Int, f: Float) {
+    super.renderBackground(guiGraphics, i, j, f)
     backgroundWidgets.renderAll(guiGraphics, i, j, f)
   }
-
   override fun renderLabels(guiGraphics: GuiGraphics, i: Int, j: Int) {}
 
   fun renderSlotBackground(guiGraphics: GuiGraphics, slot: Slot) {
