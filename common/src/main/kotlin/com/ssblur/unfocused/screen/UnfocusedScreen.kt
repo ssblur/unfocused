@@ -1,6 +1,7 @@
 package com.ssblur.unfocused.screen
 
 import com.ssblur.unfocused.extension.WidgetExtension.renderAll
+import com.ssblur.unfocused.screen.renderable.PositionedRenderable
 import com.ssblur.unfocused.screen.renderable.SlotBackground.Companion.TEXTURE
 import com.ssblur.unfocused.screen.widget.PositionedWidget
 import net.minecraft.client.gui.GuiGraphics
@@ -29,14 +30,14 @@ abstract class UnfocusedScreen<T : AbstractContainerMenu>(abstractContainerMenu:
     return addRenderableOnly(guiEventListener)
   }
 
-  var backgroundWidgets: MutableList<PositionedWidget> = mutableListOf()
+  var backgroundWidgets: MutableList<PositionedRenderable> = mutableListOf()
   fun <T: Renderable> addBackground(guiEventListener: T): T {
+    if(guiEventListener is PositionedRenderable) {
+      guiEventListener.parent = this
+      backgroundWidgets.add(guiEventListener)
+    }
     if(guiEventListener is NarratableEntry && guiEventListener is GuiEventListener) {
       val widget = super.addWidget(guiEventListener)
-      if(widget is PositionedWidget) {
-        widget.parent = this
-        backgroundWidgets.add(widget)
-      }
       return widget
     }
     return guiEventListener
@@ -70,7 +71,9 @@ abstract class UnfocusedScreen<T : AbstractContainerMenu>(abstractContainerMenu:
 
   override fun renderBackground(guiGraphics: GuiGraphics, i: Int, j: Int, f: Float) {
     super.renderBackground(guiGraphics, i, j, f)
-    backgroundWidgets.renderAll(guiGraphics, i, j, f)
+    backgroundWidgets.forEach {
+      it.render(guiGraphics, i, j, f)
+    }
   }
   override fun renderLabels(guiGraphics: GuiGraphics, i: Int, j: Int) {}
 
