@@ -13,6 +13,7 @@ import net.minecraft.world.entity.player.Inventory
 import net.minecraft.world.inventory.AbstractContainerMenu
 import net.minecraft.world.inventory.Slot
 
+@Suppress("unused")
 abstract class UnfocusedScreen<T : AbstractContainerMenu>(abstractContainerMenu: T, inventory: Inventory, component: Component) :
   AbstractContainerScreen<T>(abstractContainerMenu, inventory, component) {
   var widgets: MutableList<PositionedWidget> = mutableListOf()
@@ -26,6 +27,19 @@ abstract class UnfocusedScreen<T : AbstractContainerMenu>(abstractContainerMenu:
       return widget
     }
     return addRenderableOnly(guiEventListener)
+  }
+
+  var backgroundWidgets: MutableList<PositionedWidget> = mutableListOf()
+  fun <T: Renderable> addBackground(guiEventListener: T): T {
+    if(guiEventListener is NarratableEntry && guiEventListener is GuiEventListener) {
+      val widget = super.addWidget(guiEventListener)
+      if(widget is PositionedWidget) {
+        widget.parent = this
+        backgroundWidgets.add(widget)
+      }
+      return widget
+    }
+    return guiEventListener
   }
 
   override fun clearWidgets() {
@@ -52,7 +66,9 @@ abstract class UnfocusedScreen<T : AbstractContainerMenu>(abstractContainerMenu:
     f: Float,
     i: Int,
     j: Int
-  ) {}
+  ) {
+    backgroundWidgets.renderAll(guiGraphics, i, j, f)
+  }
 
   override fun renderLabels(guiGraphics: GuiGraphics, i: Int, j: Int) {}
 
