@@ -46,6 +46,7 @@ abstract class UnfocusedScreen<T : AbstractContainerMenu>(abstractContainerMenu:
   override fun clearWidgets() {
     super.clearWidgets()
     widgets = mutableListOf()
+    backgroundWidgets = mutableListOf()
   }
 
   fun renderWidgets(guiGraphics: GuiGraphics, i: Int, j: Int, f: Float) {
