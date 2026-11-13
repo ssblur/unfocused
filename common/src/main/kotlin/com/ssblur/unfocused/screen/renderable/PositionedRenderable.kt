@@ -18,7 +18,7 @@ abstract class PositionedRenderable(
   ): Renderable {
   var parent: Screen? = null
   var scroll = 0.0
-  var maxScroll = h
+  open var maxScroll = h
   var scrollResolution = 1.0
   open val scissorW = w
   open val scissorH = h

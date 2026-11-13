@@ -7,6 +7,7 @@ import net.minecraft.client.gui.GuiGraphics
 import net.minecraft.client.gui.components.events.GuiEventListener
 import net.minecraft.client.gui.narration.NarratableEntry
 import net.minecraft.sounds.SoundEvents
+import kotlin.math.ceil
 import kotlin.math.roundToInt
 
 abstract class PositionedWidget(
@@ -37,23 +38,29 @@ abstract class PositionedWidget(
   fun overNextPage(mouseX: Double, mouseY: Double) = (pageButtons && pageNumber < pages
       && mouseX.toInt() in nextPageButtonX..(w-pageButtonsMargin)
       && mouseY.toInt() in pageButtonsY..(pageButtonsY + pageButtonsH))
-  fun overPrevPage(mouseX: Double, mouseY: Double) = (pageButtons && pageNumber > 1
+  fun overPrevPage(mouseX: Double, mouseY: Double) = (pageButtons && scroll > 0
       && mouseX.toInt() in prevPageButtonX..(pageButtonsMargin+pageButtonsW)
       && mouseY.toInt() in pageButtonsY..(pageButtonsY + pageButtonsH))
   override val shouldScroll: Boolean
     get() = !pageButtons && maxScroll > h
   val pageNumber: Int
     get() = scroll.roundToInt()/h + 1
+  private var maxScrollInternal = h
+  val pageSize: Int
+    get() = h - (pageButtonsH + (2 * pageButtonsMargin) + scrollResolution.toInt())
   val pages: Int
-    get() = maxScroll/h + 1
+    get() = maxScroll/pageSize
+  override var maxScroll: Int
+    get() = ceil(maxScrollInternal.toDouble() / pageSize.toDouble()).toInt() * pageSize
+    set(value) { maxScrollInternal = value }
   override val scissorH: Int
     get() = if(pageButtons) h - (pageButtonsH + (2 * pageButtonsMargin)) else h
 
   open fun nextPage() {
-    scroll(h.toDouble())
+    scroll(pageSize.toDouble())
   }
   open fun prevPage() {
-    scroll(-h.toDouble())
+    scroll(-pageSize.toDouble())
   }
 
   /**
@@ -86,7 +93,7 @@ abstract class PositionedWidget(
         )
       }
     }
-    if(pageButtons && pageNumber > 1) {
+    if(pageButtons && scroll > 0) {
       if(overPrevPage(mouseX.toDouble(), mouseY.toDouble())) {
         guiGraphics.blitSprite(
           PREV_BUTTON_HIGHLIGHT,
