@@ -15,6 +15,7 @@ import net.minecraft.commands.Commands
 import net.minecraft.network.chat.Component
 import net.minecraft.world.flag.FeatureFlagSet
 import net.minecraft.world.inventory.MenuType
+import net.minecraft.world.item.ItemStack
 import org.apache.logging.log4j.LogManager
 
 object Unfocused: ModInitializer("unfocused") {
@@ -66,6 +67,9 @@ object Unfocused: ModInitializer("unfocused") {
   }
 
   fun isModLoaded(id: String) = UtilityExpectPlatform.isModLoaded(id)
+
+  @Suppress("unused")
+  fun getBurnTime(item: ItemStack) = UtilityExpectPlatform.getBurnTime(item)
 
   fun openCommand(command: CommandContext<CommandSourceStack>): Int {
     command.source.player?.closeContainer()
