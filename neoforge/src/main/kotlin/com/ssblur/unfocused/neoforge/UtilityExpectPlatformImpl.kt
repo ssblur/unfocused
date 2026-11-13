@@ -5,6 +5,8 @@ package com.ssblur.unfocused.neoforge
 import net.minecraft.client.color.block.BlockColor
 import net.minecraft.client.color.item.ItemColor
 import net.minecraft.world.item.CreativeModeTab
+import net.minecraft.world.item.ItemStack
+import net.minecraft.world.item.crafting.RecipeType
 import net.minecraft.world.level.ItemLike
 import net.minecraft.world.level.block.Block
 import net.neoforged.api.distmarker.Dist
@@ -48,5 +50,10 @@ object UtilityExpectPlatformImpl {
   @JvmStatic
   fun isModLoaded(name: String): Boolean {
     return ModList.get().isLoaded(name)
+  }
+
+  @JvmStatic
+  fun getBurnTime(item: ItemStack): Int {
+    return item.getBurnTime(RecipeType.SMELTING)
   }
 }

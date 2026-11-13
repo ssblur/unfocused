@@ -11,8 +11,10 @@ import net.fabricmc.loader.impl.FabricLoaderImpl
 import net.minecraft.client.color.block.BlockColor
 import net.minecraft.client.color.item.ItemColor
 import net.minecraft.world.item.CreativeModeTab
+import net.minecraft.world.item.ItemStack
 import net.minecraft.world.level.ItemLike
 import net.minecraft.world.level.block.Block
+import net.minecraft.world.level.block.entity.AbstractFurnaceBlockEntity
 import java.nio.file.Path
 import java.util.function.Supplier
 
@@ -45,5 +47,10 @@ object UtilityExpectPlatformImpl {
   @JvmStatic
   fun isModLoaded(name: String): Boolean {
     return FabricLoader.getInstance().isModLoaded(name)
+  }
+
+  @JvmStatic
+  fun getBurnTime(item: ItemStack): Int {
+    return AbstractFurnaceBlockEntity.getFuel()[item.item] ?: 0
   }
 }

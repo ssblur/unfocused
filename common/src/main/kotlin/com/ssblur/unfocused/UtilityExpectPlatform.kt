@@ -8,6 +8,7 @@ import net.fabricmc.api.Environment
 import net.minecraft.client.color.block.BlockColor
 import net.minecraft.client.color.item.ItemColor
 import net.minecraft.world.item.CreativeModeTab
+import net.minecraft.world.item.ItemStack
 import net.minecraft.world.level.ItemLike
 import net.minecraft.world.level.block.Block
 import java.nio.file.Path
@@ -51,6 +52,12 @@ object UtilityExpectPlatform {
   @ExpectPlatform
   @JvmStatic
   fun isModLoaded(name: String): Boolean {
+    throw AssertionError()
+  }
+
+  @ExpectPlatform
+  @JvmStatic
+  fun getBurnTime(item: ItemStack): Int {
     throw AssertionError()
   }
 }
